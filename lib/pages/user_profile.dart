@@ -58,7 +58,7 @@ class _UserProfileState extends State<UserProfile> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome()));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()),(Route<dynamic> route) => false);
           },
           icon: Icon(
             Icons.chevron_left,

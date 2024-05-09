@@ -28,9 +28,7 @@ class ChatStart extends StatelessWidget {
               width: double.infinity,
               child: Column(
                 children: const [
-                  ChatText(text : "Revolutionize your nutrition with Gene – "),
-                  ChatText(text : "the ultimate solution for automating your "),
-                  ChatText(text : "diet."),
+                  ChatText(text : "Revolutionize your nutrition with Gene – the ultimate solution for automating your diet."),
                 ],
               ),
             ),
@@ -44,8 +42,7 @@ class ChatStart extends StatelessWidget {
               width: double.infinity,
               child: Column(
                 children: const [
-                  ChatText(text : "Prioritize your mental well-being with "),
-                  ChatText(text : "Gene"),
+                  ChatText(text : "Prioritize your mental well-being with Gene"),
                 ],
               ),
             ),
@@ -59,8 +56,7 @@ class ChatStart extends StatelessWidget {
               width: double.infinity,
               child: Column(
                 children: const [
-                  ChatText(text : "Effortlessly order and track essential tests"),
-                  ChatText(text : "and other health metrics,"),
+                  ChatText(text : "Effortlessly order and track essential tests and other health metrics,"),
                 ],
               ),
             ),

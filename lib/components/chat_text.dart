@@ -9,6 +9,7 @@ class ChatText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+      textAlign: TextAlign.center,
       text,
       style: const TextStyle(
         color: Color.fromRGBO(51, 51, 51, 1),

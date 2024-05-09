@@ -6,7 +6,6 @@ import 'package:helix_ai/components/custom_divider.dart';
 import 'package:helix_ai/components/custom_text_field.dart';
 import 'package:helix_ai/components/social_login_buttons.dart';
 import 'package:helix_ai/pages/first_profile.dart';
-import 'package:helix_ai/pages/user_login.dart';
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:provider/provider.dart';
 import '../images_path.dart';
@@ -23,11 +22,10 @@ class _UserSignUpState extends State<UserSignUp> {
   final signUpFormKey = GlobalKey<FormState>();
 
   final TextEditingController signUpEmailController = TextEditingController();
-
   final TextEditingController signUpPasswordController = TextEditingController();
 
   String? validateEmail(String? value) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (value == null || value.isEmpty) {
       return 'Please enter an email';
@@ -47,9 +45,9 @@ class _UserSignUpState extends State<UserSignUp> {
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (signUpFormKey.currentState!.validate()) {
       if (await authProvider.signUp(signUpEmailController.text, signUpPasswordController.text)) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FirstProfile()));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => FirstProfile()),(Route<dynamic> route) => false,);
       } else {
-        UiHelper().showSnackBar(authProvider.errorMessage);
+        UiHelper().showSnackBar(context , authProvider.errorMessage);
       }
     }
   }
@@ -58,7 +56,6 @@ class _UserSignUpState extends State<UserSignUp> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
-        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.black,
         body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -145,7 +142,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          Navigator.pushNamed(context, '/login');
+                                          Navigator.pushReplacementNamed(context,'/login');
                                         },
                                         child: Text(
                                           "Login",
@@ -166,7 +163,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     height: 30,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, right: 35, bottom: 10),
+                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 10),
                                     child: SocialLoginButtons(text: "SignUp with"),
                                   )
                                 ],
@@ -181,6 +178,7 @@ class _UserSignUpState extends State<UserSignUp> {
               ),
             );
           },
-        ));
+        )
+    );
   }
 }

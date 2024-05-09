@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class UiHelper {
   GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-  void showSnackBar(String message) {
-    scaffoldMessengerKey.currentState!.showSnackBar(
+  void showSnackBar(BuildContext context , String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         content: Text(message),

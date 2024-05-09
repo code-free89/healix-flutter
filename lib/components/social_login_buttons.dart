@@ -28,8 +28,8 @@ class SocialLoginButtons extends StatelessWidget {
         Row(
           children: [
             Container(
-              height: 60,
-              width: 60,
+              height: 59,
+              width: 59,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12)
@@ -38,8 +38,8 @@ class SocialLoginButtons extends StatelessWidget {
             ),
             SizedBox(width: 20,),
             Container(
-              height: 60,
-              width: 60,
+              height: 59,
+              width: 59,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12)

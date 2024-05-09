@@ -6,8 +6,6 @@ import 'package:helix_ai/chat_component/user_chat.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/user_profile.dart';
 
-import 'first_profile.dart';
-
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
 
