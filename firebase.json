@@ -1,0 +1,45 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "smarte-cloudservice-846b2",
+          "appId": "1:123873713539:android:211c8a7596fdf2e7552ab6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "smarte-cloudservice-846b2",
+          "appId": "1:123873713539:ios:a249e4e9d9407c78552ab6",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "smarte-cloudservice-846b2",
+          "appId": "1:123873713539:ios:a249e4e9d9407c78552ab6",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "smarte-cloudservice-846b2",
+          "configurations": {
+            "android": "1:123873713539:android:211c8a7596fdf2e7552ab6",
+            "ios": "1:123873713539:ios:a249e4e9d9407c78552ab6",
+            "macos": "1:123873713539:ios:a249e4e9d9407c78552ab6",
+            "web": "1:123873713539:web:014fb545ed9bac76552ab6",
+            "windows": "1:123873713539:web:335991113d54c62e552ab6"
+          }
+        }
+      }
+    }
+  }
+}

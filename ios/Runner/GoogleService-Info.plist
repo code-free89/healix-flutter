@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>123873713539-kv33qm7ftp0k2kcdnmvuapmqaq4lfh8g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.123873713539-kv33qm7ftp0k2kcdnmvuapmqaq4lfh8g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>123873713539-4cenuvbbi9j7bdku3peada0d1psi9r80.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAUabvKOhct2ntxoQ08FLzUD2K8F653Ae0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>123873713539</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.helixAi</string>
+	<key>PROJECT_ID</key>
+	<string>smarte-cloudservice-846b2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>smarte-cloudservice-846b2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:123873713539:ios:a249e4e9d9407c78552ab6</string>
+</dict>
+</plist>
