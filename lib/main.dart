@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
             case Status.Unauthenticated:
               return UserSignUp();
             case Status.Authenticating:
-              return UserLogin();
+              // return UserLogin();
             case Status.Authenticated:
               return ChatHome();
             case Status.FirstTimeAuthenticated:

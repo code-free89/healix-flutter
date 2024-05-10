@@ -48,6 +48,7 @@ class _UserLoginState extends State<UserLogin> {
       if (await authProvider.signIn(loginEmailController.text, loginPasswordController.text)) {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()),(Route<dynamic> route) => false,);
       } else {
+        authProvider.setIsLoginLoading(false);
         UiHelper().showSnackBar(context , authProvider.errorMessage);
       }
     }
@@ -122,6 +123,7 @@ class _UserLoginState extends State<UserLogin> {
                                         onPressed: (){
                                           validateAndSubmit(authProvider);
                                         },
+                                        showLoading: authProvider.isLoginLoading,
                                         buttonText: "Login"),
                                   ),
                                   SizedBox(height: 12,),

@@ -10,6 +10,8 @@ class AuthenticationProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
   SharedPreferenceRepository _sharedPreferenceRepository = SharedPreferenceRepository();
+  bool isSignupLoading = false;
+  bool isLoginLoading = false;
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -25,10 +27,13 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<bool> signUp(String email, String password) async {
     try {
-      _status = Status.Authenticating;
-      notifyListeners();
+      // _status = Status.Authenticating;
+      setIsSignupLoading(true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      _status = Status.FirstTimeAuthenticated;
+      setIsSignupLoading(false);
+      notifyListeners();
       return true;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -49,8 +54,9 @@ class AuthenticationProvider with ChangeNotifier {
   Future<bool> signIn(String email, String password) async {
     try {
       _status = Status.Authenticating;
-      notifyListeners();
+      setIsLoginLoading(true);
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -87,6 +93,21 @@ class AuthenticationProvider with ChangeNotifier {
         _status = Status.Authenticated;
       }
     }
+    notifyListeners();
+  }
+
+  void setStatus(Status status) {
+    _status = status;
+    notifyListeners();
+  }
+
+  void setIsSignupLoading(bool value) {
+    isSignupLoading = value;
+    notifyListeners();
+  }
+
+  void setIsLoginLoading(bool value) {
+    isLoginLoading = value;
     notifyListeners();
   }
 }

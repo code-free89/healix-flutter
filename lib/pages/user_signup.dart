@@ -45,9 +45,15 @@ class _UserSignUpState extends State<UserSignUp> {
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (signUpFormKey.currentState!.validate()) {
       if (await authProvider.signUp(signUpEmailController.text, signUpPasswordController.text)) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => FirstProfile()),(Route<dynamic> route) => false,);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => FirstProfile()),
+          (Route<dynamic> route) => false,
+        );
       } else {
-        UiHelper().showSnackBar(context , authProvider.errorMessage);
+        authProvider.setIsSignupLoading(false);
+        // authProvider.setStatus(Status.Unauthenticated);
+        UiHelper().showSnackBar(context, authProvider.errorMessage);
       }
     }
   }
@@ -125,6 +131,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                         onPressed: () {
                                           validateAndSubmit(authProvider);
                                         },
+                                        showLoading: authProvider.isSignupLoading,
                                         buttonText: "Signup"),
                                   ),
                                   SizedBox(
@@ -142,7 +149,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          Navigator.pushReplacementNamed(context,'/login');
+                                          Navigator.pushReplacementNamed(context, '/login');
                                         },
                                         child: Text(
                                           "Login",
@@ -164,7 +171,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 10),
-                                    child: SocialLoginButtons(text: "SignUp with"),
+                                    child: SocialLoginButtons(text: "Signup with"),
                                   )
                                 ],
                               ),
@@ -178,7 +185,6 @@ class _UserSignUpState extends State<UserSignUp> {
               ),
             );
           },
-        )
-    );
+        ));
   }
 }
