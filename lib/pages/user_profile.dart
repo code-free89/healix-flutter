@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
+import 'package:helix_ai/components/logout_alert_dialog.dart';
 import 'package:helix_ai/components/profile_generic_tile.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
@@ -41,9 +42,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void validateAndSubmit() {
-    if (profileUpdateFormKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile Updated")));
-    }
   }
 
   @override
@@ -89,7 +88,7 @@ class _UserProfileState extends State<UserProfile> {
                       style: TextStyle(fontFamily: 'Ubuntu-Medium', fontSize: 28),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 51,
                     ),
                     Row(
                       children: [
@@ -182,16 +181,24 @@ class _UserProfileState extends State<UserProfile> {
               ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Terms of service"),
               ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Privacy Policy"),
               ProfileGenericTile(
-                  onPressed: () async {
-                    debugPrint("logout clicked");
-                    await authProvider.signOut();
-                    Navigator.pushAndRemoveUntil(
-                        context, MaterialPageRoute(builder: (_) => UserLogin()), (route) => false);
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return LogOutAlertDialog(
+                            onLogout: () async{
+                              debugPrint("logout clicked");
+                              await authProvider.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                  context, MaterialPageRoute(builder: (_) => UserLogin()), (route) => false);
+                            },
+                          );
+                        });
                   },
                   assetName: logOut,
                   text: "Log out"),
               SizedBox(
-                height: 40,
+                height: 45,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 25.0),

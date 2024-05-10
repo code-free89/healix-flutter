@@ -18,7 +18,7 @@ class ProfileGenericTile extends StatelessWidget {
             onPressed();
           },
           child: Padding(
-            padding: const EdgeInsets.all(22),
+            padding: const EdgeInsets.all(24),
             child: Row(
               children: [
                 Row(

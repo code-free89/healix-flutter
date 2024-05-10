@@ -9,7 +9,6 @@ import 'package:helix_ai/pages/user_login.dart';
 import 'package:helix_ai/pages/user_profile.dart';
 import 'package:helix_ai/pages/user_signup.dart';
 import 'package:helix_ai/provider/authentication_provider.dart';
-import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -64,14 +63,15 @@ class HomePage extends StatelessWidget {
             case Status.Uninitialized:
               return SplashScreen();
             case Status.Unauthenticated:
-              return UserSignUp();
-            case Status.Authenticating:
               return UserLogin();
+            // case Status.Authenticating:
+            //   return UserLogin();
             case Status.Authenticated:
               return ChatHome();
             case Status.FirstTimeAuthenticated:
               return FirstProfile();
           }
-        }));
+        })
+    );
   }
 }

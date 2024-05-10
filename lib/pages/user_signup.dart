@@ -156,14 +156,14 @@ class _UserSignUpState extends State<UserSignUp> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 25,
+                                    height: 20,
                                   ),
                                   CustomDivider(),
                                   SizedBox(
-                                    height: 30,
+                                    height: 20,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 10),
+                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 41),
                                     child: SocialLoginButtons(text: "SignUp with"),
                                   )
                                 ],

@@ -37,9 +37,7 @@ class _FirstProfileState extends State<FirstProfile> {
   }
 
   void validateAndSubmit(){
-    if(profileFormKey.currentState!.validate()){
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
-    }
   }
 
   @override

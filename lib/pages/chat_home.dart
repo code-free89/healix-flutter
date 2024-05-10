@@ -17,6 +17,13 @@ class _ChatHomeState extends State<ChatHome> {
   bool isChatVisible = false;
   TextEditingController chatController = TextEditingController();
 
+  List initialMessages = [
+    "Hello there",
+    "Hello! How may I assist you today!",
+    "Show me what you can do?",
+    "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
+  ];
+
   List messages = [
     "Hello there",
     "Hello! How may I assist you today!",
@@ -36,6 +43,7 @@ class _ChatHomeState extends State<ChatHome> {
             onTap: () {
               setState(() {
                 isChatVisible = false;
+                messages = initialMessages;
               });
             },
             child: SvgPicture.asset(
@@ -44,11 +52,14 @@ class _ChatHomeState extends State<ChatHome> {
             )),
         centerTitle: true,
         actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()));
-              },
-              child: SvgPicture.asset(userCircle))
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()));
+                },
+                child: SvgPicture.asset(userCircle)),
+          )
         ],
       ),
       body: Padding(
@@ -57,6 +68,7 @@ class _ChatHomeState extends State<ChatHome> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(child: isChatVisible ? UserChat(messages: messages) : ChatStart()),
+            SizedBox(height: 22,),
             Row(
               children: [
                 Expanded(
@@ -75,8 +87,16 @@ class _ChatHomeState extends State<ChatHome> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
                             color: Color.fromRGBO(28, 197, 116, 1),
-                            width: 2,
-                          )),
+                            width: 1,
+                          )
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(28, 197, 116, 1),
+                            width: 1,
+                          )
+                      ),
                       hintText: "Ask me anything...",
                       hintStyle: TextStyle(fontFamily: 'Rubik', fontSize: 17, color: Color.fromRGBO(166, 163, 157, 1)),
                     ),

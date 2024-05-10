@@ -163,11 +163,11 @@ class _UserLoginState extends State<UserLogin> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(height: 25,),
+                                  SizedBox(height: 20,),
                                   CustomDivider(),
-                                  SizedBox(height: 30,),
+                                  SizedBox(height: 20,),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0 , right: 40 , bottom: 10),
+                                    padding: const EdgeInsets.only(left: 20.0 , right: 40 , bottom: 41),
                                     child: SocialLoginButtons(text: "Login with"),
                                   )
                                 ],

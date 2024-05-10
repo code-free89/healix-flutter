@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 
-enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated, FirstTimeAuthenticated }
+enum Status { Uninitialized, Authenticated, Unauthenticated, FirstTimeAuthenticated }
 
 class AuthenticationProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -25,7 +25,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<bool> signUp(String email, String password) async {
     try {
-      _status = Status.Authenticating;
+      // _status = Status.Authenticating;
       notifyListeners();
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
@@ -48,7 +48,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<bool> signIn(String email, String password) async {
     try {
-      _status = Status.Authenticating;
+      // _status = Status.Authenticating;
       notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
