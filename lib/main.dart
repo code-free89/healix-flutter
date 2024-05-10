@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
     await Future.delayed(Duration(seconds: 2));
 
-    switch (authProvider.status) {
+    switch  (authProvider.status) {
       case Status.Uninitialized:
         break;
       case Status.Unauthenticated:
