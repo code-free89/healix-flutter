@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   runApp(const MyApp());
 }
 
@@ -53,25 +52,39 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    checkAuthStatus();
+  }
+
+  Future<void> checkAuthStatus() async {
+    final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+    await Future.delayed(Duration(seconds: 2));
+
+    switch (authProvider.status) {
+      case Status.Uninitialized:
+        break;
+      case Status.Unauthenticated:
+        Navigator.pushReplacementNamed(context, '/login');
+        break;
+      case Status.Authenticated:
+        Navigator.pushReplacementNamed(context, '/chat_home');
+        break;
+      case Status.FirstTimeAuthenticated:
+        Navigator.pushReplacementNamed(context, '/first_profile');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => AuthenticationProvider.instance(),
-        child: Consumer<AuthenticationProvider>(builder: (context, authProvider, child) {
-          switch (authProvider.status) {
-            case Status.Uninitialized:
-              return SplashScreen();
-            case Status.Unauthenticated:
-              return UserLogin();
-            // case Status.Authenticating:
-            //   return UserLogin();
-            case Status.Authenticated:
-              return ChatHome();
-            case Status.FirstTimeAuthenticated:
-              return FirstProfile();
-          }
-        })
-    );
+    return SplashScreen();
   }
 }

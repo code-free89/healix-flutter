@@ -43,7 +43,7 @@ class _ChatHomeState extends State<ChatHome> {
             onTap: () {
               setState(() {
                 isChatVisible = false;
-                messages = initialMessages;
+                messages = initialMessages.toList();
               });
             },
             child: SvgPicture.asset(

@@ -103,6 +103,7 @@ class _UserProfileState extends State<UserProfile> {
                             filled: false,
                             validator: validateUsername,
                             textInputAction: TextInputAction.next,
+                            textColor: Color.fromRGBO(44 , 43, 38, 1),
                           ),
                         ),
                         SizedBox(
@@ -119,6 +120,7 @@ class _UserProfileState extends State<UserProfile> {
                             filled: false,
                             validator: validateAge,
                             textInputAction: TextInputAction.next,
+                            textColor: Color.fromRGBO(44 , 43, 38, 1),
                           ),
                         ),
                       ],
@@ -139,6 +141,7 @@ class _UserProfileState extends State<UserProfile> {
                             filled: false,
                             validator: null,
                             textInputAction: TextInputAction.next,
+                            textColor: Color.fromRGBO(44 , 43, 38, 1),
                           ),
                         ),
                         SizedBox(
@@ -155,6 +158,7 @@ class _UserProfileState extends State<UserProfile> {
                             filled: false,
                             validator: null,
                             textInputAction: TextInputAction.done,
+                            textColor: Color.fromRGBO(44, 43, 38, 1),
                           ),
                         ),
                       ],
