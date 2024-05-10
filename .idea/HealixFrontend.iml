@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../HealixAI">
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/android/app/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/android/app/src/main/kotlin/com/helix_ai" isTestSource="false" packagePrefix="com.healix_gpt_app.healix_gpt_app" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/app/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/app/generated/source/buildConfig/release" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/firebase_auth/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/firebase_auth/generated/source/buildConfig/release" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/firebase_core/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/firebase_core/generated/source/buildConfig/release" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/path_provider_android/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/path_provider_android/generated/source/buildConfig/release" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/shared_preferences_android/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/build/shared_preferences_android/generated/source/buildConfig/release" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/windows/flutter/ephemeral/.plugin_symlinks/firebase_auth/android/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/windows/flutter/ephemeral/.plugin_symlinks/firebase_auth/example/android/app/src/main/kotlin/io/flutter/plugins/firebase/example" isTestSource="false" packagePrefix="io.flutter.plugins.firebaseauthexample" />
+      <sourceFolder url="file://$MODULE_DIR$/../../HealixAI/windows/flutter/ephemeral/.plugin_symlinks/firebase_core/android/src/main/java" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Flutter Plugins" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
+  </component>
+</module>
