@@ -2,6 +2,7 @@ const String imagePath = 'assets/images';
 
 const String lifeStyleImage = '$imagePath/lifestyle.svg';
 const String containerBackground = '$imagePath/container_background.png';
+const String containerBackgroundSvg = '$imagePath/container_background.svg';
 const String splashImage = '$imagePath/splash_image.svg';
 const String googleLogin = '$imagePath/login_google.svg';
 const String appleLogin = '$imagePath/login_apple.svg';

@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
+import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_divider.dart';
 import 'package:helix_ai/components/custom_text_field.dart';
 import 'package:helix_ai/components/social_login_buttons.dart';
@@ -39,7 +41,6 @@ class _UserLoginState extends State<UserLogin> {
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
     }
-    // You can add more password validation logic here if needed
     return null;
   }
 
@@ -77,15 +78,8 @@ class _UserLoginState extends State<UserLogin> {
                               fit: BoxFit.cover),
                         ),
                         Expanded(
-                          child: Container(
+                          child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(containerBackground),
-                                    fit: BoxFit.fill
-                                )
-                            ),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(28,75,28,0),
                               child: Column(

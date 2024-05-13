@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
+import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
@@ -62,15 +62,8 @@ class _FirstProfileState extends State<FirstProfile> {
                             fit: BoxFit.cover),
                       ),
                       Expanded(
-                        child: Container(
+                        child: CustomContainer(
                           // height: MediaQuery.of(context).size.height,
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(containerBackground),
-                                  fit: BoxFit.fill
-                              )
-                          ),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(28,85,28,0),
                             child: Column(

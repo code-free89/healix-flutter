@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/pages/user_login.dart';
-import 'package:helix_ai/provider/authentication_provider.dart';
-import 'package:provider/provider.dart';
 
 class LogOutAlertDialog extends StatelessWidget {
 
