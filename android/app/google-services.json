@@ -1,0 +1,302 @@
+{
+  "project_info": {
+    "project_number": "123873713539",
+    "project_id": "smarte-cloudservice-846b2",
+    "storage_bucket": "smarte-cloudservice-846b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:32ea9cb596cbfaca552ab6",
+        "android_client_info": {
+          "package_name": "com.example.metadataupdater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:211c8a7596fdf2e7552ab6",
+        "android_client_info": {
+          "package_name": "com.healix_gpt_app.healix_gpt_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-kv1ta81ut2dehol4hk8l66o7sq4pa96t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healix_gpt_app.healix_gpt_app",
+            "certificate_hash": "ed0f9fb7d14ce01ac3160eac7157ab930af8fc85"
+          }
+        },
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:bcc84b0948fb10f5552ab6",
+        "android_client_info": {
+          "package_name": "com.leminou.smarte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-sbh4qt5nan9en2b2d5ftmcu4904nv94v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leminou.smarte",
+            "certificate_hash": "8a0f9931e528cb7b929b65b33818fd269f882d6b"
+          }
+        },
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:0dc5e39f35b33e70552ab6",
+        "android_client_info": {
+          "package_name": "com.leminou.smarte.device"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-an8aua64q66ld6dgckee593pjo9ee9vd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leminou.smarte.device",
+            "certificate_hash": "8a0f9931e528cb7b929b65b33818fd269f882d6b"
+          }
+        },
+        {
+          "client_id": "123873713539-vfrrhsk844th9frujq8vkevoc5nke7fu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leminou.smarte.device",
+            "certificate_hash": "a47e777c95a9f3e488e17bbe123d904d31ae0f07"
+          }
+        },
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:75dce7507a2f8d17552ab6",
+        "android_client_info": {
+          "package_name": "com.smarte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:552813c3a354ef11552ab6",
+        "android_client_info": {
+          "package_name": "com.smarte.android.service"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-4cenuvbbi9j7bdku3peada0d1psi9r80.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smarte.android.service",
+            "certificate_hash": "2dc5b037710766990eacafc7172455d0dd09bb72"
+          }
+        },
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123873713539:android:1afdf72ef8bf5868552ab6",
+        "android_client_info": {
+          "package_name": "com.smarte.device.backend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgrZbP93QZbYgEGPwShpdlLK84MU2bsrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123873713539-d7l0ihu5toru16rejrj9hktlj3gc2573.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123873713539-93m5iqc5oeev6coe4l5t5csg4hd71pc5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healixgptapp.healixGptApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
