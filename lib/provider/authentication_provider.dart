@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 
 enum Status { Uninitialized, Authenticated, Unauthenticated, FirstTimeAuthenticated }
@@ -12,6 +13,7 @@ class AuthenticationProvider with ChangeNotifier {
   SharedPreferenceRepository _sharedPreferenceRepository = SharedPreferenceRepository();
   bool isSignupLoading = false;
   bool isLoginLoading = false;
+  FirestoreService firestoreService = FirestoreService();
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -30,6 +32,13 @@ class AuthenticationProvider with ChangeNotifier {
       // _status = Status.Authenticating;
       setIsSignupLoading(true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user= userCredential.user;
+      if(user != null){
+        await firestoreService.addUserDocument(
+            user.uid,
+            email,
+        );
+      }
       await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);

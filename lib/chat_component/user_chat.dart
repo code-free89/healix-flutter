@@ -4,7 +4,7 @@ import 'package:helix_ai/chat_component/user_chat_container.dart';
 
 class UserChat extends StatefulWidget {
 
-  List messages;
+  final List messages;
   UserChat({super.key , required this.messages});
 
   @override

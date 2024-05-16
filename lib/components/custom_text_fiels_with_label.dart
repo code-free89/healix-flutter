@@ -14,6 +14,7 @@ class LabelTextField extends StatelessWidget {
  final FormFieldValidator<String>? validator;
  final TextInputAction textInputAction;
  final Color textColor;
+ final String? initialText;
 
   const LabelTextField({super.key ,
     required this.textController ,
@@ -25,7 +26,8 @@ class LabelTextField extends StatelessWidget {
     required this.filled,
     required this.validator,
     required this.textInputAction,
-    required this.textColor});
+    required this.textColor,
+    this.initialText});
 
 
   @override
@@ -38,15 +40,20 @@ class LabelTextField extends StatelessWidget {
           child: Text(labelText, style: TextStyle(fontSize: 13 , color: Color.fromRGBO(38, 37, 34, 1) )),
         ),
         TextFormField(
+          initialValue: initialText,
           validator: validator,
           controller: textController,
           decoration: InputDecoration(
+            errorMaxLines: 3,
               contentPadding: EdgeInsets.fromLTRB(14, 16, 16, 14),
               border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
               hintText: hintText,
               hintStyle: TextStyle(
                   fontFamily: 'Urbanist',
                   fontSize: 17
+              ),
+              errorStyle: TextStyle(
+                overflow: TextOverflow.visible
               ),
               fillColor: Color.fromRGBO(242, 242, 242, 1),
               filled: filled,

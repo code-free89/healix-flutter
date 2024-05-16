@@ -1,15 +1,16 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
 import 'package:helix_ai/components/logout_alert_dialog.dart';
 import 'package:helix_ai/components/profile_generic_tile.dart';
+import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
 import 'package:helix_ai/pages/user_login.dart';
 import 'package:provider/provider.dart';
-
 import '../provider/authentication_provider.dart';
 
 class UserProfile extends StatefulWidget {
@@ -20,12 +21,17 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+
   final profileUpdateFormKey = GlobalKey<FormState>();
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
+
+  FirestoreService firestoreService = FirestoreService();
+
+  bool isLoading = false;
 
   String? validateUsername(String? value) {
     if (value == null || value.isEmpty) {
@@ -35,14 +41,111 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   String? validateAge(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a age';
+    if(value != null && value.isNotEmpty){
+      final int? age = int.parse(value);
+      if(age != null && age > 100){
+        return 'Cannot be more than 100';
+      }
     }
     return null;
   }
 
-  void validateAndSubmit() {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile Updated")));
+  String? validateWeight(String? value) {
+    if (value != null && value.isNotEmpty) {
+      final double? weight = double.tryParse(value);
+      if (weight != null && weight > 400) {
+        return 'Cannot be more than 400';
+      }
+      if (value.contains('.') && value.split('.').last.length > 2) {
+        return 'Maximum of two decimal places allowed';
+      }
+    }
+    return null;
+  }
+
+  String? validateHeight(String? value) {
+    if (value != null && value.isNotEmpty) {
+      final double? height = double.tryParse(value);
+      if (height != null && height > 280) {
+        return 'Cannot be more than 280';
+      }
+      if (value.contains('.') && value.split('.').last.length > 2) {
+        return 'Maximum of two decimal places allowed';
+      }
+    }
+    return null;
+  }
+
+  void validateAndSubmit() async {
+    if (profileUpdateFormKey.currentState!.validate()) {
+      bool hasFilledField = usernameController.text.isNotEmpty ||
+          ageController.text.isNotEmpty ||
+          weightController.text.isNotEmpty ||
+          heightController.text.isNotEmpty;
+
+      String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
+
+      if(uid != null){
+
+        setState(() {
+          isLoading = true;
+        });
+
+        String username = usernameController.text.toString();
+        int? age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
+        double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
+        double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
+
+        await firestoreService.updateUserDetails(uid, username, age, height, weight);
+
+        setState(() {
+          isLoading = false;
+        });
+      }
+      if (hasFilledField) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Profile Updated"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Please enter some details"),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> fetchUserDetails() async{
+    String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
+
+    if(uid != null){
+      Map<String,dynamic>? userDetails = await firestoreService.showUserDetails(uid);
+      setState(() {
+        usernameController.text = userDetails?['username'] ?? '' ;
+        ageController.text = userDetails?['age'].toString() ?? '' ;
+        heightController.text = userDetails?['height'].toString() ?? '' ;
+        weightController.text = userDetails?['weight'].toString() ?? '' ;
+      });
+    }
+  }
+
+
+  @override
+  void initState() {
+    fetchUserDetails();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    ageController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    super.dispose();
   }
 
   @override
@@ -101,7 +204,7 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.name,
                             labelText: "Username",
                             filled: false,
-                            validator: validateUsername,
+                            validator: null,
                             textInputAction: TextInputAction.next,
                             textColor: Color.fromRGBO(44 , 43, 38, 1),
                           ),
@@ -139,7 +242,7 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.number,
                             labelText: "Weight",
                             filled: false,
-                            validator: null,
+                            validator: validateWeight,
                             textInputAction: TextInputAction.next,
                             textColor: Color.fromRGBO(44 , 43, 38, 1),
                           ),
@@ -156,7 +259,7 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.number,
                             labelText: "Height",
                             filled: false,
-                            validator: null,
+                            validator: validateHeight,
                             textInputAction: TextInputAction.done,
                             textColor: Color.fromRGBO(44, 43, 38, 1),
                           ),
@@ -174,7 +277,8 @@ class _UserProfileState extends State<UserProfile> {
                             // Navigator.pushNamed(context, '/first_profile');
                             validateAndSubmit();
                           },
-                          buttonText: "Update"),
+                          buttonText: "Update",
+                          showLoading: isLoading,),
                     ),
                   ],
                 ),

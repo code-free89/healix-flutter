@@ -56,6 +56,13 @@ class _UserLoginState extends State<UserLogin> {
   }
 
   @override
+  void dispose() {
+    loginEmailController.dispose();
+    loginPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthenticationProvider>(context);
 

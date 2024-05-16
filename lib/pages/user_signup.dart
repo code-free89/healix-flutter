@@ -60,6 +60,13 @@ class _UserSignUpState extends State<UserSignUp> {
   }
 
   @override
+  void dispose() {
+    signUpEmailController.dispose();
+    signUpPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(

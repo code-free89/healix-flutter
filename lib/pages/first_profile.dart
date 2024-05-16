@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
 import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
+import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
 
@@ -22,6 +24,9 @@ class _FirstProfileState extends State<FirstProfile> {
   TextEditingController ageController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
+  FirestoreService firestoreService = FirestoreService();
+  bool hasFilledField = false;
+  bool isLoading = false;
 
   String? validateUsername(String? value){
     if (value == null || value.isEmpty) {
@@ -30,15 +35,125 @@ class _FirstProfileState extends State<FirstProfile> {
     return null;
   }
 
-  String? validateAge(String? value){
-    if (value == null || value.isEmpty) {
-      return 'Please enter a age';
+  String? validateAge(String? value) {
+    if(value != null && value.isNotEmpty){
+      final int? age = int.parse(value);
+      if(age != null && age > 100){
+        return 'Cannot be more than 100';
+      }
     }
     return null;
   }
 
-  void validateAndSubmit(){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
+  String? validateWeight(String? value) {
+    if (value != null && value.isNotEmpty) {
+      final double? weight = double.tryParse(value);
+      if (weight != null && weight > 400) {
+        return 'Cannot be more than 400';
+      }
+      if (value.contains('.') && value.split('.').last.length > 2) {
+        return 'Maximum of two decimal places allowed';
+      }
+    }
+    return null;
+  }
+
+  String? validateHeight(String? value) {
+    if (value != null && value.isNotEmpty) {
+      final double? height = double.tryParse(value);
+      if (height != null && height > 280) {
+        return 'Cannot be more than 280';
+      }
+      if (value.contains('.') && value.split('.').last.length > 2) {
+        return 'Maximum of two decimal places allowed';
+      }
+    }
+    return null;
+  }
+
+  void filledField(){
+    setState(() {
+      hasFilledField =  usernameController.text.isNotEmpty ||
+          ageController.text.isNotEmpty ||
+          weightController.text.isNotEmpty ||
+          heightController.text.isNotEmpty;
+    });
+  }
+
+  Widget updateButton(){
+    if(hasFilledField){
+      return
+        SizedBox(
+          width: double.infinity,
+          height: 60,
+          child:CustomButton(
+              onPressed: (){
+                validateAndSubmit();
+              },
+              buttonText: "Submit",
+              showLoading: isLoading,)
+      );
+    }else{
+      return SizedBox(
+          width: double.infinity,
+          height: 60,
+          child:CustomButton(
+              onPressed: (){
+                skip();
+              },
+              buttonText: "Skip")
+      );
+    }
+  }
+
+  void validateAndSubmit() async{
+    if(profileFormKey.currentState!.validate()){
+
+      String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
+
+      if(uid != null){
+
+        setState(() {
+          isLoading = true;
+        });
+
+        String username = usernameController.text.toString();
+        int? age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
+        double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
+        double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
+
+        await firestoreService.getUserDetails(uid, username, age, height, weight);
+
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
+      }
+    }
+  }
+
+  void skip(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
+  }
+
+  String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
+  @override
+  void initState() {
+    super.initState();
+    usernameController.addListener(filledField);
+    ageController.addListener(filledField);
+    weightController.addListener(filledField);
+    heightController.addListener(filledField);
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    ageController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,7 +205,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.name,
                                         labelText: "Username",
                                         filled: true,
-                                        validator: validateUsername,
+                                        validator: null,
                                         textInputAction: TextInputAction.next,
                                         textColor: Color.fromRGBO(242, 242, 242, 1),),
                                     ),
@@ -122,7 +237,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.number,
                                         labelText: "Weight",
                                         filled: true,
-                                        validator: null,
+                                        validator: validateWeight,
                                         textInputAction: TextInputAction.next,
                                         textColor: Color.fromRGBO(242, 242, 242, 1),),
                                     ),
@@ -136,22 +251,14 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.number,
                                         labelText: "Height",
                                         filled: true,
-                                        validator: null,
+                                        validator: validateHeight,
                                         textInputAction: TextInputAction.done,
                                         textColor: Color.fromRGBO(242, 242, 242, 1),),
                                     ),
                                   ],
                                 ),
                                 SizedBox(height: 50,),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 60,
-                                  child: CustomButton(
-                                      onPressed: (){
-                                        validateAndSubmit();
-                                      },
-                                      buttonText: "Submit"),
-                                ),
+                                updateButton(),
                               ],
                             ),
                           ),
