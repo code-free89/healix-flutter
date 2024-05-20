@@ -5,9 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/custom_button.dart';
 import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
+import 'package:helix_ai/util/validator.dart';
 
 class FirstProfile extends StatefulWidget {
   const FirstProfile({super.key});
@@ -27,49 +29,6 @@ class _FirstProfileState extends State<FirstProfile> {
   FirestoreService firestoreService = FirestoreService();
   bool hasFilledField = false;
   bool isLoading = false;
-
-  String? validateUsername(String? value){
-    if (value == null || value.isEmpty) {
-      return 'Please enter a username';
-    }
-    return null;
-  }
-
-  String? validateAge(String? value) {
-    if(value != null && value.isNotEmpty){
-      final int? age = int.parse(value);
-      if(age != null && age > 100){
-        return 'Cannot be more than 100';
-      }
-    }
-    return null;
-  }
-
-  String? validateWeight(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final double? weight = double.tryParse(value);
-      if (weight != null && weight > 400) {
-        return 'Cannot be more than 400';
-      }
-      if (value.contains('.') && value.split('.').last.length > 2) {
-        return 'Maximum of two decimal places allowed';
-      }
-    }
-    return null;
-  }
-
-  String? validateHeight(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final double? height = double.tryParse(value);
-      if (height != null && height > 280) {
-        return 'Cannot be more than 280';
-      }
-      if (value.contains('.') && value.split('.').last.length > 2) {
-        return 'Maximum of two decimal places allowed';
-      }
-    }
-    return null;
-  }
 
   void filledField(){
     setState(() {
@@ -207,7 +166,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                         filled: true,
                                         validator: null,
                                         textInputAction: TextInputAction.next,
-                                        textColor: Color.fromRGBO(242, 242, 242, 1),),
+                                        textColor: textFieldColor),
                                     ),
                                     SizedBox(width: 20,),
                                     Expanded(
@@ -219,9 +178,9 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.number,
                                         labelText: "Age",
                                         filled: true,
-                                        validator: validateAge,
+                                        validator: Validator.validateAge,
                                         textInputAction: TextInputAction.next,
-                                        textColor: Color.fromRGBO(242, 242, 242, 1),),
+                                        textColor: textFieldColor,),
                                     ),
                                   ],
                                 ),
@@ -237,9 +196,9 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.number,
                                         labelText: "Weight",
                                         filled: true,
-                                        validator: validateWeight,
+                                        validator: Validator.validateWeight,
                                         textInputAction: TextInputAction.next,
-                                        textColor: Color.fromRGBO(242, 242, 242, 1),),
+                                        textColor: textFieldColor,),
                                     ),
                                     SizedBox(width: 20,),
                                     Expanded(
@@ -251,9 +210,9 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputType: TextInputType.number,
                                         labelText: "Height",
                                         filled: true,
-                                        validator: validateHeight,
+                                        validator: Validator.validateHeight,
                                         textInputAction: TextInputAction.done,
-                                        textColor: Color.fromRGBO(242, 242, 242, 1),),
+                                        textColor: textFieldColor,),
                                     ),
                                   ],
                                 ),

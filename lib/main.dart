@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:helix_ai/constants/string_constants.dart';
 import 'package:helix_ai/firebase_options.dart';
 import 'package:helix_ai/images_path.dart';
@@ -10,12 +11,14 @@ import 'package:helix_ai/pages/user_login.dart';
 import 'package:helix_ai/pages/user_profile.dart';
 import 'package:helix_ai/pages/user_signup.dart';
 import 'package:helix_ai/provider/authentication_provider.dart';
+import 'package:helix_ai/provider/chat_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await dotenv.load(fileName: ".env");
   await preCacheInitialAssets();
   runApp(const MyApp());
 }
@@ -30,6 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => AuthenticationProvider.instance(),
         ),
+        ChangeNotifierProvider<ChatProvider>(create: (_) => ChatProvider())
         // Add other providers here
       ],
       child: MaterialApp(

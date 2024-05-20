@@ -1,10 +1,16 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/chat_component/chat_start.dart';
 import 'package:helix_ai/chat_component/user_chat.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/user_profile.dart';
+import 'package:helix_ai/provider/chat_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../util/ui_helper.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -16,6 +22,7 @@ class ChatHome extends StatefulWidget {
 class _ChatHomeState extends State<ChatHome> {
   bool isChatVisible = false;
   TextEditingController chatController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   List initialMessages = [
     "Hello there",
@@ -56,81 +63,109 @@ class _ChatHomeState extends State<ChatHome> {
             padding: EdgeInsets.only(right: 20),
             child: InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UserProfile()));
                 },
                 child: SvgPicture.asset(userCircle)),
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 18.0, right: 18, bottom: 36, top: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(child: isChatVisible ? UserChat(messages: messages) : ChatStart()),
-            SizedBox(height: 22,),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    onTap: () {
-                      if (!isChatVisible) {
-                        setState(() {
-                          isChatVisible = true;
-                        });
-                      }
-                    },
-                    controller: chatController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(16, 14, 16, 14),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(28, 197, 116, 1),
-                            width: 1,
-                          )
+      body: Consumer<ChatProvider>(builder: (_, chatProvider, __) {
+        return Padding(
+          padding:
+              const EdgeInsets.only(left: 18.0, right: 18, bottom: 36, top: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                  child: isChatVisible
+                      ? UserChat(messages: messages,scrollController: scrollController,)
+                      : ChatStart()),
+              SizedBox(
+                height: 22,
+              ),
+              AbsorbPointer(
+                absorbing: chatProvider.isAnswerLoading,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        onTap: () {
+                          if (!isChatVisible) {
+                            setState(() {
+                              isChatVisible = true;
+                            });
+                          }
+                          chatProvider.scrollToBottom(scrollController);
+                        },
+                        controller: chatController,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(16, 14, 16, 14),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: greenThemeColor,
+                                width: 1,
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: greenThemeColor,
+                                width: 1,
+                              )),
+                          hintText: "Ask me anything...",
+                          hintStyle: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 17,
+                              color: Color.fromRGBO(166, 163, 157, 1)),
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(28, 197, 116, 1),
-                            width: 1,
-                          )
-                      ),
-                      hintText: "Ask me anything...",
-                      hintStyle: TextStyle(fontFamily: 'Rubik', fontSize: 17, color: Color.fromRGBO(166, 163, 157, 1)),
                     ),
-                  ),
+                    InkWell(
+                      onTap: () async {
+                        if (chatController.text.isNotEmpty) {
+                          final connectionStatus =
+                              await Connectivity().checkConnectivity();
+                          if (connectionStatus == ConnectivityResult.none) {
+                            UiHelper().showSnackBar(context , 'Please enable internet connection');
+                            return;
+                          }
+                          if (chatController.text != "") {
+                            FocusManager.instance.primaryFocus
+                                ?.unfocus();
+                            chatProvider.addQuestion(chatController.text);
+                            String? question = chatController.text;
+                            chatController.clear();
+                            chatProvider.scrollToBottom(scrollController);
+                            await chatProvider.getChatAnswer(question);
+                            chatProvider.scrollToBottom(scrollController);
+                          }
+                          return;
+                        }
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: greenThemeColor),
+                          child: SvgPicture.asset(
+                            buttonArrow,
+                            fit: BoxFit.none,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                InkWell(
-                  onTap: () {
-                    if (chatController.text.isNotEmpty) {
-                      setState(() {
-                        messages.add(chatController.text.toString());
-                      });
-                    }
-                    chatController.clear();
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12), color: Color.fromRGBO(28, 197, 116, 1)),
-                      child: SvgPicture.asset(
-                        buttonArrow,
-                        fit: BoxFit.none,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class LabelTextField extends StatelessWidget {
 
@@ -55,7 +56,7 @@ class LabelTextField extends StatelessWidget {
               errorStyle: TextStyle(
                 overflow: TextOverflow.visible
               ),
-              fillColor: Color.fromRGBO(242, 242, 242, 1),
+              fillColor: textFieldColor,
               filled: filled,
               helperText: helperText,
               helperStyle: TextStyle(

@@ -6,8 +6,10 @@ import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_divider.dart';
 import 'package:helix_ai/components/custom_text_field.dart';
 import 'package:helix_ai/components/social_login_buttons.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/pages/first_profile.dart';
 import 'package:helix_ai/util/ui_helper.dart';
+import 'package:helix_ai/util/validator.dart';
 import 'package:provider/provider.dart';
 import '../images_path.dart';
 import '../provider/authentication_provider.dart';
@@ -24,24 +26,6 @@ class _UserSignUpState extends State<UserSignUp> {
 
   final TextEditingController signUpEmailController = TextEditingController();
   final TextEditingController signUpPasswordController = TextEditingController();
-
-  String? validateEmail(String? value) {
-    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-    if (value == null || value.isEmpty) {
-      return 'Please enter an email';
-    } else if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-    return null;
-  }
 
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (signUpFormKey.currentState!.validate()) {
@@ -111,7 +95,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     obsecureText: false,
                                     helperText: null,
                                     textInputType: TextInputType.emailAddress,
-                                    validator: validateEmail,
+                                    validator: Validator.validateEmail,
                                     textInputAction: TextInputAction.next,
                                   ),
                                   SizedBox(
@@ -123,7 +107,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     obsecureText: true,
                                     helperText: null,
                                     textInputType: TextInputType.text,
-                                    validator: validatePassword,
+                                    validator: Validator.validatePassword,
                                     textInputAction: TextInputAction.done,
                                   ),
                                   SizedBox(
@@ -147,7 +131,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     children: [
                                       Text(
                                         "Already have an account?",
-                                        style: TextStyle(color: Color.fromRGBO(44, 43, 38, 1), fontSize: 12),
+                                        style: TextStyle(color: textColor, fontSize: 12),
                                       ),
                                       SizedBox(
                                         width: 3,
@@ -161,7 +145,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                           style: TextStyle(
                                             fontFamily: 'Ubuntu-Medium',
                                             fontSize: 12,
-                                            color: Color.fromRGBO(44, 43, 38, 1),
+                                            color: textColor,
                                           ),
                                         ),
                                       )

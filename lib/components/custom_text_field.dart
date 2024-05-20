@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
 
@@ -33,12 +34,12 @@ class CustomTextField extends StatelessWidget {
           fontFamily: 'Urbanist',
           fontSize: 17
         ),
-        fillColor: Color.fromRGBO(242, 242, 242, 1),
+        fillColor: textFieldColor,
         filled: true,
         helperText: helperText,
         helperStyle: TextStyle(
           fontSize: 12,
-          color: Color.fromRGBO(242, 242, 242, 1),
+          color: textFieldColor,
         )
       ),
       obscureText: obsecureText,

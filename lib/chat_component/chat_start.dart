@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/chat_text.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/images_path.dart';
 
 class ChatStart extends StatelessWidget {
@@ -22,7 +23,7 @@ class ChatStart extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
+                  color: whiteColor,
                   borderRadius: BorderRadius.circular(12)
               ),
               width: double.infinity,
@@ -36,7 +37,7 @@ class ChatStart extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
+                  color: whiteColor,
                   borderRadius: BorderRadius.circular(12)
               ),
               width: double.infinity,
@@ -50,7 +51,7 @@ class ChatStart extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
+                  color: whiteColor,
                   borderRadius: BorderRadius.circular(12)
               ),
               width: double.infinity,
@@ -64,7 +65,7 @@ class ChatStart extends StatelessWidget {
             Text("These are just examples what can I do." ,
               style: TextStyle(
                   fontSize: 17,
-                  color: Color.fromRGBO(130, 130, 130, 1)
+                  color: gray1Color,
               ),
             )
           ],

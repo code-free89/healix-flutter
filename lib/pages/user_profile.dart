@@ -6,10 +6,12 @@ import 'package:helix_ai/components/custom_button.dart';
 import 'package:helix_ai/components/custom_text_fiels_with_label.dart';
 import 'package:helix_ai/components/logout_alert_dialog.dart';
 import 'package:helix_ai/components/profile_generic_tile.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
 import 'package:helix_ai/pages/user_login.dart';
+import 'package:helix_ai/util/validator.dart';
 import 'package:provider/provider.dart';
 import '../provider/authentication_provider.dart';
 
@@ -32,49 +34,6 @@ class _UserProfileState extends State<UserProfile> {
   FirestoreService firestoreService = FirestoreService();
 
   bool isLoading = false;
-
-  String? validateUsername(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a username';
-    }
-    return null;
-  }
-
-  String? validateAge(String? value) {
-    if(value != null && value.isNotEmpty){
-      final int? age = int.parse(value);
-      if(age != null && age > 100){
-        return 'Cannot be more than 100';
-      }
-    }
-    return null;
-  }
-
-  String? validateWeight(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final double? weight = double.tryParse(value);
-      if (weight != null && weight > 400) {
-        return 'Cannot be more than 400';
-      }
-      if (value.contains('.') && value.split('.').last.length > 2) {
-        return 'Maximum of two decimal places allowed';
-      }
-    }
-    return null;
-  }
-
-  String? validateHeight(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final double? height = double.tryParse(value);
-      if (height != null && height > 280) {
-        return 'Cannot be more than 280';
-      }
-      if (value.contains('.') && value.split('.').last.length > 2) {
-        return 'Maximum of two decimal places allowed';
-      }
-    }
-    return null;
-  }
 
   void validateAndSubmit() async {
     if (profileUpdateFormKey.currentState!.validate()) {
@@ -206,7 +165,7 @@ class _UserProfileState extends State<UserProfile> {
                             filled: false,
                             validator: null,
                             textInputAction: TextInputAction.next,
-                            textColor: Color.fromRGBO(44 , 43, 38, 1),
+                            textColor: textColor,
                           ),
                         ),
                         SizedBox(
@@ -221,9 +180,9 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.number,
                             labelText: "Age",
                             filled: false,
-                            validator: validateAge,
+                            validator: Validator.validateAge,
                             textInputAction: TextInputAction.next,
-                            textColor: Color.fromRGBO(44 , 43, 38, 1),
+                            textColor: textColor,
                           ),
                         ),
                       ],
@@ -242,9 +201,9 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.number,
                             labelText: "Weight",
                             filled: false,
-                            validator: validateWeight,
+                            validator: Validator.validateWeight,
                             textInputAction: TextInputAction.next,
-                            textColor: Color.fromRGBO(44 , 43, 38, 1),
+                            textColor: textColor,
                           ),
                         ),
                         SizedBox(
@@ -259,9 +218,9 @@ class _UserProfileState extends State<UserProfile> {
                             textInputType: TextInputType.number,
                             labelText: "Height",
                             filled: false,
-                            validator: validateHeight,
+                            validator: Validator.validateHeight,
                             textInputAction: TextInputAction.done,
-                            textColor: Color.fromRGBO(44, 43, 38, 1),
+                            textColor: textColor,
                           ),
                         ),
                       ],

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class ProfileGenericTile extends StatelessWidget {
   final VoidCallback onPressed;
@@ -29,7 +30,7 @@ class ProfileGenericTile extends StatelessWidget {
                     ),
                     Text(
                       text,
-                      style: TextStyle(fontFamily: 'Rubik', fontSize: 17, color: Color.fromRGBO(64, 62, 57, 1)),
+                      style: TextStyle(fontFamily: 'Rubik', fontSize: 17, color: genericTileTextColor),
                     )
                   ],
                 ),

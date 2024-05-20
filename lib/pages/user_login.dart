@@ -7,9 +7,11 @@ import 'package:helix_ai/components/custom_container.dart';
 import 'package:helix_ai/components/custom_divider.dart';
 import 'package:helix_ai/components/custom_text_field.dart';
 import 'package:helix_ai/components/social_login_buttons.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
 import 'package:helix_ai/provider/authentication_provider.dart';
+import 'package:helix_ai/util/validator.dart';
 import 'package:provider/provider.dart';
 import '../util/ui_helper.dart';
 
@@ -25,24 +27,6 @@ class _UserLoginState extends State<UserLogin> {
 
   TextEditingController loginEmailController = TextEditingController();
   TextEditingController loginPasswordController = TextEditingController();
-
-  String? validateEmail(String? value) {
-    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-    if (value == null || value.isEmpty) {
-      return 'Please enter an email';
-    } else if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-    return null;
-  }
 
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (loginFormKey.currentState!.validate()) {
@@ -105,7 +89,7 @@ class _UserLoginState extends State<UserLogin> {
                                     obsecureText: false,
                                     helperText: null,
                                     textInputType: TextInputType.emailAddress,
-                                    validator: validateEmail,
+                                    validator: Validator.validateEmail,
                                     textInputAction: TextInputAction.next,),
                                   SizedBox(height: 15,),
                                   CustomTextField(
@@ -114,7 +98,7 @@ class _UserLoginState extends State<UserLogin> {
                                     obsecureText: true,
                                     helperText: null,
                                     textInputType: TextInputType.text,
-                                    validator: validatePassword,
+                                    validator: Validator.validatePassword,
                                     textInputAction: TextInputAction.done,),
                                   SizedBox(height: 16,),
                                   SizedBox(
@@ -131,11 +115,11 @@ class _UserLoginState extends State<UserLogin> {
                                   Row(
                                     children: [
                                       Row(
-                                        children: const [
+                                        children:  [
                                           Text("Forgot Password" ,
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Color.fromRGBO(44, 43, 38, 1),
+                                              color: textColor,
                                             ),
                                           )
                                         ],
@@ -146,7 +130,7 @@ class _UserLoginState extends State<UserLogin> {
                                           Text("Don't have an account?",
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Color.fromRGBO(44, 43, 38, 1),
+                                              color: textColor,
                                             ),
                                           ),
                                           SizedBox(width: 3,),
@@ -158,7 +142,7 @@ class _UserLoginState extends State<UserLogin> {
                                               style: TextStyle(
                                                 fontFamily: 'Ubuntu-Medium',
                                                 fontSize: 12,
-                                                color: Color.fromRGBO(44, 43, 38, 1),
+                                                color: textColor,
                                               ),
                                             ),
                                           )

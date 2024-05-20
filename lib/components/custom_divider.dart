@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({super.key});
@@ -14,7 +15,7 @@ class CustomDivider extends StatelessWidget {
       children: [
         Expanded(child: Container(
           height: 2,
-          color: Color.fromRGBO(5, 163, 87, 1),
+          color: greenThemeColor,
         )
         ),
         Padding(
@@ -22,13 +23,13 @@ class CustomDivider extends StatelessWidget {
           child: Text("OR" ,
           style: TextStyle(
             fontSize: 11,
-            color: Color.fromRGBO(5, 163, 87, 1),
+            color: greenThemeColor,
           ),
           ),
         ),
         Expanded(child: Container(
           height: 2,
-          color: Color.fromRGBO(5, 163, 87, 1),
+          color: greenThemeColor,
         )
         ),
       ],
