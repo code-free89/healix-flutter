@@ -66,6 +66,7 @@ class _FirstProfileState extends State<FirstProfile> {
   }
 
   void validateAndSubmit() async{
+    bool status = false;
     if(profileFormKey.currentState!.validate()){
 
       String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
@@ -81,13 +82,21 @@ class _FirstProfileState extends State<FirstProfile> {
         double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
         double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
 
-        await firestoreService.getUserDetails(uid, username, age, height, weight);
-
+        status =  await firestoreService.getUserDetails(uid, username, age, height, weight);
+        debugPrint('status is get user ${status}');
         setState(() {
           isLoading = false;
         });
 
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
+        if(status){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()) ,(Route<dynamic> route) => false,);
+        }else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Enable to submit check your internet"),
+            ),
+          );
+        }
       }
     }
   }
@@ -158,6 +167,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                     Expanded(
                                       child: LabelTextField(
                                         textController:usernameController,
+                                        stockColor: dividerColor,
                                         hintText: "healthy_john",
                                         obsecureText: false,
                                         helperText: null,
@@ -171,6 +181,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                     SizedBox(width: 20,),
                                     Expanded(
                                       child: LabelTextField(
+                                        stockColor: dividerColor,
                                         textController:ageController,
                                         hintText: "25",
                                         obsecureText: false,
@@ -189,10 +200,12 @@ class _FirstProfileState extends State<FirstProfile> {
                                   children: [
                                     Expanded(
                                       child: LabelTextField(
+                                        maxLength: 3,
+                                        stockColor: dividerColor,
                                         textController:weightController,
                                         hintText: "60",
                                         obsecureText: false,
-                                        helperText: "Weight in LB",
+                                        helperText: "Weight in KG",
                                         textInputType: TextInputType.number,
                                         labelText: "Weight",
                                         filled: true,
@@ -203,6 +216,8 @@ class _FirstProfileState extends State<FirstProfile> {
                                     SizedBox(width: 20,),
                                     Expanded(
                                       child: LabelTextField(
+                                        maxLength: 3,
+                                        stockColor: dividerColor,
                                         textController:heightController,
                                         hintText: "170",
                                         obsecureText: false,

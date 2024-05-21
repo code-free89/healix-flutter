@@ -8,9 +8,8 @@ import '../constants/string_constants.dart';
 
 class UserChat extends StatefulWidget {
 
-  final List messages;
   final ScrollController scrollController;
-  UserChat({super.key , required this.messages, required this.scrollController});
+  UserChat({super.key , required this.scrollController});
 
   @override
   State<UserChat> createState() => _UserChatState();

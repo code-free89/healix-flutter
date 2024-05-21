@@ -1,4 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+import '../util/internet_connetion.dart';
 
 class FirestoreService{
 
@@ -20,42 +24,63 @@ class FirestoreService{
     }
   }
 
-  Future<void> getUserDetails(String uid ,String? username , int? age , double? height , double? weight) async{
+  Future<bool> getUserDetails(String uid ,String? username , int? age , double? height , double? weight) async{
     try{
-      await fireStore.collection('healix_users').doc(uid).update({
-        'username' : username,
-        'age' : age,
-        'height' : height,
-        'weight' : weight
-      });
-      print("Updated");
+      bool isConnected =
+      await InternetConnection.checkInternet();
+      if (isConnected) {
+        await fireStore.collection('healix_users').doc(uid).update({
+          'username' : username,
+          'age' : age,
+          'height' : height,
+          'weight' : weight
+        });
+        return true;
+        print("Updated");
+      }else{
+        return false;
+      }
+    return false;
     }catch(e){
       print('Error updating user document: $e');
+      return false;
     }
   }
 
-  Future<void> updateUserDetails(String uid , String? username , int? age , double? height , double? weight) async{
+  Future<bool> updateUserDetails(String uid , String? username , int? age , double? height , double? weight) async{
     try{
-      if(username!=null){
-    await fireStore.collection('healix_users').doc(uid).update({
-      'username' : username
-    });
-  }if(age!=null){
-        await fireStore.collection('healix_users').doc(uid).update({
-        'age' : age
-        });
-      }if(height!=null){
-        await fireStore.collection('healix_users').doc(uid).update({
-        'height' : height
-        });
-      }if(weight!=null){
-        await fireStore.collection('healix_users').doc(uid).update({
-        'weight' : weight
-        });
+      bool isConnected =
+      await InternetConnection.checkInternet();
+      if (isConnected) {
+        if(username!=null){
+          await fireStore.collection('healix_users').doc(uid).update({
+            'username' : username
+          }).catchError((e){
+            debugPrint('error $e');
+          });
+        }if(age!=null){
+          await fireStore.collection('healix_users').doc(uid).update({
+            'age' : age
+          });
+        }if(height!=null){
+          await fireStore.collection('healix_users').doc(uid).update({
+            'height' : height
+          });
+        }if(weight!=null){
+          await fireStore.collection('healix_users').doc(uid).update({
+            'weight' : weight
+          });
+        }
+        print("Profile Updated");
+        return true;
+      }else{
+        return false;
       }
-      print("Profile Updated");
+
     }catch(e){
-    print('Error updating user document: $e');
+      print('Error updating user document: $e');
+      return false;
+
     }
   }
 

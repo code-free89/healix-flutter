@@ -29,6 +29,14 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(14, 16, 16, 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+          color: dividerColor,
+          width: 1,
+        )),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+          color: dividerColor,
+          width: 1,
+        )),
         hintText: hintText,
         hintStyle: TextStyle(
           fontFamily: 'Urbanist',

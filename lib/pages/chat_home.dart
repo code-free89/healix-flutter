@@ -20,23 +20,31 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
-  bool isChatVisible = false;
+  // bool isChatVisible = false;
   TextEditingController chatController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
-  List initialMessages = [
-    "Hello there",
-    "Hello! How may I assist you today!",
-    "Show me what you can do?",
-    "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
-  ];
+  // List initialMessages = [
+  //   "Hello there",
+  //   "Hello! How may I assist you today!",
+  //   "Show me what you can do?",
+  //   "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
+  // ];
 
-  List messages = [
-    "Hello there",
-    "Hello! How may I assist you today!",
-    "Show me what you can do?",
-    "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
-  ];
+  // List messages = [
+  //   "Hello there",
+  //   "Hello! How may I assist you today!",
+  //   "Show me what you can do?",
+  //   "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
+  // ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var chatProvider = Provider.of<ChatProvider>(context,listen: false);
+    chatProvider.scrollToBottom(scrollController);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +54,10 @@ class _ChatHomeState extends State<ChatHome> {
           'Gene',
           style: TextStyle(fontSize: 15),
         ),
-        leading: InkWell(
-            onTap: () {
-              setState(() {
-                isChatVisible = false;
-                messages = initialMessages.toList();
-              });
-            },
-            child: SvgPicture.asset(
-              appLogo,
-              fit: BoxFit.none,
-            )),
+        leading: SvgPicture.asset(
+          appLogo,
+          fit: BoxFit.none,
+        ),
         centerTitle: true,
         actions: [
           Padding(
@@ -78,8 +79,10 @@ class _ChatHomeState extends State<ChatHome> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                  child: isChatVisible
-                      ? UserChat(messages: messages,scrollController: scrollController,)
+                  child: chatProvider.messages.isNotEmpty
+                      ? UserChat(
+                          scrollController: scrollController,
+                        )
                       : ChatStart()),
               SizedBox(
                 height: 22,
@@ -91,11 +94,11 @@ class _ChatHomeState extends State<ChatHome> {
                     Expanded(
                       child: TextField(
                         onTap: () {
-                          if (!isChatVisible) {
-                            setState(() {
-                              isChatVisible = true;
-                            });
-                          }
+                          // if (!isChatVisible) {
+                          //   setState(() {
+                          //     isChatVisible = true;
+                          //   });
+                          // }
                           chatProvider.scrollToBottom(scrollController);
                         },
                         controller: chatController,
@@ -108,6 +111,12 @@ class _ChatHomeState extends State<ChatHome> {
                                 width: 1,
                               )),
                           focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: greenThemeColor,
+                                width: 1,
+                              )),
+                          enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
@@ -127,12 +136,12 @@ class _ChatHomeState extends State<ChatHome> {
                           final connectionStatus =
                               await Connectivity().checkConnectivity();
                           if (connectionStatus == ConnectivityResult.none) {
-                            UiHelper().showSnackBar(context , 'Please enable internet connection');
+                            UiHelper().showSnackBar(
+                                context, 'Please enable internet connection');
                             return;
                           }
                           if (chatController.text != "") {
-                            FocusManager.instance.primaryFocus
-                                ?.unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
                             chatProvider.addQuestion(chatController.text);
                             String? question = chatController.text;
                             chatController.clear();

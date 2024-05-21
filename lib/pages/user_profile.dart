@@ -36,6 +36,7 @@ class _UserProfileState extends State<UserProfile> {
   bool isLoading = false;
 
   void validateAndSubmit() async {
+    bool status = false;
     if (profileUpdateFormKey.currentState!.validate()) {
       bool hasFilledField = usernameController.text.isNotEmpty ||
           ageController.text.isNotEmpty ||
@@ -54,20 +55,27 @@ class _UserProfileState extends State<UserProfile> {
         double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
         double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
 
-        await firestoreService.updateUserDetails(uid, username, age, height, weight);
+       status = await firestoreService.updateUserDetails(uid, username, age, height, weight);
+        debugPrint('update user');
 
         setState(() {
           isLoading = false;
         });
       }
 
-      if (hasFilledField) {
+      if (hasFilledField&&status) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Profile Updated"),
           ),
         );
-      } else {
+      } else if (!status){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Enable to update please check your internet"),
+          ),
+        );
+      }else{
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Please enter some details"),
@@ -155,6 +163,7 @@ class _UserProfileState extends State<UserProfile> {
                       children: [
                         Expanded(
                           child: LabelTextField(
+                            stockColor: greyStockColor,
                             textController: usernameController,
                             hintText: "healthy_john",
                             obsecureText: false,
@@ -172,6 +181,7 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                         Expanded(
                           child: LabelTextField(
+                            stockColor: greyStockColor,
                             textController: ageController,
                             hintText: "25",
                             obsecureText: false,
@@ -193,10 +203,12 @@ class _UserProfileState extends State<UserProfile> {
                       children: [
                         Expanded(
                           child: LabelTextField(
+                            maxLength: 3,
+                            stockColor: greyStockColor,
                             textController: weightController,
                             hintText: "60",
                             obsecureText: false,
-                            helperText: "Weight in LB",
+                            helperText: "Weight in KG",
                             textInputType: TextInputType.number,
                             labelText: "Weight",
                             filled: false,
@@ -210,6 +222,8 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                         Expanded(
                           child: LabelTextField(
+                            maxLength: 3,
+                            stockColor: greyStockColor,
                             textController: heightController,
                             hintText: "170",
                             obsecureText: false,

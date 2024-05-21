@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/constants/string_constants.dart';
 import 'package:helix_ai/firebase_options.dart';
 import 'package:helix_ai/images_path.dart';
@@ -41,8 +42,14 @@ class MyApp extends StatelessWidget {
         title: appName,
         theme: ThemeData(
           // textTheme: GoogleFonts.ubuntu(Theme.of(context).textTheme),
+          appBarTheme: AppBarTheme(
+            color: whiteColor,
+            scrolledUnderElevation: 0.0,
+            elevation: 0,
+          ),
+          scaffoldBackgroundColor: whiteColor,
           fontFamily: 'Ubuntu',
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: greenThemeColor),
           useMaterial3: true,
         ),
         home: HomePage(),

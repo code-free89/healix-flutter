@@ -21,6 +21,7 @@ class UserChatContainer extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(51,0,7,22),
             child: Container(
               padding: EdgeInsets.all(12),
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: greenThemeColor,
                 borderRadius: BorderRadius.only(
@@ -46,6 +47,7 @@ class UserChatContainer extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(2,0,55,22),
             child: Container(
+              width: double.infinity,
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                   color: gray5Color,
