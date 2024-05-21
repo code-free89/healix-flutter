@@ -23,7 +23,6 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-
   final profileUpdateFormKey = GlobalKey<FormState>();
 
   TextEditingController usernameController = TextEditingController();
@@ -45,7 +44,7 @@ class _UserProfileState extends State<UserProfile> {
 
       String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
 
-      if(uid != null){
+      if (uid != null) {
         setState(() {
           isLoading = true;
         });
@@ -55,7 +54,7 @@ class _UserProfileState extends State<UserProfile> {
         double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
         double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
 
-       status = await firestoreService.updateUserDetails(uid, username, age, height, weight);
+        status = await firestoreService.updateUserDetails(uid, username, age, height, weight);
         debugPrint('update user');
 
         setState(() {
@@ -63,19 +62,19 @@ class _UserProfileState extends State<UserProfile> {
         });
       }
 
-      if (hasFilledField&&status) {
+      if (hasFilledField && status) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Profile Updated"),
           ),
         );
-      } else if (!status){
+      } else if (!status) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Enable to update please check your internet"),
+            content: Text("Unable to update please check your internet"),
           ),
         );
-      }else{
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Please enter some details"),
@@ -85,16 +84,16 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-  Future<void> fetchUserDetails() async{
+  Future<void> fetchUserDetails() async {
     String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
 
-    if(uid != null){
-      Map<String,dynamic>? userDetails = await firestoreService.showUserDetails(uid);
+    if (uid != null) {
+      Map<String, dynamic>? userDetails = await firestoreService.showUserDetails(uid);
       setState(() {
-        usernameController.text = userDetails?['username'] ?? '' ;
-        ageController.text = (userDetails?['age'] ?? '').toString() ;
-        heightController.text = (userDetails?['height'] ?? '').toString() ;
-        weightController.text = (userDetails?['weight']?? '').toString() ;
+        usernameController.text = userDetails?['username'] ?? '';
+        ageController.text = (userDetails?['age'] ?? '').toString();
+        heightController.text = (userDetails?['height'] ?? '').toString();
+        weightController.text = (userDetails?['weight'] ?? '').toString();
       });
     }
   }
@@ -126,7 +125,8 @@ class _UserProfileState extends State<UserProfile> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()),(Route<dynamic> route) => false);
+            Navigator.pushAndRemoveUntil(
+                context, MaterialPageRoute(builder: (context) => ChatHome()), (Route<dynamic> route) => false);
           },
           icon: Icon(
             Icons.chevron_left,
@@ -146,19 +146,19 @@ class _UserProfileState extends State<UserProfile> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25),
+                padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      "John Doe",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'Ubuntu-Medium', fontSize: 28),
-                    ),
-                    SizedBox(
-                      height: 51,
-                    ),
+                    // Text(
+                    //   "John Doe",
+                    //   textAlign: TextAlign.center,
+                    //   style: TextStyle(fontFamily: 'Ubuntu-Medium', fontSize: 28),
+                    // ),
+                    // SizedBox(
+                    //   height: 51,
+                    // ),
                     Row(
                       children: [
                         Expanded(
@@ -245,12 +245,13 @@ class _UserProfileState extends State<UserProfile> {
                       width: double.infinity,
                       height: 60,
                       child: CustomButton(
-                          onPressed: () {
-                            // Navigator.pushNamed(context, '/first_profile');
-                            validateAndSubmit();
-                          },
-                          buttonText: "Update",
-                          showLoading: isLoading,),
+                        onPressed: () {
+                          // Navigator.pushNamed(context, '/first_profile');
+                          validateAndSubmit();
+                        },
+                        buttonText: "Update",
+                        showLoading: isLoading,
+                      ),
                     ),
                   ],
                 ),
@@ -264,9 +265,9 @@ class _UserProfileState extends State<UserProfile> {
                   onPressed: () {
                     showDialog(
                         context: context,
-                        builder: (BuildContext context){
+                        builder: (BuildContext context) {
                           return LogOutAlertDialog(
-                            onLogout: () async{
+                            onLogout: () async {
                               debugPrint("logout clicked");
                               await authProvider.signOut();
                               Navigator.pushAndRemoveUntil(

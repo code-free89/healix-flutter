@@ -93,7 +93,7 @@ class _FirstProfileState extends State<FirstProfile> {
         }else{
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Enable to submit check your internet"),
+              content: Text("Unable to submit check your internet"),
             ),
           );
         }

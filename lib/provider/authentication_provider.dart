@@ -32,14 +32,16 @@ class AuthenticationProvider with ChangeNotifier {
       // _status = Status.Authenticating;
       setIsSignupLoading(true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User? user= userCredential.user;
-      if(user != null){
+      User? user = userCredential.user;
+      if (user != null) {
         await firestoreService.addUserDocument(
-            user.uid,
-            email,
+          user.uid,
+          email,
         );
       }
-      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      await _sharedPreferenceRepository.storeUserInfo(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email);
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
       notifyListeners();
@@ -64,7 +66,10 @@ class AuthenticationProvider with ChangeNotifier {
     try {
       // _status = Status.Authenticating;
       setIsLoginLoading(true);
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _sharedPreferenceRepository.storeUserInfo(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email);
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
