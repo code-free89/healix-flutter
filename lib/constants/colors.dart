@@ -9,3 +9,4 @@ var buttonTextColor = Color.fromRGBO(255, 251, 242, 1);
 var textFieldColor = Color.fromRGBO(242, 242, 242, 1);
 var genericTileTextColor = Color.fromRGBO(64, 62, 57, 1);
 var textColor = Color.fromRGBO(44, 43, 38, 1);
+var dividerColor = Color.fromRGBO(5, 163, 87, 1);

@@ -15,7 +15,7 @@ class CustomDivider extends StatelessWidget {
       children: [
         Expanded(child: Container(
           height: 2,
-          color: greenThemeColor,
+          color: dividerColor,
         )
         ),
         Padding(
@@ -23,13 +23,13 @@ class CustomDivider extends StatelessWidget {
           child: Text("OR" ,
           style: TextStyle(
             fontSize: 11,
-            color: greenThemeColor,
+            color: dividerColor,
           ),
           ),
         ),
         Expanded(child: Container(
           height: 2,
-          color: greenThemeColor,
+          color: dividerColor,
         )
         ),
       ],
