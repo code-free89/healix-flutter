@@ -45,7 +45,6 @@ class _UserProfileState extends State<UserProfile> {
       String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
 
       if(uid != null){
-
         setState(() {
           isLoading = true;
         });
@@ -61,6 +60,7 @@ class _UserProfileState extends State<UserProfile> {
           isLoading = false;
         });
       }
+
       if (hasFilledField) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -84,13 +84,12 @@ class _UserProfileState extends State<UserProfile> {
       Map<String,dynamic>? userDetails = await firestoreService.showUserDetails(uid);
       setState(() {
         usernameController.text = userDetails?['username'] ?? '' ;
-        ageController.text = userDetails?['age'].toString() ?? '' ;
-        heightController.text = userDetails?['height'].toString() ?? '' ;
-        weightController.text = userDetails?['weight'].toString() ?? '' ;
+        ageController.text = (userDetails?['age'] ?? '').toString() ;
+        heightController.text = (userDetails?['height'] ?? '').toString() ;
+        weightController.text = (userDetails?['weight']?? '').toString() ;
       });
     }
   }
-
 
   @override
   void initState() {

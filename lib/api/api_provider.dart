@@ -5,8 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../constants/api_constants.dart';
 import '../model/ai_response.dart';
 
-
-
 class ApiProvider {
   final Dio dio = Dio();
   final options = Options(contentType: Headers.formUrlEncodedContentType);
