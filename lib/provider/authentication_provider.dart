@@ -13,6 +13,7 @@ class AuthenticationProvider with ChangeNotifier {
   SharedPreferenceRepository _sharedPreferenceRepository = SharedPreferenceRepository();
   bool isSignupLoading = false;
   bool isLoginLoading = false;
+  bool isSendingPasswordResentLinkLoading = false;
   FirestoreService firestoreService = FirestoreService();
 
   AuthenticationProvider.instance()
@@ -39,9 +40,7 @@ class AuthenticationProvider with ChangeNotifier {
           email,
         );
       }
-      await _sharedPreferenceRepository.storeUserInfo(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email);
+      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
       notifyListeners();
@@ -67,9 +66,7 @@ class AuthenticationProvider with ChangeNotifier {
       // _status = Status.Authenticating;
       setIsLoginLoading(true);
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      await _sharedPreferenceRepository.storeUserInfo(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email);
+      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -110,6 +107,19 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> sendPasswordResetEmail(String email) async {
+    setIsResettingPasswordLoading(true);
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      setIsResettingPasswordLoading(false);
+      return true;
+    } catch (exception) {
+      debugPrint("Exception while sending password reset link: $exception");
+      setIsResettingPasswordLoading(false);
+      return false;
+    }
+  }
+
   void setStatus(Status status) {
     _status = status;
     notifyListeners();
@@ -122,6 +132,11 @@ class AuthenticationProvider with ChangeNotifier {
 
   void setIsLoginLoading(bool value) {
     isLoginLoading = value;
+    notifyListeners();
+  }
+
+  void setIsResettingPasswordLoading(bool value) {
+    isSendingPasswordResentLinkLoading = value;
     notifyListeners();
   }
 }

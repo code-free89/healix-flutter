@@ -8,6 +8,7 @@ import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
 import 'package:helix_ai/pages/first_profile.dart';
 import 'package:helix_ai/pages/splash_screen.dart';
+import 'package:helix_ai/pages/user_forgot_password.dart';
 import 'package:helix_ai/pages/user_login.dart';
 import 'package:helix_ai/pages/user_profile.dart';
 import 'package:helix_ai/pages/user_signup.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
           '/first_profile': (context) => FirstProfile(),
           '/chat_home': (context) => ChatHome(),
           '/user_profile': (context) => UserProfile(),
+          '/forgot-password': (context) => UserForgotPassword(),
         },
       ),
     );

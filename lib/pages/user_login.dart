@@ -13,6 +13,7 @@ import 'package:helix_ai/pages/chat_home.dart';
 import 'package:helix_ai/provider/authentication_provider.dart';
 import 'package:helix_ai/util/validator.dart';
 import 'package:provider/provider.dart';
+
 import '../util/ui_helper.dart';
 
 class UserLogin extends StatefulWidget {
@@ -31,10 +32,14 @@ class _UserLoginState extends State<UserLogin> {
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (loginFormKey.currentState!.validate()) {
       if (await authProvider.signIn(loginEmailController.text, loginPasswordController.text)) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ChatHome()),(Route<dynamic> route) => false,);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => ChatHome()),
+          (Route<dynamic> route) => false,
+        );
       } else {
         authProvider.setIsLoginLoading(false);
-        UiHelper().showSnackBar(context , authProvider.errorMessage);
+        UiHelper().showSnackBar(context, authProvider.errorMessage);
       }
     }
   }
@@ -52,7 +57,7 @@ class _UserLoginState extends State<UserLogin> {
 
     return Scaffold(
         backgroundColor: Colors.black,
-        body:LayoutBuilder(
+        body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return SingleChildScrollView(
               child: ConstrainedBox(
@@ -65,24 +70,26 @@ class _UserLoginState extends State<UserLogin> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 50.0),
-                          child: SvgPicture.asset(lifeStyleImage ,
-                              fit: BoxFit.cover),
+                          child: SvgPicture.asset(lifeStyleImage, fit: BoxFit.cover),
                         ),
                         Expanded(
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(28,75,28,0),
+                              padding: const EdgeInsets.fromLTRB(28, 75, 28, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text("Welcome to Healix AI" ,
+                                  Text(
+                                    "Welcome to Healix AI",
                                     style: TextStyle(
                                       fontFamily: 'Ubuntu-Bold',
                                       fontSize: 20,
                                     ),
                                   ),
-                                  SizedBox(height: 18,),
+                                  SizedBox(
+                                    height: 18,
+                                  ),
                                   CustomTextField(
                                     textController: loginEmailController,
                                     hintText: "Email Address",
@@ -90,8 +97,11 @@ class _UserLoginState extends State<UserLogin> {
                                     helperText: null,
                                     textInputType: TextInputType.emailAddress,
                                     validator: Validator.validateEmail,
-                                    textInputAction: TextInputAction.next,),
-                                  SizedBox(height: 15,),
+                                    textInputAction: TextInputAction.next,
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
                                   CustomTextField(
                                     textController: loginPasswordController,
                                     hintText: "Password",
@@ -99,46 +109,61 @@ class _UserLoginState extends State<UserLogin> {
                                     helperText: null,
                                     textInputType: TextInputType.text,
                                     validator: Validator.validatePassword,
-                                    textInputAction: TextInputAction.done,),
-                                  SizedBox(height: 16,),
+                                    textInputAction: TextInputAction.done,
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
                                   SizedBox(
                                     width: double.infinity,
                                     height: 60,
                                     child: CustomButton(
-                                        onPressed: (){
+                                        onPressed: () {
                                           validateAndSubmit(authProvider);
                                         },
                                         showLoading: authProvider.isLoginLoading,
                                         buttonText: "Login"),
                                   ),
-                                  SizedBox(height: 12,),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
                                   Row(
                                     children: [
                                       Row(
-                                        children:  [
-                                          Text("Forgot Password" ,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: textColor,
+                                        children: [
+                                          InkWell(
+                                            child: Text(
+                                              "Forgot Password",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: textColor,
+                                              ),
                                             ),
+                                            onTap: () {
+                                              Navigator.pushNamed(context, '/forgot-password');
+                                            },
                                           )
                                         ],
                                       ),
                                       Spacer(),
                                       Row(
                                         children: [
-                                          Text("Don't have an account?",
+                                          Text(
+                                            "Don't have an account?",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: textColor,
                                             ),
                                           ),
-                                          SizedBox(width: 3,),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
                                           InkWell(
-                                            onTap: (){
-                                              Navigator.pushReplacementNamed(context,'/sign_up');
+                                            onTap: () {
+                                              Navigator.pushReplacementNamed(context, '/sign_up');
                                             },
-                                            child: Text("Sign Up" ,
+                                            child: Text(
+                                              "Sign Up",
                                               style: TextStyle(
                                                 fontFamily: 'Ubuntu-Medium',
                                                 fontSize: 12,
@@ -150,11 +175,15 @@ class _UserLoginState extends State<UserLogin> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   CustomDivider(),
-                                  SizedBox(height: 20,),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0 , right: 40 , bottom: 41),
+                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 41),
                                     child: SocialLoginButtons(text: "Login with"),
                                   )
                                 ],
@@ -169,7 +198,6 @@ class _UserLoginState extends State<UserLogin> {
               ),
             );
           },
-        )
-    );
+        ));
   }
 }
