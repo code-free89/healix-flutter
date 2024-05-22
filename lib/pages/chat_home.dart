@@ -20,30 +20,18 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
-  // bool isChatVisible = false;
   TextEditingController chatController = TextEditingController();
   ScrollController scrollController = ScrollController();
-
-  // List initialMessages = [
-  //   "Hello there",
-  //   "Hello! How may I assist you today!",
-  //   "Show me what you can do?",
-  //   "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
-  // ];
-
-  // List messages = [
-  //   "Hello there",
-  //   "Hello! How may I assist you today!",
-  //   "Show me what you can do?",
-  //   "Of course! I can help you to start and maintain a healthy Healix lifestyle, with everything you need to know at your fingertips.  Let me know your questions."
-  // ];
+  bool _shouldAutoscroll = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    var chatProvider = Provider.of<ChatProvider>(context,listen: false);
-    chatProvider.scrollToBottom(scrollController);
+    scrollController=ScrollController(onAttach: (position){
+     var chatProvider = Provider.of<ChatProvider>(context,listen: false);
+     chatProvider.scrollToBottom(scrollController);
+    });
   }
 
   @override
@@ -94,11 +82,6 @@ class _ChatHomeState extends State<ChatHome> {
                     Expanded(
                       child: TextField(
                         onTap: () {
-                          // if (!isChatVisible) {
-                          //   setState(() {
-                          //     isChatVisible = true;
-                          //   });
-                          // }
                           chatProvider.scrollToBottom(scrollController);
                         },
                         controller: chatController,
