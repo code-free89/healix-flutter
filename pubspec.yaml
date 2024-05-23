@@ -40,6 +40,11 @@ dependencies:
   firebase_auth: ^4.19.5
   provider: ^6.1.1
   shared_preferences: ^2.1.1
+  cloud_firestore: ^4.17.3
+  dio: ^5.4.3+1
+  connectivity_plus: ^5.0.2
+  jumping_dot: ^0.0.4
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +97,7 @@ flutter:
 
   assets:
     - assets/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

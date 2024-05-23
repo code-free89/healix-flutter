@@ -4,6 +4,7 @@ class SharePreferenceProvider {
   late SharedPreferences prefs;
   static const String keyUserUid = "current_user_uid";
   static const String keyUserEmail = "current_user_email";
+  static const String keyUserName = "current_user_name";
   static const String keyIsFirstProfileShown = "is_first_profile_shown";
 
   Future _initSecureStorage() async {
@@ -18,10 +19,12 @@ class SharePreferenceProvider {
 
   Future<void> storeUserInfo(
       {String? uid,
-      String? email}) async {
+      String? email,
+      String? displayName}) async {
     await _initSecureStorage();
     await prefs.setString(keyUserUid, uid ?? '');
     await prefs.setString(keyUserEmail, email ?? '');
+    await prefs.setString(keyUserName, displayName ?? '');
   }
 
   Future<String?> retrieveUserEmail() async {
@@ -32,6 +35,11 @@ class SharePreferenceProvider {
   Future<String?> retrieveUserUid() async {
     await _initSecureStorage();
     return prefs.getString(keyUserUid);
+  }
+
+  Future<String?> retrieveUserDisplayName() async {
+    await _initSecureStorage();
+    return prefs.getString(keyUserName);
   }
 
   Future<void> storeFirstProfileShownStatus(bool isShown) async {

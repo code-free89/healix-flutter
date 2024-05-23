@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
 
@@ -28,17 +29,25 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(14, 16, 16, 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+          color: dividerColor,
+          width: 1,
+        )),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+          color: dividerColor,
+          width: 1,
+        )),
         hintText: hintText,
         hintStyle: TextStyle(
           fontFamily: 'Urbanist',
           fontSize: 17
         ),
-        fillColor: Color.fromRGBO(242, 242, 242, 1),
+        fillColor: textFieldColor,
         filled: true,
         helperText: helperText,
         helperStyle: TextStyle(
           fontSize: 12,
-          color: Color.fromRGBO(242, 242, 242, 1),
+          color: textFieldColor,
         )
       ),
       obscureText: obsecureText,

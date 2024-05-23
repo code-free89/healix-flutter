@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 
 enum Status { Uninitialized, Authenticated, Unauthenticated, FirstTimeAuthenticated }
@@ -12,6 +13,8 @@ class AuthenticationProvider with ChangeNotifier {
   SharedPreferenceRepository _sharedPreferenceRepository = SharedPreferenceRepository();
   bool isSignupLoading = false;
   bool isLoginLoading = false;
+  bool isSendingPasswordResentLinkLoading = false;
+  FirestoreService firestoreService = FirestoreService();
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -30,6 +33,13 @@ class AuthenticationProvider with ChangeNotifier {
       // _status = Status.Authenticating;
       setIsSignupLoading(true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      if (user != null) {
+        await firestoreService.addUserDocument(
+          user.uid,
+          email,
+        );
+      }
       await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
@@ -55,7 +65,8 @@ class AuthenticationProvider with ChangeNotifier {
     try {
       // _status = Status.Authenticating;
       setIsLoginLoading(true);
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -96,6 +107,19 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> sendPasswordResetEmail(String email) async {
+    setIsResettingPasswordLoading(true);
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      setIsResettingPasswordLoading(false);
+      return true;
+    } catch (exception) {
+      debugPrint("Exception while sending password reset link: $exception");
+      setIsResettingPasswordLoading(false);
+      return false;
+    }
+  }
+
   void setStatus(Status status) {
     _status = status;
     notifyListeners();
@@ -108,6 +132,11 @@ class AuthenticationProvider with ChangeNotifier {
 
   void setIsLoginLoading(bool value) {
     isLoginLoading = value;
+    notifyListeners();
+  }
+
+  void setIsResettingPasswordLoading(bool value) {
+    isSendingPasswordResentLinkLoading = value;
     notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class ResponseChatContainer extends StatelessWidget {
 
@@ -15,7 +16,7 @@ class ResponseChatContainer extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(224, 224, 224, 1),
+            color: gray5Color,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(12),
               topLeft: Radius.circular(12),

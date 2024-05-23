@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helix_ai/constants/colors.dart';
 
 class CustomContainer extends StatelessWidget {
 
@@ -13,7 +14,7 @@ class CustomContainer extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Color.fromRGBO(28, 197, 116, 1)
+            color: greenThemeColor
         ),
         child: child,
       ),

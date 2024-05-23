@@ -1,11 +1,19 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/components/chat_text.dart';
+import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/images_path.dart';
 
 class ChatStart extends StatelessWidget {
-  const ChatStart({super.key});
+   ChatStart({super.key});
+
+  final List<String> capability = [
+    'Revolutionize your nutrition with Gene – the ultimate solution for automating your diet.',
+    'Prioritize your mental well-being with Gene',
+    'Effortlessly order and track essential tests and other health metrics,'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -19,52 +27,32 @@ class ChatStart extends StatelessWidget {
             SizedBox(height: 25,),
             ChatText(text: "Gene Capabilities"),
             SizedBox(height: 25,),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              width: double.infinity,
-              child: Column(
-                children: const [
-                  ChatText(text : "Revolutionize your nutrition with Gene – the ultimate solution for automating your diet."),
-                ],
-              ),
-            ),
-            SizedBox(height: 16,),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              width: double.infinity,
-              child: Column(
-                children: const [
-                  ChatText(text : "Prioritize your mental well-being with Gene"),
-                ],
-              ),
-            ),
-            SizedBox(height: 16,),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(245, 245, 245, 1),
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              width: double.infinity,
-              child: Column(
-                children: const [
-                  ChatText(text : "Effortlessly order and track essential tests and other health metrics,"),
-                ],
-              ),
+            ListView.builder(
+              itemCount: capability.length,
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemBuilder: (context,index){
+                return Container(
+                  padding: EdgeInsets.all(12),
+                  margin: EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                      color: f5f5feColor,
+                      borderRadius: BorderRadius.circular(12)
+                  ),
+                  width: double.infinity,
+                  child: Column(
+                    children:  [
+                      ChatText(text : capability[index]),
+                    ],
+                  ),
+                );
+              },
             ),
             SizedBox(height: 15),
             Text("These are just examples what can I do." ,
               style: TextStyle(
                   fontSize: 17,
-                  color: Color.fromRGBO(130, 130, 130, 1)
+                  color: gray1Color,
               ),
             )
           ],
