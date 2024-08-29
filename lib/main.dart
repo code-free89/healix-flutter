@@ -16,6 +16,7 @@ import 'package:helix_ai/provider/authentication_provider.dart';
 import 'package:helix_ai/provider/chat_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:health/health.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -80,10 +80,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> checkAuthStatus() async {
-    final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     await Future.delayed(Duration(seconds: 2));
 
-    switch  (authProvider.status) {
+    switch (authProvider.status) {
       case Status.Uninitialized:
         break;
       case Status.Unauthenticated:
@@ -104,15 +105,12 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-preCacheInitialAssets() async{
-  await Future.wait(
-      [
-        preCachePicture(lifeStyleImage)
-      ]
-  );
+preCacheInitialAssets() async {
+  await Future.wait([preCachePicture(lifeStyleImage)]);
 }
 
-Future preCachePicture(String path) async{
+Future preCachePicture(String path) async {
   final loader = SvgAssetLoader(path);
-  await svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
+  await svg.cache
+      .putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
 }

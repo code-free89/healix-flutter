@@ -45,5 +45,11 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
+
+    <key>NSHealthShareUsageDescription</key>
+<string>We need access to your health data to display it in the app.</string>
+<key>NSHealthUpdateUsageDescription</key>
+<string>We need access to update your health data.</string>
+
   </dict>
 </plist>
