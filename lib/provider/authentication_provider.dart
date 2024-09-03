@@ -3,14 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/firestore/firestore.dart';
 import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 
-enum Status { Uninitialized, Authenticated, Unauthenticated, FirstTimeAuthenticated }
+enum Status {
+  Uninitialized,
+  Authenticated,
+  Unauthenticated,
+  FirstTimeAuthenticated
+}
 
 class AuthenticationProvider with ChangeNotifier {
   FirebaseAuth _auth;
   User? _user;
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
-  SharedPreferenceRepository _sharedPreferenceRepository = SharedPreferenceRepository();
+  SharedPreferenceRepository _sharedPreferenceRepository =
+      SharedPreferenceRepository();
   bool isSignupLoading = false;
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
@@ -32,7 +38,8 @@ class AuthenticationProvider with ChangeNotifier {
     try {
       // _status = Status.Authenticating;
       setIsSignupLoading(true);
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       if (user != null) {
         await firestoreService.addUserDocument(
@@ -40,7 +47,10 @@ class AuthenticationProvider with ChangeNotifier {
           email,
         );
       }
-      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      await _sharedPreferenceRepository.storeUserInfo(
+          uid: userCredential.user!.uid, email: userCredential.user!.email);
+      print("Get User ID");
+      print(userCredential.user!.uid);
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
       notifyListeners();
@@ -65,8 +75,12 @@ class AuthenticationProvider with ChangeNotifier {
     try {
       // _status = Status.Authenticating;
       setIsLoginLoading(true);
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      await _sharedPreferenceRepository.storeUserInfo(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      await _sharedPreferenceRepository.storeUserInfo(
+          uid: userCredential.user!.uid, email: userCredential.user!.email);
+      print("Get User ID");
+      print(userCredential.user!.uid);
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -97,7 +111,8 @@ class AuthenticationProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       _user = firebaseUser;
-      if (await _sharedPreferenceRepository.retrieveFirstProfileShownStatus() ?? false) {
+      if (await _sharedPreferenceRepository.retrieveFirstProfileShownStatus() ??
+          false) {
         _status = Status.FirstTimeAuthenticated;
         await _sharedPreferenceRepository.storeFirstProfileShownStatus(true);
       } else {

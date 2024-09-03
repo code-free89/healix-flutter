@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:health/health.dart';
 import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/constants/string_constants.dart';
 import 'package:helix_ai/firebase_options.dart';
@@ -16,13 +17,13 @@ import 'package:helix_ai/provider/authentication_provider.dart';
 import 'package:helix_ai/provider/chat_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:health/health.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: ".env");
   await preCacheInitialAssets();
+  Health().configure();
   runApp(const MyApp());
 }
 

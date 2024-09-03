@@ -31,7 +31,8 @@ class _UserLoginState extends State<UserLogin> {
 
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (loginFormKey.currentState!.validate()) {
-      if (await authProvider.signIn(loginEmailController.text, loginPasswordController.text)) {
+      if (await authProvider.signIn(
+          loginEmailController.text, loginPasswordController.text)) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => ChatHome()),
@@ -70,7 +71,8 @@ class _UserLoginState extends State<UserLogin> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 50.0),
-                          child: SvgPicture.asset(lifeStyleImage, fit: BoxFit.cover),
+                          child: SvgPicture.asset(lifeStyleImage,
+                              fit: BoxFit.cover),
                         ),
                         Expanded(
                           child: CustomContainer(
@@ -121,7 +123,8 @@ class _UserLoginState extends State<UserLogin> {
                                         onPressed: () {
                                           validateAndSubmit(authProvider);
                                         },
-                                        showLoading: authProvider.isLoginLoading,
+                                        showLoading:
+                                            authProvider.isLoginLoading,
                                         buttonText: "Login"),
                                   ),
                                   SizedBox(
@@ -140,7 +143,8 @@ class _UserLoginState extends State<UserLogin> {
                                               ),
                                             ),
                                             onTap: () {
-                                              Navigator.pushNamed(context, '/forgot-password');
+                                              Navigator.pushNamed(
+                                                  context, '/forgot-password');
                                             },
                                           )
                                         ],
@@ -160,7 +164,8 @@ class _UserLoginState extends State<UserLogin> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              Navigator.pushReplacementNamed(context, '/sign_up');
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/sign_up');
                                             },
                                             child: Text(
                                               "Sign Up",
@@ -183,8 +188,10 @@ class _UserLoginState extends State<UserLogin> {
                                     height: 20,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 41),
-                                    child: SocialLoginButtons(text: "Login with"),
+                                    padding: const EdgeInsets.only(
+                                        left: 20.0, right: 40, bottom: 41),
+                                    child:
+                                        SocialLoginButtons(text: "Login with"),
                                   )
                                 ],
                               ),

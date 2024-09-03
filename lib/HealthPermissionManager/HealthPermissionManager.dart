@@ -30,6 +30,7 @@ class HealthPermissionManager {
   factory HealthPermissionManager() {
     return _instance;
   }
+
   // AppState to manage permission state
   AppState _state = AppState.DATA_NOT_FETCHED;
   List<HealthDataPoint> _healthDataList = [];
@@ -38,7 +39,6 @@ class HealthPermissionManager {
     HealthDataType.WEIGHT,
     HealthDataType.STEPS,
     HealthDataType.HEIGHT,
-    HealthDataType.WORKOUT,
     HealthDataType.WORKOUT,
     HealthDataType.ACTIVE_ENERGY_BURNED,
     HealthDataType.DISTANCE_WALKING_RUNNING,
@@ -61,7 +61,7 @@ class HealthPermissionManager {
               : HealthDataAccess.READ_WRITE)
       .toList();
 
-  //MARK: -  Function to request health permission 88888
+  //MARK: -  Function to request health permission
   Future<bool> authorizeHealthPermission() async {
     // Request required permissions
     await Permission.activityRecognition.request();
@@ -72,11 +72,12 @@ class HealthPermissionManager {
         await Health().hasPermissions(types, permissions: permissions);
 
     // Request permissions if not granted
-    if (hasPermissions == false) {
+    if (hasPermissions == false || hasPermissions == null) {
       try {
         bool authorized = await Health()
             .requestAuthorization(types, permissions: permissions);
         _state = authorized ? AppState.AUTHORIZED : AppState.AUTH_NOT_GRANTED;
+        print(authorized ? 'Successfully Authorized' : 'Authorization Failed');
         return authorized;
       } catch (error) {
         print("Exception in authorize: $error");
@@ -88,7 +89,7 @@ class HealthPermissionManager {
     return true;
   }
 
-  //MARK: -  Function to fetch health data points *****
+  //MARK: -  Function to fetch health data points
   Future<void> fetchHealthData() async {
     _state = AppState.FETCHING_DATA;
 
@@ -97,9 +98,17 @@ class HealthPermissionManager {
     final yesterday = now.subtract(Duration(hours: 24));
 
     // Clear old data points
-    //_healthDataList.clear();
+    _healthDataList.clear();
 
     try {
+      // Check authorization before fetching data
+      bool isAuthorized = await authorizeHealthPermission();
+      if (!isAuthorized) {
+        print("Health permissions not granted");
+        _state = AppState.AUTH_NOT_GRANTED;
+        return;
+      }
+
       // Fetch health data
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
         types: types,
@@ -115,15 +124,20 @@ class HealthPermissionManager {
           (healthData.length < 100) ? healthData : healthData.sublist(0, 100));
     } catch (error) {
       print("Exception in getHealthDataFromTypes: $error");
+      _state = AppState.NO_DATA;
+      return;
     }
 
     // Filter out duplicates
     _healthDataList = Health().removeDuplicates(_healthDataList);
 
-    _healthDataList.forEach((data) => print(toJsonString(data)));
-
-    // Update the state to display the results
-    _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
+    if (_healthDataList.isEmpty) {
+      print("No data retrieved.");
+      _state = AppState.NO_DATA;
+    } else {
+      _healthDataList.forEach((data) => print(toJsonString(data)));
+      _state = AppState.DATA_READY;
+    }
   }
 
   // Getter for the state

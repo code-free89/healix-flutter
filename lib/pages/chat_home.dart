@@ -96,7 +96,7 @@ class _ChatHomeState extends State<ChatHome> {
       var chatProvider = Provider.of<ChatProvider>(context, listen: false);
       chatProvider.scrollToBottom(scrollController);
     });
-
+    Health().configure();
     // Authorize health permission and fetch data using the singleton
     HealthPermissionManager().authorizeHealthPermission().then((authorized) {
       if (authorized) {
