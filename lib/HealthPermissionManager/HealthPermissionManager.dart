@@ -1,6 +1,9 @@
+import 'package:helix_ai/Controller/HealthDataController.dart';
+import 'package:helix_ai/model/puthealthdata.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
+import 'package:helix_ai/model/puthealthdata.dart';
 
 enum AppState {
   DATA_NOT_FETCHED,
@@ -89,7 +92,6 @@ class HealthPermissionManager {
     return true;
   }
 
-  //MARK: -  Function to fetch health data points
   Future<void> fetchHealthData() async {
     _state = AppState.FETCHING_DATA;
 
@@ -137,12 +139,38 @@ class HealthPermissionManager {
     } else {
       _healthDataList.forEach((data) => print(toJsonString(data)));
       _state = AppState.DATA_READY;
+
+      // Call the function to post health data after it's fetched
+      await postFetchedHealthData();
+
     }
   }
 
-  // Getter for the state
-  AppState get state => _state;
+  Future<void> postFetchedHealthData() async {
+    List<puthealthdata> items = _healthDataList.map((dataPoint) {
+      return puthealthdata(
+        type: dataPoint.typeString, // Map the correct type
+        unit: dataPoint.unitString, // Map the correct unit
+        dateFrom: dataPoint.dateFrom.toIso8601String(),
+        dateTo: dataPoint.dateTo.toIso8601String(),
+        sourcePlatforms: dataPoint.sourceName,
+        sourceDeviceId: dataPoint.sourceDeviceId,
+        sourceId: dataPoint.sourceId,
+        sourceName: dataPoint.sourceName,
+        isManualEntry: dataPoint.isManualEntry,
+        value: {
+          "__type": "NumericHealthValue",
+          "numeric_value": dataPoint.value,
+        },
+      );
+    }).toList();
 
-  // Getter for the health data list
-  List<HealthDataPoint> get healthDataList => _healthDataList;
+    HealthDataRequest request = HealthDataRequest(
+      id: "J6zFKZnD71cWiVijfHbZl8YZfhS2", // Replace with actual ID if available
+      items: items,
+    );
+
+    HealthDataController controller = HealthDataController();
+    await controller.postHealthData(request);
+  }
 }
