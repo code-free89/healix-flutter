@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:helix_ai/Controller/HealthDataController.dart';
 import 'package:helix_ai/HealthPermissionManager/HealthPermissionManager.dart';
 import 'package:helix_ai/chat_component/chat_start.dart';
 import 'package:helix_ai/chat_component/user_chat.dart';
 import 'package:helix_ai/constants/colors.dart';
 import 'package:helix_ai/images_path.dart';
+import 'package:helix_ai/model/gethealthdata.dart';
 import 'package:helix_ai/pages/user_profile.dart';
 import 'package:helix_ai/provider/chat_provider.dart';
+import 'package:helix_ai/shared_preferences/share_preference_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:health/health.dart';
+import 'package:intl/intl.dart';
 
 import '../util/ui_helper.dart';
 
@@ -25,6 +30,9 @@ class _ChatHomeState extends State<ChatHome> {
   TextEditingController chatController = TextEditingController();
   ScrollController scrollController = ScrollController();
   Timer? _fetchHealthDataTimer;
+  late Future<void> futureHealthData;
+  final sharePreferenceProvider = SharePreferenceProvider();
+  HealthDataController controller = HealthDataController();
 
   @override
   void initState() {
@@ -159,6 +167,26 @@ class _ChatHomeState extends State<ChatHome> {
                             chatProvider.scrollToBottom(scrollController);
                             await chatProvider.getChatAnswer(question);
                             chatProvider.scrollToBottom(scrollController);
+                            String? userUid =
+                                await sharePreferenceProvider.retrieveUserUid();
+                            // Get today's date
+                            DateTime now = DateTime.now();
+                            String today =
+                                "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+                            gethealthdataRequest request = gethealthdataRequest(
+                              id: userUid ?? "",
+                              items: ["STEPS", "ACTIVE_ENERGY_BURNED"],
+                              startDate: today,
+                              endDate: today,
+                            );
+                            HealthDataController controller =
+                                HealthDataController();
+                            futureHealthData =
+                                controller.fetchHealthData(request);
+
+                            print(
+                                "Get Health Data Response: {$futureHealthData}");
                           }
                           return;
                         }

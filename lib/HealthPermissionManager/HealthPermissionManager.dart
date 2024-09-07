@@ -1,5 +1,7 @@
 import 'package:helix_ai/Controller/HealthDataController.dart';
 import 'package:helix_ai/model/puthealthdata.dart';
+import 'package:helix_ai/shared_preferences/share_preference_provider.dart';
+import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
@@ -26,6 +28,7 @@ enum AppState {
 class HealthPermissionManager {
   // Private constructor
   HealthPermissionManager._privateConstructor();
+  final sharePreferenceProvider = SharePreferenceProvider();
   // Singleton instance
   static final HealthPermissionManager _instance =
       HealthPermissionManager._privateConstructor();
@@ -142,7 +145,6 @@ class HealthPermissionManager {
 
       // Call the function to post health data after it's fetched
       await postFetchedHealthData();
-
     }
   }
 
@@ -164,9 +166,9 @@ class HealthPermissionManager {
         },
       );
     }).toList();
-
+    String? userUid = await sharePreferenceProvider.retrieveUserUid();
     HealthDataRequest request = HealthDataRequest(
-      id: "J6zFKZnD71cWiVijfHbZl8YZfhS2", // Replace with actual ID if available
+      id: userUid ?? "", // Replace with actual ID if available
       items: items,
     );
 

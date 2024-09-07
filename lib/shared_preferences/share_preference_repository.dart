@@ -4,7 +4,8 @@ class SharedPreferenceRepository {
   final SharePreferenceProvider _sharePreferenceProvider;
 
   SharedPreferenceRepository({SharePreferenceProvider? secureStorageProvider})
-      : _sharePreferenceProvider = secureStorageProvider ?? SharePreferenceProvider();
+      : _sharePreferenceProvider =
+            secureStorageProvider ?? SharePreferenceProvider();
 
   Future<void> clearSharePreference() async {
     return await _sharePreferenceProvider.clearSharePreference();
