@@ -69,6 +69,7 @@
 
 
 
+
     <application
         android:label="Healix AI"
         android:name="${applicationName}"
@@ -112,5 +113,14 @@
         </activity-alias>
         <meta-data android:name="flutterEmbedding"
             android:value="2"/>
-    </application>
+
+
+
+        ...
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
+
+
+</application>
 </manifest>
