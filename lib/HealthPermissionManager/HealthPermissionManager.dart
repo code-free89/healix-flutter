@@ -31,7 +31,7 @@ class HealthPermissionManager {
   final sharePreferenceProvider = SharePreferenceProvider();
   // Singleton instance
   static final HealthPermissionManager _instance =
-      HealthPermissionManager._privateConstructor();
+  HealthPermissionManager._privateConstructor();
   // Factory method to return the same instance
   factory HealthPermissionManager() {
     return _instance;
@@ -47,7 +47,6 @@ class HealthPermissionManager {
     HealthDataType.HEIGHT,
     HealthDataType.WORKOUT,
     HealthDataType.ACTIVE_ENERGY_BURNED,
-    HealthDataType.DISTANCE_WALKING_RUNNING,
     HealthDataType.SLEEP_ASLEEP,
     HealthDataType.HEART_RATE,
     HealthDataType.BODY_MASS_INDEX
@@ -56,15 +55,15 @@ class HealthPermissionManager {
   // Permissions based on health data types
   List<HealthDataAccess> get permissions => types
       .map((type) => [
-            HealthDataType.WALKING_HEART_RATE,
-            HealthDataType.ELECTROCARDIOGRAM,
-            HealthDataType.HIGH_HEART_RATE_EVENT,
-            HealthDataType.LOW_HEART_RATE_EVENT,
-            HealthDataType.IRREGULAR_HEART_RATE_EVENT,
-            HealthDataType.EXERCISE_TIME,
-          ].contains(type)
-              ? HealthDataAccess.READ
-              : HealthDataAccess.READ_WRITE)
+    HealthDataType.WALKING_HEART_RATE,
+    HealthDataType.ELECTROCARDIOGRAM,
+    HealthDataType.HIGH_HEART_RATE_EVENT,
+    HealthDataType.LOW_HEART_RATE_EVENT,
+    HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+    HealthDataType.EXERCISE_TIME,
+  ].contains(type)
+      ? HealthDataAccess.READ
+      : HealthDataAccess.READ_WRITE)
       .toList();
 
   //MARK: -  Function to request health permission
@@ -75,7 +74,7 @@ class HealthPermissionManager {
 
     // Check if we already have health permissions
     bool? hasPermissions =
-        await Health().hasPermissions(types, permissions: permissions);
+    await Health().hasPermissions(types, permissions: permissions);
 
     // Request permissions if not granted
     if (hasPermissions == false || hasPermissions == null) {
@@ -149,29 +148,39 @@ class HealthPermissionManager {
   }
 
   Future<void> postFetchedHealthData() async {
+    // Map each data point to the required structure
     List<puthealthdata> items = _healthDataList.map((dataPoint) {
       return puthealthdata(
-        type: dataPoint.typeString, // Map the correct type
-        unit: dataPoint.unitString, // Map the correct unit
-        dateFrom: dataPoint.dateFrom.toIso8601String(),
-        dateTo: dataPoint.dateTo.toIso8601String(),
-        sourcePlatforms: dataPoint.sourceName,
-        sourceDeviceId: dataPoint.sourceDeviceId,
-        sourceId: dataPoint.sourceId,
-        sourceName: dataPoint.sourceName,
-        isManualEntry: dataPoint.isManualEntry,
+        type: dataPoint.typeString, // Example: "STEPS"
+        unit: dataPoint.unitString, // Example: "COUNT"
+        dateFrom: dataPoint.dateFrom
+            .toIso8601String(), // Date format: "2024-08-29T20:22:00.000"
+        dateTo: dataPoint.dateTo
+            .toIso8601String(), // Date format: "2024-08-30T20:22:00.000"
+        sourcePlatforms: dataPoint.sourceName, // Example: "appleHealth"
+        sourceDeviceId: dataPoint
+            .sourceDeviceId, // Example: "BEE86A48-F8B9-4BA6-AB13-39A1A608558D"
+        sourceId: dataPoint.sourceId, // Example: "com.apple.Health"
+        sourceName: dataPoint.sourceName, // Example: "Health"
+        isManualEntry: dataPoint.isManualEntry, // Boolean value
         value: {
           "__type": "NumericHealthValue",
-          "numeric_value": dataPoint.value,
+          "numeric_value": dataPoint.value, // Example: 200
         },
       );
     }).toList();
+
+    // Retrieve user UID from shared preferences
     String? userUid = await sharePreferenceProvider.retrieveUserUid();
+
+    print("userUid, $userUid");
+    // Create the request object with the correct user ID and health data items
     HealthDataRequest request = HealthDataRequest(
       id: userUid ?? "", // Replace with actual ID if available
       items: items,
     );
 
+    // Create a controller instance and post the health data
     HealthDataController controller = HealthDataController();
     await controller.postHealthData(request);
   }
