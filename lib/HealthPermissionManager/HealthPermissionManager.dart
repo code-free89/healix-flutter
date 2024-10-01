@@ -41,15 +41,38 @@ class HealthPermissionManager {
   AppState _state = AppState.DATA_NOT_FETCHED;
   List<HealthDataPoint> _healthDataList = [];
   // The list of health data types to request permission for
+  // static final types = [
+  //   HealthDataType.WEIGHT,
+  //   HealthDataType.STEPS,
+  //   HealthDataType.HEIGHT,
+  //   HealthDataType.WORKOUT,
+  //   HealthDataType.ACTIVE_ENERGY_BURNED,
+  //   HealthDataType.SLEEP_ASLEEP,
+  //   HealthDataType.HEART_RATE,
+  //   HealthDataType.BODY_MASS_INDEX
+  // ];
+
   static final types = [
-    HealthDataType.WEIGHT,
-    HealthDataType.STEPS,
-    HealthDataType.HEIGHT,
-    HealthDataType.WORKOUT,
-    HealthDataType.ACTIVE_ENERGY_BURNED,
-    HealthDataType.SLEEP_ASLEEP,
-    HealthDataType.HEART_RATE,
-    HealthDataType.BODY_MASS_INDEX
+    // General Health Data
+    HealthDataType.WEIGHT,                 // Weight in kg
+    HealthDataType.STEPS,                  // Number of steps
+    HealthDataType.HEIGHT,                 // Height in meters
+    HealthDataType.WORKOUT,                // Workouts
+    HealthDataType.ACTIVE_ENERGY_BURNED,   // Active energy burned in kcal
+    HealthDataType.BODY_MASS_INDEX,        // BMI
+    HealthDataType.BLOOD_GLUCOSE,          // Blood glucose levels
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,// Systolic blood pressure
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,// Diastolic blood pressure
+
+    // iOS Specific Data
+    HealthDataType.SLEEP_ASLEEP,           // Time spent asleep (iOS)
+    HealthDataType.HEART_RATE,             // Heart rate (iOS)
+    HealthDataType.BODY_TEMPERATURE,       // Body temperature (iOS)
+    // Blood oxygen level (Android)
+
+    // Cross-Platform Data (Available on both iOS and Android)
+    HealthDataType.WATER,                  // Water intake
+    HealthDataType.SLEEP_IN_BED            // Time spent in bed
   ];
 
   // Permissions based on health data types

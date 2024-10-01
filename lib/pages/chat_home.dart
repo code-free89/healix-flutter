@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,6 +32,7 @@ class _ChatHomeState extends State<ChatHome> {
   late Future<void> futureHealthData;
   final sharePreferenceProvider = SharePreferenceProvider();
   HealthDataController controller = HealthDataController();
+  bool isFetching = false; // Flag to prevent multiple API calls
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _ChatHomeState extends State<ChatHome> {
     _fetchHealthData();
 
     // Set up the periodic timer to call the fetch function every 4 hours
-    _fetchHealthDataTimer = Timer.periodic(Duration(hours: 4), (Timer timer) {
+    _fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
       _fetchHealthData();
     });
   }
@@ -87,11 +87,12 @@ class _ChatHomeState extends State<ChatHome> {
           Padding(
             padding: EdgeInsets.only(right: 20),
             child: InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserProfile()));
-                },
-                child: SvgPicture.asset(userCircle)),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => UserProfile()));
+              },
+              child: SvgPicture.asset(userCircle),
+            ),
           )
         ],
       ),
@@ -112,7 +113,7 @@ class _ChatHomeState extends State<ChatHome> {
                 height: 22,
               ),
               AbsorbPointer(
-                absorbing: chatProvider.isAnswerLoading,
+                absorbing: chatProvider.isAnswerLoading || isFetching,
                 child: Row(
                   children: [
                     Expanded(
@@ -151,7 +152,7 @@ class _ChatHomeState extends State<ChatHome> {
                     ),
                     InkWell(
                       onTap: () async {
-                        if (chatController.text.isNotEmpty) {
+                        if (chatController.text.isNotEmpty && !isFetching) {
                           final connectionStatus =
                               await Connectivity().checkConnectivity();
                           if (connectionStatus == ConnectivityResult.none) {
@@ -159,38 +160,44 @@ class _ChatHomeState extends State<ChatHome> {
                                 context, 'Please enable internet connection');
                             return;
                           }
-                          if (chatController.text != "") {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            chatProvider.addQuestion(chatController.text);
-                            String? question = chatController.text;
-                            chatController.clear();
-                            chatProvider.scrollToBottom(scrollController);
-                            await chatProvider.getChatAnswer(question);
-                            chatProvider.scrollToBottom(scrollController);
-                            String? userUid =
-                                await sharePreferenceProvider.retrieveUserUid();
-                            // Get today's date
-                            DateTime now = DateTime.now();
-                            String today =
-                                "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
 
-                            gethealthdataRequest request = gethealthdataRequest(
-                              id: userUid ?? "",
-                              items: ["STEPS", "ACTIVE_ENERGY_BURNED"],
-                              startDate: today,
-                              endDate: today,
-                            );
-                            HealthDataController controller =
-                                HealthDataController();
-                            futureHealthData =
-                                controller.fetchHealthData(request);
+                          String question = chatController.text;
+                          FocusManager.instance.primaryFocus?.unfocus();
 
-                            print(
-                                "Get Health Data Response: {$futureHealthData}");
-                          }
-                          return;
+                          // Add question to chat provider
+                          chatProvider.getChatAnswer(question);
+                          chatController.clear();
+                          chatProvider.scrollToBottom(scrollController);
+
+                          // Set the fetching flag
+                          isFetching = true;
+
+                          // Fetch GPT answer for the question
+                          await chatProvider.getChatAnswer(question);
+                          chatProvider.scrollToBottom(scrollController);
+
+                          // Reset the fetching flag after API call
+                          isFetching = false;
+
+                          // Fetch Health Data
+                          String? userUid =
+                              await sharePreferenceProvider.retrieveUserUid();
+                          DateTime now = DateTime.now();
+                          String today = DateFormat('yyyy-MM-dd').format(now);
+
+                          gethealthdataRequest request = gethealthdataRequest(
+                            id: userUid ?? "",
+                            items: ["STEPS", "ACTIVE_ENERGY_BURNED"],
+                            startDate: today,
+                            endDate: today,
+                          );
+
+                          futureHealthData =
+                              controller.fetchHealthData(request);
+                          futureHealthData.then((response) {
+                            print("Get Health Data Response");
+                          });
                         }
-                        FocusScope.of(context).unfocus();
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),

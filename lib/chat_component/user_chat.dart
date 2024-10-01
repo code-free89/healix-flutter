@@ -3,7 +3,6 @@ import 'package:helix_ai/chat_component/HealthBarChart.dart';
 import 'package:helix_ai/chat_component/user_chat_container.dart';
 import 'package:helix_ai/provider/chat_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../constants/string_constants.dart';
 
 class UserChat extends StatefulWidget {
@@ -15,32 +14,38 @@ class UserChat extends StatefulWidget {
 }
 
 class _UserChatState extends State<UserChat> {
+  bool isFetching = false;
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Consumer<ChatProvider>(builder: (_, chatProvider, __) {
+        // Ensure that messages are not duplicated in the ListView
+        List messages =
+            chatProvider.messages.toSet().toList(); // Remove duplicates
+
         return ListView.builder(
           controller: widget.scrollController,
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: chatProvider.messages.length,
+          itemCount: messages.length, // Use the unique list
           itemBuilder: (context, index) {
-            final message = chatProvider.messages[index];
+            final message = messages[index];
             String question = message[questionTitle];
-            final answer = message[answerTitle];
-            if (question.contains("steps")) {
+            String answer = message[answerTitle] ?? '';
+
+            if (question.contains("steps") && !isFetching) {
+              isFetching = true;
               return Container(
                 padding: EdgeInsets.only(bottom: 20),
-                height:
-                400.0, // Set a fixed height or use constraints that fit your design
+                height: 400.0,
                 child: Healthbarchart(),
               );
             } else {
-              // Handle other questions and answers
               return UserChatContainer(
-                question: question ?? 'No question',
-                answer: answer ?? 'No answer',
+                question: question,
+                answer: answer.isNotEmpty ? answer : 'Loading answer...',
               );
             }
           },
