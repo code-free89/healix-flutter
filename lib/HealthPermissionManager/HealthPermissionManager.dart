@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
 import 'package:helix_ai/model/puthealthdata.dart';
+import 'dart:io';
 
 enum AppState {
   DATA_NOT_FETCHED,
@@ -31,7 +32,7 @@ class HealthPermissionManager {
   final sharePreferenceProvider = SharePreferenceProvider();
   // Singleton instance
   static final HealthPermissionManager _instance =
-  HealthPermissionManager._privateConstructor();
+      HealthPermissionManager._privateConstructor();
   // Factory method to return the same instance
   factory HealthPermissionManager() {
     return _instance;
@@ -52,41 +53,105 @@ class HealthPermissionManager {
   //   HealthDataType.BODY_MASS_INDEX
   // ];
 
-  static final types = [
-    // General Health Data
-    HealthDataType.WEIGHT,                 // Weight in kg
-    HealthDataType.STEPS,                  // Number of steps
-    HealthDataType.HEIGHT,                 // Height in meters
-    HealthDataType.WORKOUT,                // Workouts
-    HealthDataType.ACTIVE_ENERGY_BURNED,   // Active energy burned in kcal
-    HealthDataType.BODY_MASS_INDEX,        // BMI
-    HealthDataType.BLOOD_GLUCOSE,          // Blood glucose levels
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,// Systolic blood pressure
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,// Diastolic blood pressure
+  static final List<HealthDataType> types = Platform.isIOS
+      ? [
+    // iOS-specific HealthDataTypes
+    //Available in iOS
+    HealthDataType.ACTIVE_ENERGY_BURNED,
+    HealthDataType.AUDIOGRAM,
+    HealthDataType.BLOOD_GLUCOSE,
+    HealthDataType.BLOOD_OXYGEN,
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+    HealthDataType.BODY_FAT_PERCENTAGE,
+    HealthDataType.BODY_MASS_INDEX,
+    HealthDataType.BODY_TEMPERATURE,
+    HealthDataType.DIETARY_CARBS_CONSUMED,
+    HealthDataType.DIETARY_CAFFEINE,
+    HealthDataType.DIETARY_ENERGY_CONSUMED,
+    HealthDataType.DIETARY_FATS_CONSUMED,
+    HealthDataType.DIETARY_PROTEIN_CONSUMED,
+    HealthDataType.ELECTRODERMAL_ACTIVITY,
+    HealthDataType.FORCED_EXPIRATORY_VOLUME,
+    HealthDataType.HEART_RATE,
+    HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+    HealthDataType.HEIGHT,
+    HealthDataType.HIGH_HEART_RATE_EVENT,
+    HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+    HealthDataType.LOW_HEART_RATE_EVENT,
+    HealthDataType.RESPIRATORY_RATE,
+    HealthDataType.PERIPHERAL_PERFUSION_INDEX,
+    HealthDataType.STEPS,
+    HealthDataType.WAIST_CIRCUMFERENCE,
+    HealthDataType.WALKING_HEART_RATE,
+    HealthDataType.WEIGHT,
+    HealthDataType.DISTANCE_WALKING_RUNNING,
+    HealthDataType.DISTANCE_SWIMMING,
+    HealthDataType.DISTANCE_CYCLING,
+    HealthDataType.MINDFULNESS,
+    HealthDataType.SLEEP_IN_BED,
+    HealthDataType.SLEEP_AWAKE,
+    HealthDataType.SLEEP_ASLEEP,
+    HealthDataType.SLEEP_DEEP,
+    HealthDataType.SLEEP_REM,
+    HealthDataType.SLEEP_ASLEEP_CORE,
+    HealthDataType.SLEEP_ASLEEP_DEEP,
+    HealthDataType.SLEEP_ASLEEP_REM,
+    HealthDataType.WATER,
+    HealthDataType.EXERCISE_TIME,
+    HealthDataType.WORKOUT,
+    HealthDataType.HEADACHE_NOT_PRESENT,
+    HealthDataType.HEADACHE_MILD,
+    HealthDataType.HEADACHE_MODERATE,
+    HealthDataType.HEADACHE_SEVERE,
+    HealthDataType.HEADACHE_UNSPECIFIED,
+    HealthDataType.ELECTROCARDIOGRAM,
+    HealthDataType.NUTRITION
+    // Add other iOS-specific types here...
+  ]
+      : [
+    // Android-specific HealthDataTypes
+    //Available in Android
+    HealthDataType.ACTIVE_ENERGY_BURNED,
+    HealthDataType.BLOOD_GLUCOSE,
+    HealthDataType.BLOOD_OXYGEN,
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+    HealthDataType.BODY_FAT_PERCENTAGE,
+    HealthDataType.BODY_MASS_INDEX,
+    HealthDataType.BODY_TEMPERATURE,
+    HealthDataType.HEART_RATE,
+    HealthDataType.HEIGHT,
+    HealthDataType.STEPS,
+    HealthDataType.WEIGHT,
+    HealthDataType.MOVE_MINUTES,
+    HealthDataType.DISTANCE_DELTA,
+    HealthDataType.SLEEP_AWAKE,
+    HealthDataType.SLEEP_ASLEEP,
+    HealthDataType.SLEEP_IN_BED,
+    HealthDataType.SLEEP_DEEP,
+    HealthDataType.SLEEP_LIGHT,
+    HealthDataType.SLEEP_REM,
+    HealthDataType.WATER,
+    HealthDataType.WORKOUT,
+    HealthDataType.NUTRITION,
+    // Add other Android-specific types here...
 
-    // iOS Specific Data
-    HealthDataType.SLEEP_ASLEEP,           // Time spent asleep (iOS)
-    HealthDataType.HEART_RATE,             // Heart rate (iOS)
-    HealthDataType.BODY_TEMPERATURE,       // Body temperature (iOS)
-    // Blood oxygen level (Android)
 
-    // Cross-Platform Data (Available on both iOS and Android)
-    HealthDataType.WATER,                  // Water intake
-    HealthDataType.SLEEP_IN_BED            // Time spent in bed
-  ];
+
 
   // Permissions based on health data types
   List<HealthDataAccess> get permissions => types
       .map((type) => [
-    HealthDataType.WALKING_HEART_RATE,
-    HealthDataType.ELECTROCARDIOGRAM,
-    HealthDataType.HIGH_HEART_RATE_EVENT,
-    HealthDataType.LOW_HEART_RATE_EVENT,
-    HealthDataType.IRREGULAR_HEART_RATE_EVENT,
-    HealthDataType.EXERCISE_TIME,
-  ].contains(type)
-      ? HealthDataAccess.READ
-      : HealthDataAccess.READ_WRITE)
+            HealthDataType.WALKING_HEART_RATE,
+            HealthDataType.ELECTROCARDIOGRAM,
+            HealthDataType.HIGH_HEART_RATE_EVENT,
+            HealthDataType.LOW_HEART_RATE_EVENT,
+            HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+            HealthDataType.EXERCISE_TIME,
+          ].contains(type)
+              ? HealthDataAccess.READ
+              : HealthDataAccess.READ_WRITE)
       .toList();
 
   //MARK: -  Function to request health permission
@@ -97,7 +162,7 @@ class HealthPermissionManager {
 
     // Check if we already have health permissions
     bool? hasPermissions =
-    await Health().hasPermissions(types, permissions: permissions);
+        await Health().hasPermissions(types, permissions: permissions);
 
     // Request permissions if not granted
     if (hasPermissions == false || hasPermissions == null) {
