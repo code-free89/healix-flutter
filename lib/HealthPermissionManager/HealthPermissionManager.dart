@@ -55,90 +55,88 @@ class HealthPermissionManager {
 
   static final List<HealthDataType> types = Platform.isIOS
       ? [
-    // iOS-specific HealthDataTypes
-    //Available in iOS
-    HealthDataType.ACTIVE_ENERGY_BURNED,
-    HealthDataType.AUDIOGRAM,
-    HealthDataType.BLOOD_GLUCOSE,
-    HealthDataType.BLOOD_OXYGEN,
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-    HealthDataType.BODY_FAT_PERCENTAGE,
-    HealthDataType.BODY_MASS_INDEX,
-    HealthDataType.BODY_TEMPERATURE,
-    HealthDataType.DIETARY_CARBS_CONSUMED,
-    HealthDataType.DIETARY_CAFFEINE,
-    HealthDataType.DIETARY_ENERGY_CONSUMED,
-    HealthDataType.DIETARY_FATS_CONSUMED,
-    HealthDataType.DIETARY_PROTEIN_CONSUMED,
-    HealthDataType.ELECTRODERMAL_ACTIVITY,
-    HealthDataType.FORCED_EXPIRATORY_VOLUME,
-    HealthDataType.HEART_RATE,
-    HealthDataType.HEART_RATE_VARIABILITY_SDNN,
-    HealthDataType.HEIGHT,
-    HealthDataType.HIGH_HEART_RATE_EVENT,
-    HealthDataType.IRREGULAR_HEART_RATE_EVENT,
-    HealthDataType.LOW_HEART_RATE_EVENT,
-    HealthDataType.RESPIRATORY_RATE,
-    HealthDataType.PERIPHERAL_PERFUSION_INDEX,
-    HealthDataType.STEPS,
-    HealthDataType.WAIST_CIRCUMFERENCE,
-    HealthDataType.WALKING_HEART_RATE,
-    HealthDataType.WEIGHT,
-    HealthDataType.DISTANCE_WALKING_RUNNING,
-    HealthDataType.DISTANCE_SWIMMING,
-    HealthDataType.DISTANCE_CYCLING,
-    HealthDataType.MINDFULNESS,
-    HealthDataType.SLEEP_IN_BED,
-    HealthDataType.SLEEP_AWAKE,
-    HealthDataType.SLEEP_ASLEEP,
-    HealthDataType.SLEEP_DEEP,
-    HealthDataType.SLEEP_REM,
-    HealthDataType.SLEEP_ASLEEP_CORE,
-    HealthDataType.SLEEP_ASLEEP_DEEP,
-    HealthDataType.SLEEP_ASLEEP_REM,
-    HealthDataType.WATER,
-    HealthDataType.EXERCISE_TIME,
-    HealthDataType.WORKOUT,
-    HealthDataType.HEADACHE_NOT_PRESENT,
-    HealthDataType.HEADACHE_MILD,
-    HealthDataType.HEADACHE_MODERATE,
-    HealthDataType.HEADACHE_SEVERE,
-    HealthDataType.HEADACHE_UNSPECIFIED,
-    HealthDataType.ELECTROCARDIOGRAM,
-    HealthDataType.NUTRITION
-    // Add other iOS-specific types here...
-  ]
+          // iOS-specific HealthDataTypes
+          //Available in iOS
+          HealthDataType.ACTIVE_ENERGY_BURNED,
+          HealthDataType.AUDIOGRAM,
+          HealthDataType.BLOOD_GLUCOSE,
+          HealthDataType.BLOOD_OXYGEN,
+          HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+          HealthDataType.BODY_FAT_PERCENTAGE,
+          HealthDataType.BODY_MASS_INDEX,
+          HealthDataType.BODY_TEMPERATURE,
+          HealthDataType.DIETARY_CARBS_CONSUMED,
+          HealthDataType.DIETARY_CAFFEINE,
+          HealthDataType.DIETARY_ENERGY_CONSUMED,
+          HealthDataType.DIETARY_FATS_CONSUMED,
+          HealthDataType.DIETARY_PROTEIN_CONSUMED,
+          HealthDataType.ELECTRODERMAL_ACTIVITY,
+          HealthDataType.FORCED_EXPIRATORY_VOLUME,
+          HealthDataType.HEART_RATE,
+          HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+          HealthDataType.HEIGHT,
+          HealthDataType.HIGH_HEART_RATE_EVENT,
+          HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+          HealthDataType.LOW_HEART_RATE_EVENT,
+          HealthDataType.RESPIRATORY_RATE,
+          HealthDataType.PERIPHERAL_PERFUSION_INDEX,
+          HealthDataType.STEPS,
+          HealthDataType.WAIST_CIRCUMFERENCE,
+          HealthDataType.WALKING_HEART_RATE,
+          HealthDataType.WEIGHT,
+          HealthDataType.DISTANCE_WALKING_RUNNING,
+          HealthDataType.DISTANCE_SWIMMING,
+          HealthDataType.DISTANCE_CYCLING,
+          HealthDataType.MINDFULNESS,
+          HealthDataType.SLEEP_IN_BED,
+          HealthDataType.SLEEP_AWAKE,
+          HealthDataType.SLEEP_ASLEEP,
+          HealthDataType.SLEEP_DEEP,
+          HealthDataType.SLEEP_REM,
+          HealthDataType.SLEEP_ASLEEP_CORE,
+          HealthDataType.SLEEP_ASLEEP_DEEP,
+          HealthDataType.SLEEP_ASLEEP_REM,
+          HealthDataType.WATER,
+          HealthDataType.EXERCISE_TIME,
+          HealthDataType.WORKOUT,
+          HealthDataType.HEADACHE_NOT_PRESENT,
+          HealthDataType.HEADACHE_MILD,
+          HealthDataType.HEADACHE_MODERATE,
+          HealthDataType.HEADACHE_SEVERE,
+          HealthDataType.HEADACHE_UNSPECIFIED,
+          HealthDataType.ELECTROCARDIOGRAM,
+          HealthDataType.NUTRITION
+          // Add other iOS-specific types here...
+        ]
       : [
-    // Android-specific HealthDataTypes
-    //Available in Android
-    HealthDataType.ACTIVE_ENERGY_BURNED,
-    HealthDataType.BLOOD_GLUCOSE,
-    HealthDataType.BLOOD_OXYGEN,
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-    HealthDataType.BODY_FAT_PERCENTAGE,
-    HealthDataType.BODY_MASS_INDEX,
-    HealthDataType.BODY_TEMPERATURE,
-    HealthDataType.HEART_RATE,
-    HealthDataType.HEIGHT,
-    HealthDataType.STEPS,
-    HealthDataType.WEIGHT,
-    HealthDataType.MOVE_MINUTES,
-    HealthDataType.DISTANCE_DELTA,
-    HealthDataType.SLEEP_AWAKE,
-    HealthDataType.SLEEP_ASLEEP,
-    HealthDataType.SLEEP_IN_BED,
-    HealthDataType.SLEEP_DEEP,
-    HealthDataType.SLEEP_LIGHT,
-    HealthDataType.SLEEP_REM,
-    HealthDataType.WATER,
-    HealthDataType.WORKOUT,
-    HealthDataType.NUTRITION,
-    // Add other Android-specific types here...
-
-
-
+          // Android-specific HealthDataTypes
+          //Available in Android
+          HealthDataType.ACTIVE_ENERGY_BURNED,
+          HealthDataType.BLOOD_GLUCOSE,
+          HealthDataType.BLOOD_OXYGEN,
+          HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+          HealthDataType.BODY_FAT_PERCENTAGE,
+          HealthDataType.BODY_MASS_INDEX,
+          HealthDataType.BODY_TEMPERATURE,
+          HealthDataType.HEART_RATE,
+          HealthDataType.HEIGHT,
+          HealthDataType.STEPS,
+          HealthDataType.WEIGHT,
+          HealthDataType.MOVE_MINUTES,
+          HealthDataType.DISTANCE_DELTA,
+          HealthDataType.SLEEP_AWAKE,
+          HealthDataType.SLEEP_ASLEEP,
+          HealthDataType.SLEEP_IN_BED,
+          HealthDataType.SLEEP_DEEP,
+          HealthDataType.SLEEP_LIGHT,
+          HealthDataType.SLEEP_REM,
+          HealthDataType.WATER,
+          HealthDataType.WORKOUT,
+          HealthDataType.NUTRITION
+          // Add other Android-specific types here...
+        ];
 
   // Permissions based on health data types
   List<HealthDataAccess> get permissions => types
@@ -185,9 +183,9 @@ class HealthPermissionManager {
   Future<void> fetchHealthData() async {
     _state = AppState.FETCHING_DATA;
 
-    // Get data within the last 24 hours
+    // Get the current time and the start of today
     final now = DateTime.now();
-    final yesterday = now.subtract(Duration(hours: 24));
+    final startOfToday = DateTime(now.year, now.month, now.day);
 
     // Clear old data points
     _healthDataList.clear();
@@ -201,10 +199,10 @@ class HealthPermissionManager {
         return;
       }
 
-      // Fetch health data
+      // Fetch health data for today
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
         types: types,
-        startTime: yesterday,
+        startTime: startOfToday,
         endTime: now,
       );
 
@@ -220,19 +218,7 @@ class HealthPermissionManager {
       return;
     }
 
-    // Filter out duplicates
-    _healthDataList = Health().removeDuplicates(_healthDataList);
-
-    if (_healthDataList.isEmpty) {
-      print("No data retrieved.");
-      _state = AppState.NO_DATA;
-    } else {
-      _healthDataList.forEach((data) => print(toJsonString(data)));
-      _state = AppState.DATA_READY;
-
-      // Call the function to post health data after it's fetched
-      await postFetchedHealthData();
-    }
+    _state = AppState.DATA_READY;
   }
 
   Future<void> postFetchedHealthData() async {
