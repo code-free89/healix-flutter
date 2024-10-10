@@ -47,9 +47,9 @@ class _ChatHomeState extends State<ChatHome> {
     _fetchHealthData();
 
     // Set up the periodic timer to call the fetch function every 4 hours
-    //_fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
-    //_fetchHealthData();
-    // });
+    _fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
+      _fetchHealthData();
+    });
   }
 
   // Function to authorize and fetch health data
@@ -192,8 +192,8 @@ class _ChatHomeState extends State<ChatHome> {
                             endDate: today,
                           );
 
-                          futureHealthData =
-                              controller.fetchHealthData(request, context);
+                          futureHealthData = controller.fetchHealthDataForGraph(
+                              request, context);
                           futureHealthData.then((response) {
                             print("Get Health Data Response");
                           });

@@ -107,6 +107,7 @@ class HealthPermissionManager {
     return true;
   }
 
+  //TODO: - This function performs Fetch Health Data
   Future<void> fetchHealthData(BuildContext context) async {
     _state = AppState.FETCHING_DATA;
 
@@ -158,8 +159,7 @@ class HealthPermissionManager {
     }
   }
 
-
-  //TODO: - This function performs Featch Health Data
+  //TODO: - This function performs Post Health Data
   Future<void> postFetchedHealthData(BuildContext context) async {
     // Map each data point to the required structure
     List<puthealthdata> items = _healthDataList.map((dataPoint) {

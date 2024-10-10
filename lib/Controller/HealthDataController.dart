@@ -145,7 +145,7 @@ class HealthDataController {
   }
 
   // MARK: - Function for Get Health Data
-  Future<gethealthdataResponse> fetchHealthData(
+  Future<gethealthdataResponse> fetchHealthDataForGraph(
       gethealthdataRequest request, BuildContext context) async {
     try {
       print("Sending request to $getHealthDataapiUrl");
