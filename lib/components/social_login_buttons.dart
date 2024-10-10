@@ -7,11 +7,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/images_path.dart';
 import 'package:helix_ai/pages/chat_home.dart';
+import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 
 class SocialLoginButtons extends StatelessWidget {
   final String text;
   SocialLoginButtons({super.key, required this.text});
-
+  SharedPreferenceRepository _sharedPreferenceRepository =
+      SharedPreferenceRepository();
   // Google Sign-In instance
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -33,6 +35,9 @@ class SocialLoginButtons extends StatelessWidget {
           final User? user = userCredential.user;
           if (user != null) {
             print('Facebook Firebase Login Success: ${user.uid}');
+            await _sharedPreferenceRepository.storeUserInfo(
+                uid: userCredential.user!.uid,
+                email: userCredential.user!.email);
             // Navigate to ChatHome after successful login
             Navigator.pushReplacement(
               context,
@@ -69,6 +74,9 @@ class SocialLoginButtons extends StatelessWidget {
         final User? user = userCredential.user;
         if (user != null) {
           print('Google Firebase Login Success: ${user.uid}');
+
+          await _sharedPreferenceRepository.storeUserInfo(
+              uid: userCredential.user!.uid, email: userCredential.user!.email);
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(
             context,

@@ -12,7 +12,7 @@ class ChatProvider extends ChangeNotifier {
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
 
-  Future<void> getChatAnswer(String question) async {
+  Future<void> getChatAnswer(String question, BuildContext context) async {
     if (isAnswerLoading) return; // Prevent duplicate calls
 
     isAnswerLoading = true;
@@ -35,7 +35,8 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       // Call your API to get the customized response
-      CustomizedResponse res = await apiRepository.getCustomizedData(request);
+      CustomizedResponse res =
+          await apiRepository.getCustomizedData(request, context);
 
       // Assuming your API response has a field 'gpt_response'
       String gptResponse =

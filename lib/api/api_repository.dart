@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:helix_ai/Controller/HealthDataController.dart';
 import 'package:helix_ai/model/getCustomizedata.dart';
 
@@ -15,7 +16,9 @@ import 'api_provider.dart';
 class ApiRepository {
   final HealthDataController healthDataController = HealthDataController();
 
-  Future<CustomizedResponse> getCustomizedData(CustomizedRequest request) {
-    return healthDataController.getCustomizedData(request);
+  // Passing context from the caller
+  Future<CustomizedResponse> getCustomizedData(
+      CustomizedRequest request, BuildContext context) {
+    return healthDataController.getCustomizedData(request, context);
   }
 }

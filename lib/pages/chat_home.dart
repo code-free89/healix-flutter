@@ -47,17 +47,17 @@ class _ChatHomeState extends State<ChatHome> {
     _fetchHealthData();
 
     // Set up the periodic timer to call the fetch function every 4 hours
-    _fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
-      _fetchHealthData();
-    });
+    //_fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
+    //_fetchHealthData();
+    // });
   }
 
   // Function to authorize and fetch health data
   void _fetchHealthData() async {
     bool authorized =
-        await HealthPermissionManager().authorizeHealthPermission();
+        await HealthPermissionManager().authorizeHealthPermission(context);
     if (authorized) {
-      await HealthPermissionManager().fetchHealthData();
+      await HealthPermissionManager().fetchHealthData(context);
     }
   }
 
@@ -165,7 +165,7 @@ class _ChatHomeState extends State<ChatHome> {
                           FocusManager.instance.primaryFocus?.unfocus();
 
                           // Add question to chat provider
-                          chatProvider.getChatAnswer(question);
+                          chatProvider.getChatAnswer(question, context);
                           chatController.clear();
                           chatProvider.scrollToBottom(scrollController);
 
@@ -173,7 +173,7 @@ class _ChatHomeState extends State<ChatHome> {
                           isFetching = true;
 
                           // Fetch GPT answer for the question
-                          await chatProvider.getChatAnswer(question);
+                          await chatProvider.getChatAnswer(question, context);
                           chatProvider.scrollToBottom(scrollController);
 
                           // Reset the fetching flag after API call
@@ -193,7 +193,7 @@ class _ChatHomeState extends State<ChatHome> {
                           );
 
                           futureHealthData =
-                              controller.fetchHealthData(request);
+                              controller.fetchHealthData(request, context);
                           futureHealthData.then((response) {
                             print("Get Health Data Response");
                           });

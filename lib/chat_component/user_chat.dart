@@ -35,7 +35,7 @@ class _UserChatState extends State<UserChat> {
             String question = message[questionTitle];
             String answer = message[answerTitle] ?? '';
 
-            if (question.contains("steps") && !isFetching) {
+            if (question.contains("dd") && !isFetching) {
               isFetching = true;
               return Container(
                 padding: EdgeInsets.only(bottom: 20),
