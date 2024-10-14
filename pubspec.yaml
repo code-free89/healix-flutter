@@ -46,13 +46,13 @@ dependencies:
   connectivity_plus: ^5.0.2
   jumping_dot: ^0.0.4
   flutter_dotenv: ^5.1.0
-  health: ^10.2.0
   permission_handler: ^11.3.1
   carp_serializable: ^1.1.0 # polymorphic json serialization
   http: ^1.2.2
   fl_chart: ^0.69.0
   flutter_facebook_auth: 
   flutter_secure_storage:
+  health: ^11.0.0
 
 dev_dependencies:
   flutter_test:

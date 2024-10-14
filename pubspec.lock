@@ -460,10 +460,10 @@ packages:
     dependency: "direct main"
     description:
       name: health
-      sha256: "9b3c5ddb1cb22020a2bb423b3c091c8b47806a38f80d350dfb11831000af2392"
+      sha256: "99786fd53e6a67f01211f943385a01da5dbd1c9c61b28a27879a2bbe3b708b00"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "11.0.0"
   http:
     dependency: "direct main"
     description:
@@ -913,10 +913,10 @@ packages:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "723b7f851e5724c55409bb3d5a32b203b3afe8587eaf5dafb93a5fed8ecda0d6"
+      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.4"
+    version: "1.1.5"
   xdg_directories:
     dependency: transitive
     description:

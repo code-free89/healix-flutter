@@ -1,8 +1,8 @@
 import 'package:helix_ai/Controller/HealthDataController.dart';
 import 'package:helix_ai/HealthPermissionManager/HealthPermission.dart';
-import 'package:helix_ai/model/puthealthdata.dart';
+import 'package:helix_ai/model/puthealthdata.dart'
+    hide NumericHealthValue; // Hide NumericHealthValue from 'helix_ai' package
 import 'package:helix_ai/shared_preferences/share_preference_provider.dart';
-import 'package:helix_ai/shared_preferences/share_preference_repository.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
@@ -111,7 +111,9 @@ class HealthPermissionManager {
   Future<void> fetchHealthData(BuildContext context) async {
     _state = AppState.FETCHING_DATA;
 
-    var now = DateTime.now().toLocal();
+    var now = DateTime.now();
+    var startOfDay = DateTime(now.year, now.month, now.day);
+
     // Clear old data points
     _healthDataList.clear();
 
@@ -127,15 +129,15 @@ class HealthPermissionManager {
 
       // Fetch health data
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
-          types: types,
-          startTime: now.subtract(Duration(days: 1)),
-          endTime: now,
-          includeManualEntry: true);
+        types: types,
+        startTime: startOfDay,
+        endTime: now,
+      );
 
       print('Total number of data points: ${healthData.length}. '
           '${healthData.length > 100 ? 'Only showing the first 100.' : ''}');
 
-      // Save all the new data points (only the first 100)
+      // Add all the new data points (only the first 100)
       _healthDataList.addAll(healthData);
     } catch (error) {
       showPermissionDialog(
@@ -144,8 +146,8 @@ class HealthPermissionManager {
       return;
     }
 
-    // Filter out duplicates
-    _healthDataList = Health().removeDuplicates(_healthDataList);
+    // Filter out duplicates and merge data points with the same type
+    _healthDataList = _mergeHealthDataPoints(_healthDataList);
 
     if (_healthDataList.isEmpty) {
       print("No data retrieved.");
@@ -157,6 +159,40 @@ class HealthPermissionManager {
       // Call the function to post health data after it's fetched
       await postFetchedHealthData(context);
     }
+  }
+
+  //TODO: Function to merge health data points with the same type
+  List<HealthDataPoint> _mergeHealthDataPoints(
+      List<HealthDataPoint> healthDataList) {
+    Map<String, HealthDataPoint> mergedData = {};
+
+    for (var data in healthDataList) {
+      String key = data.type.toString() +
+          data.sourceId; // Use type and sourceId to identify duplicates
+
+      if (mergedData.containsKey(key)) {
+        // If the key exists, aggregate the values
+        var existingData = mergedData[key]!;
+
+        // Assuming NumericHealthValue contains a field 'numericValue' for the actual numeric data
+        if (existingData.value is NumericHealthValue &&
+            data.value is NumericHealthValue) {
+          var existingNumericValue =
+              (existingData.value as NumericHealthValue).numericValue;
+          var newNumericValue = (data.value as NumericHealthValue).numericValue;
+
+          // Sum the values
+          (existingData.value as NumericHealthValue).numericValue =
+              existingNumericValue + newNumericValue;
+        }
+      } else {
+        // Add the new data point if it doesn't exist in the map
+        mergedData[key] = data;
+      }
+    }
+
+    // Return the merged list of health data points
+    return mergedData.values.toList();
   }
 
   //TODO: - This function performs Post Health Data
@@ -175,7 +211,7 @@ class HealthPermissionManager {
             .sourceDeviceId, // Example: "BEE86A48-F8B9-4BA6-AB13-39A1A608558D"
         sourceId: dataPoint.sourceId, // Example: "com.apple.Health"
         sourceName: dataPoint.sourceName, // Example: "Health"
-        isManualEntry: dataPoint.isManualEntry, // Boolean value
+        isManualEntry: false, // Boolean value
         value: {
           "__type": "NumericHealthValue",
           "numeric_value": dataPoint.value, // Example: 200
