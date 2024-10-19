@@ -5,7 +5,6 @@ import 'package:helix_ai/views/screens/chat_screen/chat_component/HealthBarChart
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_container.dart';
 import 'package:provider/provider.dart';
 
-
 class UserChat extends StatefulWidget {
   final ScrollController scrollController;
   UserChat({super.key, required this.scrollController});
@@ -36,19 +35,19 @@ class _UserChatState extends State<UserChat> {
             String question = message[questionTitle];
             String answer = message[answerTitle] ?? '';
 
-            if (question.contains("graph") && !isFetching) {
-              isFetching = true;
-              return Container(
-                padding: EdgeInsets.only(bottom: 20),
-                height: 400.0,
-                child: Healthbarchart(),
-              );
-            } else {
-              return UserChatContainer(
-                question: question,
-                answer: answer.isNotEmpty ? answer : 'Loading answer...',
-              );
-            }
+            // if (question.contains("graph") && !isFetching) {
+            //   isFetching = true;
+            //   return Container(
+            //     padding: EdgeInsets.only(bottom: 20),
+            //     height: 400.0,
+            //     child: Healthbarchart(),
+            //   );
+            // } else {
+            return UserChatContainer(
+              question: question,
+              answer: answer.isNotEmpty ? answer : 'Loading answer...',
+            );
+            //}
           },
         );
       }),
