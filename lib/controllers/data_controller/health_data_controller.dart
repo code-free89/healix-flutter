@@ -167,6 +167,7 @@ class HealthDataController {
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
+      print("response from getHealthDataapiUrl: ${jsonDecode(response.body)}");
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {

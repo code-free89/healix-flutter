@@ -16,7 +16,7 @@ migrate_working_dir/
 *.iws
 .idea/
 /build
-pubspec.lock
+.lock
 .env
 
 # The .vscode folder contains launch configuration and tasks you configure in

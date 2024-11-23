@@ -45,7 +45,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   jumping_dot: ^0.0.4
   flutter_dotenv: ^5.1.0
-  permission_handler: ^11.3.1
+  permission_handler:
   carp_serializable: ^1.1.0 # polymorphic json serialization
   http: ^1.2.2
   #fl_chart: ^0.69.0
@@ -105,7 +105,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - .env
+#    - .env
     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
