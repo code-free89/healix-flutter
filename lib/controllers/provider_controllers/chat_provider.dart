@@ -6,7 +6,6 @@ import 'package:helix_ai/util/backend_services/repositories/ai_chat_repositories
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
-
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
   bool isAnswerLoading = false;
@@ -23,7 +22,8 @@ class ChatProvider extends ChangeNotifier {
 
     // Create a CustomizedRequest object
     CustomizedRequest request = CustomizedRequest(
-      id: userUid ?? "", // replace with actual user ID if necessary
+      id: '345', // replace with actual user ID if necessary
+      // id: userUid ?? "", // replace with actual user ID if necessary
       searchText: question,
     );
 
@@ -48,6 +48,17 @@ class ChatProvider extends ChangeNotifier {
         questionTitle: question,
         answerTitle: gptResponse,
       };
+
+      if (res.intent == 'MEAL_ORDER') {
+        messages.last = {
+          questionTitle: question,
+          answerTitle: gptResponse,
+          isMeal: true,
+          menuItem:res.menuItem,
+        };
+      
+      }
+
     } catch (error) {
       // Update the question with an error message if the API call fails
       messages.last = {

@@ -192,11 +192,11 @@ class _ChatHomeState extends State<ChatHome> {
                             endDate: today,
                           );
 
-                          futureHealthData = controller.fetchHealthDataForGraph(
-                              request, context);
-                          futureHealthData.then((response) {
-                            print("Get Health Data Response");
-                          });
+                          // futureHealthData = controller.fetchHealthDataForGraph(
+                          //     request, context);
+                          // futureHealthData.then((response) {
+                          //   print("Get Health Data Response");
+                          // });
                         }
                       },
                       child: Padding(

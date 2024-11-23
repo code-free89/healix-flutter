@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/controllers/provider_controllers/chat_provider.dart';
+import 'package:helix_ai/model/getCustomizedata.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/HealthBarChart.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_container.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 
 class UserChat extends StatefulWidget {
   final ScrollController scrollController;
+
   UserChat({super.key, required this.scrollController});
 
   @override
@@ -29,11 +31,14 @@ class _UserChatState extends State<UserChat> {
           controller: widget.scrollController,
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: messages.length, // Use the unique list
+          itemCount: messages.length,
+          // Use the unique list
           itemBuilder: (context, index) {
             final message = messages[index];
             String question = message[questionTitle];
             String answer = message[answerTitle] ?? '';
+            bool meal = message[isMeal] ?? false;
+            MenuItem? menu = message[menuItem];
 
             // if (question.contains("graph") && !isFetching) {
             //   isFetching = true;
@@ -46,6 +51,10 @@ class _UserChatState extends State<UserChat> {
             return UserChatContainer(
               question: question,
               answer: answer.isNotEmpty ? answer : 'Loading answer...',
+              isMeal: meal,
+              menuItem: menu,
+              // isMeal: chatProvider.isMealOrder,
+              // menuItem: chatProvider.menuItem,
             );
             //}
           },
