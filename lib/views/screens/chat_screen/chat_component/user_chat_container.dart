@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:helix_ai/model/getCustomizedata.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:jumping_dot/jumping_dot.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../controllers/provider_controllers/chat_provider.dart';
 
 class UserChatContainer extends StatelessWidget {
   final String question;
@@ -72,90 +75,170 @@ class UserChatContainer extends StatelessWidget {
               // Show loading indicator or answer text
               child: answer != null && answer!.isNotEmpty
                   ? Text(
-                      answer!,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: 'Urbanist',
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                      ),
-                    )
+                answer!,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'Urbanist',
+                  color: Color.fromRGBO(51, 51, 51, 1),
+                ),
+              )
                   : SizedBox(
-                      width: 30,
-                      child: JumpingDots(
-                        color: greenThemeColor,
-                        radius: 10,
-                        numberOfDots: 3,
-                        innerPadding: 0,
-                      ),
-                    ),
+                width: 30,
+                child: JumpingDots(
+                  color: greenThemeColor,
+                  radius: 10,
+                  numberOfDots: 3,
+                  innerPadding: 0,
+                ),
+              ),
             ),
           ),
         ),
         (isMeal != null && isMeal!)
             ? Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                  Container(
+                    // height: MediaQuery.of(context).size.height * 0.25,
+                    // width: 100,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(.2),
+                          spreadRadius: 3,
+                          // How far the shadow spreads
+                          blurRadius: 10,
+                          // How blurry the shadow looks
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          // height: MediaQuery.of(context).size.height * 0.25,
-                          // width: 100,
+                            height:
+                            MediaQuery.of(context).size.height * 0.18,
+                            width:
+                            MediaQuery.of(context).size.width * 0.5,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                color: Colors.white),
+                            child: Image.network(
+                              menuItem!.image!,
+                              fit: BoxFit.contain,
+                            )),
+                        Container(
+                          height:
+                          MediaQuery.of(context).size.height * 0.07,
+                          width: MediaQuery.of(context).size.width * 0.5,
                           decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(.35),
-                                  spreadRadius: 3,
-                                  // How far the shadow spreads
-                                  blurRadius: 10,
-                                  // How blurry the shadow looks
-                                  offset: Offset(0, 3),
+                              border:
+                              Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              color: Colors.grey.shade300),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width *
+                                    0.02),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  menuItem!.name!,
+                                  style: TextStyle(
+                                      fontSize: MediaQuery.of(context)
+                                          .size
+                                          .width *
+                                          0.042),
+                                ),
+                                Text(
+                                  "\$" + menuItem!.price!.toString(),
+                                  style: TextStyle(
+                                      fontSize: MediaQuery.of(context)
+                                          .size
+                                          .width *
+                                          0.04),
                                 ),
                               ],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              ),
-                          child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.18,width:
-    MediaQuery.of(context).size.width * 0.5,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                      color: Colors.white),
-                                  child: Image.network(menuItem!.image!,fit: BoxFit.contain,)),
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.07,width:
-                              MediaQuery.of(context).size.width * 0.5,
-                                decoration: BoxDecoration(border: Border.all(color:Colors.grey.shade300 ),
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                    color: Colors.grey.shade300),
-                                child: Padding(
-                                  padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(menuItem!.name!,style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.042),),
-                                      Text("\$" + menuItem!.price!.toString(),style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical:
+                        MediaQuery.of(context).size.width * 0.04),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Consumer<ChatProvider>(
+                          builder: (_, chatProvider, __) {
+                            return Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.check,
+                                        size: 18, color: gray1Color),
+                                    GestureDetector(
+                                      onTap: () async {
+
+                                      },
+                                      child: Text(
+                                        'Confirm',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: gray1Color,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                GestureDetector(
+                                  onTap: () async {},
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.close,
+                                          size: 18, color: gray1Color),
+                                      Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: gray1Color,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                    ),
+                  ),
                 ],
-              )
+              ),
+            ),
+          ],
+        )
             : SizedBox.shrink(),
       ],
     );
