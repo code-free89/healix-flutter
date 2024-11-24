@@ -9,6 +9,7 @@ import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart'
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
   bool isAnswerLoading = false;
+  bool isMealFinalQuoteLoaded = false;
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
 
@@ -18,59 +19,105 @@ class ChatProvider extends ChangeNotifier {
     isAnswerLoading = true;
     notifyListeners();
 
-    String? userUid = await SharePreferenceProvider().retrieveUserUid();
+      String? userUid = await SharePreferenceProvider().retrieveUserUid();
 
-    // Create a CustomizedRequest object
-    CustomizedRequest request = CustomizedRequest(
-      id: '345', // replace with actual user ID if necessary
-      // id: userUid ?? "", // replace with actual user ID if necessary
-      searchText: question,
-    );
+      // Create a CustomizedRequest object
+      CustomizedRequest request = CustomizedRequest(
+        id: '345', // replace with actual user ID if necessary
+        // id: userUid ?? "", // replace with actual user ID if necessary
+        searchText: question,
+      );
 
-    // Add the question to the list with a loading placeholder
-    messages.add({
-      questionTitle: question,
-      answerTitle: null, // Placeholder for the answer
-    });
-    notifyListeners(); // Notify listeners after adding the question
-
-    try {
-      // Call your API to get the customized response
-      CustomizedResponse res =
-          await apiRepository.getCustomizedData(request, context);
-
-      // Assuming your API response has a field 'gpt_response'
-      String gptResponse =
-          res.gptResponse; // or whatever field contains the response
-
-      // Update the answer for the question in the messages list
-      messages.last = {
+      // Add the question to the list with a loading placeholder
+      messages.add({
         questionTitle: question,
-        answerTitle: gptResponse,
-      };
+        answerTitle: null, // Placeholder for the answer
+      });
+      notifyListeners(); // Notify listeners after adding the question
 
-      if (res.intent == 'MEAL_ORDER') {
+      try {
+        // Call your API to get the customized response
+        CustomizedResponse res =
+            await apiRepository.getCustomizedData(request, context);
+
+        // Assuming your API response has a field 'gpt_response'
+        String gptResponse =
+            res.gptResponse; // or whatever field contains the response
+
+        // Update the answer for the question in the messages list
         messages.last = {
           questionTitle: question,
           answerTitle: gptResponse,
-          isMeal: true,
-          menuItem:res.menuItem,
         };
-      
-      }
 
-    } catch (error) {
-      // Update the question with an error message if the API call fails
-      messages.last = {
-        questionTitle: question,
-        answerTitle: 'Error fetching response',
-      };
-      print('Error: $error');
-    }
+        if (res.intent == 'MEAL_ORDER') {
+          messages.last = {
+            questionTitle: question,
+            answerTitle: gptResponse,
+            isMeal: true,
+            menuItem: res.menuItem,
+          };
+        }
+      } catch (error) {
+        // Update the question with an error message if the API call fails
+        messages.last = {
+          questionTitle: question,
+          answerTitle: 'Error fetching response',
+        };
+        print('Error: $error');
+      }
 
     isAnswerLoading = false;
     notifyListeners(); // Notify listeners after updating the answer
   }
+
+
+  Future<void> getFinalQuote(String question, BuildContext context,
+      MenuItem menuItemView) async {
+    // Add a placeholder message to the list
+    messages.add({
+      questionTitle: question,
+      answerTitle: null, // Placeholder for the answer
+    });
+    notifyListeners(); // Notify UI about the change
+
+    int currentMessageIndex = messages.length - 1; // Get index of the placeholder
+
+    // Prepare the request
+    CustomizedFetchDataRequest request = CustomizedFetchDataRequest(
+      id: '345', // replace with actual user ID if necessary
+      menuItem: menuItemView,
+    );
+
+    try {
+      // Fetch data
+      bool success = await apiRepository.getFinalQuoteData(request, context);
+
+      if (success) {
+        // Replace the placeholder with the final success message
+        messages[currentMessageIndex] = {
+          questionTitle: question,
+          answerTitle: 'Order confirmed!',
+        };
+      } else {
+        // Replace the placeholder with an error message
+        messages[currentMessageIndex] = {
+          questionTitle: question,
+          answerTitle: 'Error fetching response 1',
+        };
+      }
+    } catch (error) {
+      // Handle any exceptions and update the placeholder with an error message
+      messages[currentMessageIndex] = {
+        questionTitle: question,
+        answerTitle: 'Error: Something went wrong!',
+      };
+    }
+
+    notifyListeners(); // Notify UI about the updated message
+  }
+
+
 
   void scrollToBottom(ScrollController scrollController) {
     if (scrollController.hasClients) {
