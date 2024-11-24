@@ -17,7 +17,31 @@ class UserChat extends StatefulWidget {
 
 class _UserChatState extends State<UserChat> {
   bool isFetching = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Add a listener to monitor changes in the messages list
+    Provider.of<ChatProvider>(context, listen: false).addListener(_scrollToBottom);
+  }
 
+  @override
+  void dispose() {
+    // Remove the listener to prevent memory leaks
+    Provider.of<ChatProvider>(context, listen: false).removeListener(_scrollToBottom);
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.scrollController.hasClients) {
+        widget.scrollController.animateTo(
+          widget.scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Align(

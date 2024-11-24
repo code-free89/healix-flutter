@@ -18,6 +18,18 @@ class CustomizedRequest {
       };
 }
 
+class CustomizedFetchDataRequest {
+  final String id;
+  final MenuItem menuItem;
+
+  CustomizedFetchDataRequest({required this.id, required this.menuItem});
+
+  Map<String, dynamic> toJson() => {
+        'user_id': id,
+        'menu_item': menuItem.toJson(),
+      };
+}
+
 class HealthDataController {
   final String putHealthDataapiUrl =
       'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/save_health_data';
@@ -25,6 +37,8 @@ class HealthDataController {
       'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_health_data';
   final String getcustomizedUrl =
       'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_customized_response';
+  final String getQuoteData =
+      'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_final_quote';
 
   // Function to show permission dialog
   void showPermissionDialog(
@@ -105,8 +119,7 @@ class HealthDataController {
 
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(
-      HealthDataRequest request, BuildContext context) async
-  {
+      HealthDataRequest request, BuildContext context) async {
     try {
       print("Sending request to $putHealthDataapiUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
@@ -229,6 +242,42 @@ class HealthDataController {
         showPermissionDialog(context, "Error",
             "Failed to fetch customized response. Status code: ${response.statusCode}");
         throw Exception('Failed to fetch customized response');
+      }
+    } catch (e) {
+      print('Error occurred while fetching customized response: $e');
+      showPermissionDialog(context, "Error",
+          "An error occurred while fetching customized response: $e");
+      throw Exception('Error occurred while fetching customized response: $e');
+    }
+  }
+
+  Future<bool> getFinalQuoteData(
+      CustomizedFetchDataRequest request, BuildContext context) async {
+    try {
+      print("Sending request to $getQuoteData");
+      print("Request body: ${jsonEncode(request.toJson())}");
+
+      final response = await http
+          .post(
+        Uri.parse(getQuoteData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(request.toJson()),
+      )
+          .timeout(Duration(seconds: 15), onTimeout: () {
+        print('Request timed out');
+        showPermissionDialog(context, "Error",
+            "The connection has timed out, please try again later.");
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+      print("getCustomizedData Response : ${jsonDecode(response.body)}");
+
+      if (response.statusCode == 200 || response.statusCode == 202) {
+        return true;
+      } else {
+        return false;
       }
     } catch (e) {
       print('Error occurred while fetching customized response: $e');

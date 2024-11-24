@@ -10,4 +10,10 @@ class ApiRepository {
       CustomizedRequest request, BuildContext context) {
     return healthDataController.getCustomizedData(request, context);
   }
+
+  Future<bool> getFinalQuoteData(
+      CustomizedFetchDataRequest request, BuildContext context) {
+    return healthDataController.getFinalQuoteData(request, context);
+
+  }
 }
