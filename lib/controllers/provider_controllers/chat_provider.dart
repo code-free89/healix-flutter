@@ -19,61 +19,60 @@ class ChatProvider extends ChangeNotifier {
     isAnswerLoading = true;
     notifyListeners();
 
-      String? userUid = await SharePreferenceProvider().retrieveUserUid();
+    String? userUid = await SharePreferenceProvider().retrieveUserUid();
 
-      // Create a CustomizedRequest object
-      CustomizedRequest request = CustomizedRequest(
-        id: '345', // replace with actual user ID if necessary
-        // id: userUid ?? "", // replace with actual user ID if necessary
-        searchText: question,
-      );
+    // Create a CustomizedRequest object
+    CustomizedRequest request = CustomizedRequest(
+      // id: '345', // replace with actual user ID if necessary
+      id: userUid ?? "", // replace with actual user ID if necessary
+      searchText: question,
+    );
 
-      // Add the question to the list with a loading placeholder
-      messages.add({
+    // Add the question to the list with a loading placeholder
+    messages.add({
+      questionTitle: question,
+      answerTitle: null, // Placeholder for the answer
+    });
+    notifyListeners(); // Notify listeners after adding the question
+
+    try {
+      // Call your API to get the customized response
+      CustomizedResponse res =
+          await apiRepository.getCustomizedData(request, context);
+
+      // Assuming your API response has a field 'gpt_response'
+      String gptResponse =
+          res.gptResponse; // or whatever field contains the response
+
+      // Update the answer for the question in the messages list
+      messages.last = {
         questionTitle: question,
-        answerTitle: null, // Placeholder for the answer
-      });
-      notifyListeners(); // Notify listeners after adding the question
+        answerTitle: gptResponse,
+      };
 
-      try {
-        // Call your API to get the customized response
-        CustomizedResponse res =
-            await apiRepository.getCustomizedData(request, context);
-
-        // Assuming your API response has a field 'gpt_response'
-        String gptResponse =
-            res.gptResponse; // or whatever field contains the response
-
-        // Update the answer for the question in the messages list
+      if (res.intent == 'MEAL_ORDER') {
         messages.last = {
           questionTitle: question,
           answerTitle: gptResponse,
+          isMeal: true,
+          menuItem: res.menuItem,
         };
-
-        if (res.intent == 'MEAL_ORDER') {
-          messages.last = {
-            questionTitle: question,
-            answerTitle: gptResponse,
-            isMeal: true,
-            menuItem: res.menuItem,
-          };
-        }
-      } catch (error) {
-        // Update the question with an error message if the API call fails
-        messages.last = {
-          questionTitle: question,
-          answerTitle: 'Error fetching response',
-        };
-        print('Error: $error');
       }
+    } catch (error) {
+      // Update the question with an error message if the API call fails
+      messages.last = {
+        questionTitle: question,
+        answerTitle: 'Error fetching response',
+      };
+      print('Error: $error');
+    }
 
     isAnswerLoading = false;
     notifyListeners(); // Notify listeners after updating the answer
   }
 
-
-  Future<void> getFinalQuote(String question, BuildContext context,
-      MenuItem menuItemView) async {
+  Future<void> getFinalQuote(
+      String question, BuildContext context, MenuItem menuItemView) async {
     // Add a placeholder message to the list
     messages.add({
       questionTitle: question,
@@ -81,11 +80,14 @@ class ChatProvider extends ChangeNotifier {
     });
     notifyListeners(); // Notify UI about the change
 
-    int currentMessageIndex = messages.length - 1; // Get index of the placeholder
+    int currentMessageIndex =
+        messages.length - 1; // Get index of the placeholder
+    String? userUid = await SharePreferenceProvider().retrieveUserUid();
 
     // Prepare the request
     CustomizedFetchDataRequest request = CustomizedFetchDataRequest(
-      id: '345', // replace with actual user ID if necessary
+      // id: '345', // replace with actual user ID if necessary
+      id: userUid ?? "", // replace with actual user ID if necessary
       menuItem: menuItemView,
     );
 
@@ -116,8 +118,6 @@ class ChatProvider extends ChangeNotifier {
 
     notifyListeners(); // Notify UI about the updated message
   }
-
-
 
   void scrollToBottom(ScrollController scrollController) {
     if (scrollController.hasClients) {
