@@ -6,6 +6,8 @@ import 'package:helix_ai/model/gethealthdata.dart';
 import 'package:helix_ai/model/puthealthdata.dart';
 import 'package:http/http.dart' as http;
 
+import '../../util/constants/api_constants.dart';
+
 class CustomizedRequest {
   final String id;
   final String searchText;
@@ -132,7 +134,7 @@ class HealthDataController {
         },
         body: jsonEncode(request.toJson()),
       )
-          .timeout(Duration(seconds: 15), onTimeout: () {
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
         showPermissionDialog(context, "Error",
             "The connection has timed out, please try again later.");
@@ -173,7 +175,7 @@ class HealthDataController {
         },
         body: jsonEncode(request.toJson()),
       )
-          .timeout(Duration(seconds: 15), onTimeout: () {
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
         showPermissionDialog(context, "Error",
             "The connection has timed out, please try again later.");
@@ -218,14 +220,13 @@ class HealthDataController {
         },
         body: jsonEncode(request.toJson()),
       )
-          .timeout(Duration(seconds: 15), onTimeout: () {
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
         showPermissionDialog(context, "Error",
             "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
-      print("getCustomizedData Response : ${jsonDecode(response.body)}");
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
@@ -265,14 +266,13 @@ class HealthDataController {
         },
         body: jsonEncode(request.toJson()),
       )
-          .timeout(Duration(seconds: 15), onTimeout: () {
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
         showPermissionDialog(context, "Error",
             "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
-      print("getCustomizedData Response : ${jsonDecode(response.body)}");
 
       if (response.statusCode == 200 || response.statusCode == 202) {
         return true;

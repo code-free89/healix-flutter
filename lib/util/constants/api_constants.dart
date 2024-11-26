@@ -1,1 +1,1 @@
-
+int TIME_OUT_SECONDS = 60;

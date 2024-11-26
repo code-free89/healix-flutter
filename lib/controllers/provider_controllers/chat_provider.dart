@@ -105,7 +105,7 @@ class ChatProvider extends ChangeNotifier {
         // Replace the placeholder with an error message
         messages[currentMessageIndex] = {
           questionTitle: question,
-          answerTitle: 'Error fetching response 1',
+          answerTitle: 'Error fetching response',
         };
       }
     } catch (error) {
