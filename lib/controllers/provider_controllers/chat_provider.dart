@@ -6,6 +6,9 @@ import 'package:helix_ai/util/backend_services/repositories/ai_chat_repositories
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
+import '../../view_model/customized_fetch_data_request.dart';
+import '../../view_model/customized_request.dart';
+
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
   bool isAnswerLoading = false;

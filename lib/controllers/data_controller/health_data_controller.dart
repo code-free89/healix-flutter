@@ -8,40 +8,14 @@ import 'package:http/http.dart' as http;
 
 import '../../util/constants/api_constants.dart';
 import '../../util/constants/constant.dart';
-
-class CustomizedRequest {
-  final String id;
-  final String searchText;
-
-  CustomizedRequest({required this.id, required this.searchText});
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'search_text': searchText,
-      };
-}
-
-class CustomizedFetchDataRequest {
-  final String id;
-  final MenuItem menuItem;
-
-  CustomizedFetchDataRequest({required this.id, required this.menuItem});
-
-  Map<String, dynamic> toJson() => {
-        'user_id': id,
-        'menu_item': menuItem.toJson(),
-      };
-}
+import '../../view_model/customized_fetch_data_request.dart';
+import '../../view_model/customized_request.dart';
 
 class HealthDataController {
-  final String putHealthDataapiUrl =
-      '$BASEURL/save_health_data';
-  final String getHealthDataapiUrl =
-      '$BASEURL/get_health_data';
-  final String getcustomizedUrl =
-      '$BASEURL/get_customized_response';
-  final String getQuoteData =
-      '$BASEURL/get_final_quote';
+  final String putHealthDataapiUrl = '$BASEURL/save_health_data';
+  final String getHealthDataapiUrl = '$BASEURL/get_health_data';
+  final String getcustomizedUrl = '$BASEURL/get_customized_response';
+  final String getQuoteData = '$BASEURL/get_final_quote';
 
   // Function to show permission dialog
   void showPermissionDialog(
