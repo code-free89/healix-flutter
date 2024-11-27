@@ -7,6 +7,7 @@ import 'package:helix_ai/model/puthealthdata.dart';
 import 'package:http/http.dart' as http;
 
 import '../../util/constants/api_constants.dart';
+import '../../util/constants/constant.dart';
 
 class CustomizedRequest {
   final String id;
@@ -34,13 +35,13 @@ class CustomizedFetchDataRequest {
 
 class HealthDataController {
   final String putHealthDataapiUrl =
-      'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/save_health_data';
+      '$BASEURL/save_health_data';
   final String getHealthDataapiUrl =
-      'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_health_data';
+      '$BASEURL/get_health_data';
   final String getcustomizedUrl =
-      'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_customized_response';
+      '$BASEURL/get_customized_response';
   final String getQuoteData =
-      'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net/get_final_quote';
+      '$BASEURL/get_final_quote';
 
   // Function to show permission dialog
   void showPermissionDialog(
