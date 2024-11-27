@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/controllers/data_controller/health_data_controller.dart';
 import 'package:helix_ai/controllers/provider_controllers/chat_provider.dart';
+import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/model/gethealthdata.dart';
 import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
@@ -16,7 +17,7 @@ import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -33,6 +34,8 @@ class _ChatHomeState extends State<ChatHome> {
   final sharePreferenceProvider = SharePreferenceProvider();
   HealthDataController controller = HealthDataController();
   bool isFetching = false; // Flag to prevent multiple API calls
+  int _lastFetchTime = 0; // Store the last fetch time in milliseconds
+  bool _isFirstInstall = false; // Flag to check first install
 
   @override
   void initState() {
@@ -43,13 +46,59 @@ class _ChatHomeState extends State<ChatHome> {
     });
     Health().configure();
 
-    // Initial call to authorize health permission and fetch data
-    // _fetchHealthData();
+    // Check if it's the first install
+    _checkFirstInstall();
 
-    // Set up the periodic timer to call the fetch function every 4 hours
-    // _fetchHealthDataTimer = Timer.periodic(Duration(hours: 1), (Timer timer) {
-    //   _fetchHealthData();
-    // });
+    // Set up the periodic timer to check every 15 minutes
+    _fetchHealthDataTimer = Timer.periodic(
+        Duration(minutes: HEALTH_DATA_SYNC_INTERVAL), (Timer timer) {
+      _checkAndFetchHealthData();
+    });
+  }
+
+  // Function to check if the app is being launched for the first time
+  Future<void> _checkFirstInstall() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('isFirstInstall') ?? true;
+
+    if (isFirstLaunch) {
+      // Call _fetchHealthData immediately on first install
+      _fetchHealthData();
+      prefs.setBool(
+          'isFirstInstall', false); // Set flag to false after the first launch
+    } else {
+      // Load the last fetch time if not first launch
+      _loadLastFetchTime();
+      _checkAndFetchHealthData(); // Check if the specific time duration has passed since the last call
+    }
+  }
+
+  // Function to load the last fetch time from SharedPreferences
+  Future<void> _loadLastFetchTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _lastFetchTime =
+        prefs.getInt('lastFetchTime') ?? 0; // Default to 0 if not set
+  }
+
+  // Function to update the last fetch time in SharedPreferences
+  Future<void> _updateLastFetchTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastFetchTime', DateTime.now().millisecondsSinceEpoch);
+  }
+
+  // Function to check if it's time to fetch health data
+  void _checkAndFetchHealthData() async {
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    int elapsedTime = currentTime - _lastFetchTime;
+
+    // If more than 60 minutes have passed since the last fetch
+    if (elapsedTime >
+        HEALTH_DATA_SYNC_INTERVAL * SECONDS_IN_A_MIN * MILLIS_IN_SEC) {
+      _fetchHealthData();
+      await _updateLastFetchTime(); // Update the last fetch time after calling the function
+    } else {
+      print("Not enough time has passed to fetch health data.");
+    }
   }
 
   // Function to authorize and fetch health data
@@ -58,6 +107,7 @@ class _ChatHomeState extends State<ChatHome> {
         await HealthPermissionManager().authorizeHealthPermission(context);
     if (authorized) {
       await HealthPermissionManager().fetchHealthData(context);
+      print("Health data fetched");
     }
   }
 
@@ -192,11 +242,11 @@ class _ChatHomeState extends State<ChatHome> {
                             endDate: today,
                           );
 
-                          // futureHealthData = controller.fetchHealthDataForGraph(
-                          //     request, context);
-                          // futureHealthData.then((response) {
-                          //   print("Get Health Data Response");
-                          // });
+                          /*futureHealthData = controller.fetchHealthDataForGraph(
+                              request, context);
+                          futureHealthData.then((response) {
+                            print("Get Health Data Response");
+                          });*/
                         }
                       },
                       child: Padding(
