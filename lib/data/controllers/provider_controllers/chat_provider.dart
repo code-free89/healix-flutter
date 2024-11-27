@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/controllers/data_controller/health_data_controller.dart';
-import 'package:helix_ai/model/ai_response.dart';
-import 'package:helix_ai/model/getCustomizedata.dart';
-import 'package:helix_ai/util/backend_services/repositories/ai_chat_repositories/api_repository.dart';
+
+
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
-import '../../view_model/customized_fetch_data_request.dart';
-import '../../view_model/customized_request.dart';
+
+import '../../models/model/ai_response.dart';
+import '../../models/model/getCustomizedata.dart';
+import '../../models/view_model/customized_fetch_data_request.dart';
+import '../../models/view_model/customized_request.dart';
+import '../../repositories/ai_chat_repositories/api_repository.dart';
+
 
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();

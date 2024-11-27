@@ -2,11 +2,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:helix_ai/controllers/data_controller/health_data_controller.dart';
-import 'package:helix_ai/controllers/provider_controllers/chat_provider.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
-import 'package:helix_ai/model/gethealthdata.dart';
 import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
@@ -19,6 +16,9 @@ import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
 
+import '../../../data/controllers/provider_controllers/chat_provider.dart';
+import '../../../data/data_services/health_data_services.dart';
+import '../../../data/models/model/gethealthdata.dart';
 import '../../../util/constants/constant.dart';
 
 
@@ -38,7 +38,7 @@ class _ChatHomeState extends State<ChatHome> {
   Timer? _fetchHealthDataTimer;
   late Future<void> futureHealthData;
   final sharePreferenceProvider = SharePreferenceProvider();
-  HealthDataController controller = HealthDataController();
+  HealthDataServices controller = HealthDataServices();
   bool isFetching = false; // Flag to prevent multiple API calls
   int _lastFetchTime = 0; // Store the last fetch time in milliseconds
   bool _isFirstInstall = false; // Flag to check first install

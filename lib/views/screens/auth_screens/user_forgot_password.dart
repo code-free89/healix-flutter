@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:helix_ai/controllers/provider_controllers/authentication_provider.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/util/validator.dart';
@@ -11,6 +10,7 @@ import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserForgotPassword extends StatefulWidget {

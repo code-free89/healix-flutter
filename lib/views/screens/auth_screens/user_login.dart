@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:helix_ai/controllers/provider_controllers/authentication_provider.dart';
 import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/util/validator.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_forgot_password.dart';
+import 'package:helix_ai/views/screens/auth_screens/user_signup.dart';
 import 'package:helix_ai/views/shared_components/custom_button.dart';
 import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_divider.dart';
@@ -16,6 +16,8 @@ import 'package:helix_ai/views/shared_components/custom_text_field.dart';
 import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
+
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});
@@ -166,8 +168,7 @@ class _UserLoginState extends State<UserLogin> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              Navigator.pushReplacementNamed(
-                                                  context, '/sign_up');
+                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserSignUp(),));
                                             },
                                             child: Text(
                                               "Sign Up",

@@ -2,8 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:health/health.dart';
-import 'package:helix_ai/controllers/provider_controllers/authentication_provider.dart';
-import 'package:helix_ai/controllers/provider_controllers/chat_provider.dart';
+
 import 'package:helix_ai/firebase_options.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
@@ -17,6 +16,9 @@ import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_signup.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'data/controllers/provider_controllers/authentication_provider.dart';
+import 'data/controllers/provider_controllers/chat_provider.dart';
 
 
 void main() async {

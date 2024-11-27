@@ -1,4 +1,4 @@
-import 'package:helix_ai/model/getCustomizedata.dart';
+
 
 const appName = "Healix AI";
 

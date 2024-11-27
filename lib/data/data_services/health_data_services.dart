@@ -1,109 +1,35 @@
 import 'dart:convert';
 import 'dart:async'; // For timeout exceptions
 import 'package:flutter/material.dart';
-import 'package:helix_ai/model/getCustomizedata.dart';
-import 'package:helix_ai/model/gethealthdata.dart';
-import 'package:helix_ai/model/puthealthdata.dart';
+
 import 'package:http/http.dart' as http;
 
+import '../../data/models/model/getCustomizedata.dart';
+import '../../data/models/model/gethealthdata.dart';
+import '../../data/models/model/puthealthdata.dart';
+import '../../data/models/view_model/customized_fetch_data_request.dart';
+import '../../data/models/view_model/customized_request.dart';
 import '../../util/constants/api_constants.dart';
 import '../../util/constants/constant.dart';
-import '../../view_model/customized_fetch_data_request.dart';
-import '../../view_model/customized_request.dart';
+import '../../views/shared_components/show_permission_dialog.dart';
 
-class HealthDataController {
-  final String putHealthDataapiUrl = '$BASEURL/save_health_data';
-  final String getHealthDataapiUrl = '$BASEURL/get_health_data';
-  final String getcustomizedUrl = '$BASEURL/get_customized_response';
+
+class HealthDataServices {
+  final String putHealthDataApiUrl = '$BASEURL/save_health_data';
+  final String getHealthDataApiUrl = '$BASEURL/get_health_data';
+  final String getCustomizedUrl = '$BASEURL/get_customized_response';
   final String getQuoteData = '$BASEURL/get_final_quote';
-
-  // Function to show permission dialog
-  void showPermissionDialog(
-      BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Function for showing dialog to get input from the user
-  Future<CustomizedRequest?> showCustomizedRequestDialog(
-      BuildContext context) async {
-    final idController = TextEditingController();
-    final searchTextController = TextEditingController();
-
-    return showDialog<CustomizedRequest>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Enter Customized Request Details'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: idController,
-                decoration: InputDecoration(labelText: 'ID'),
-              ),
-              TextField(
-                controller: searchTextController,
-                decoration: InputDecoration(labelText: 'Search Text'),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); // Close the dialog without sending the request
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (idController.text.isNotEmpty &&
-                    searchTextController.text.isNotEmpty) {
-                  // Create a CustomizedRequest object and return it
-                  final request = CustomizedRequest(
-                    id: idController.text,
-                    searchText: searchTextController.text,
-                  );
-                  Navigator.of(context).pop(request); // Return the request
-                } else {
-                  // Show error or warning if fields are empty
-                  print("Fields cannot be empty");
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(
       HealthDataRequest request, BuildContext context) async {
     try {
-      print("Sending request to $putHealthDataapiUrl");
+      print("Sending request to $putHealthDataApiUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
 
       final response = await http
           .post(
-        Uri.parse(putHealthDataapiUrl),
+        Uri.parse(putHealthDataApiUrl),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -139,12 +65,12 @@ class HealthDataController {
   Future<gethealthdataResponse> fetchHealthDataForGraph(
       gethealthdataRequest request, BuildContext context) async {
     try {
-      print("Sending request to $getHealthDataapiUrl");
+      print("Sending request to $getHealthDataApiUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
 
       final response = await http
           .post(
-        Uri.parse(getHealthDataapiUrl),
+        Uri.parse(getHealthDataApiUrl),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -184,12 +110,12 @@ class HealthDataController {
   Future<CustomizedResponse> getCustomizedData(
       CustomizedRequest request, BuildContext context) async {
     try {
-      print("Sending request to $getcustomizedUrl");
+      print("Sending request to $getCustomizedUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
 
       final response = await http
           .post(
-        Uri.parse(getcustomizedUrl),
+        Uri.parse(getCustomizedUrl),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -261,4 +187,5 @@ class HealthDataController {
       throw Exception('Error occurred while fetching customized response: $e');
     }
   }
+
 }

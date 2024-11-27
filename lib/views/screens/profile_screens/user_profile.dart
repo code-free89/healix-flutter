@@ -2,7 +2,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:helix_ai/controllers/provider_controllers/authentication_provider.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/constants/colors.dart';
@@ -15,6 +14,7 @@ import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserProfile extends StatefulWidget {

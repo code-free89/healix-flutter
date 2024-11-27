@@ -1,6 +1,4 @@
-import 'package:helix_ai/controllers/data_controller/health_data_controller.dart';
-import 'package:helix_ai/model/puthealthdata.dart'
-    hide NumericHealthValue; // Hide NumericHealthValue from 'helix_ai' package
+
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
@@ -8,6 +6,8 @@ import 'package:health/health.dart';
 import 'package:flutter/material.dart'; // Added for the alert dialog
 import 'dart:io';
 
+import '../../data/data_services/health_data_services.dart';
+import '../../data/models/model/puthealthdata.dart'  hide NumericHealthValue;
 import 'health_permission.dart';
 
 enum AppState {
@@ -231,7 +231,7 @@ class HealthPermissionManager {
     );
 
     // Create a controller instance and post the health data
-    HealthDataController controller = HealthDataController();
+    HealthDataServices controller = HealthDataServices();
     await controller.postHealthData(request, context);
   }
 

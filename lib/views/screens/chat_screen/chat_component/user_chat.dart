@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/controllers/provider_controllers/chat_provider.dart';
-import 'package:helix_ai/model/getCustomizedata.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/HealthBarChart.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_container.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../data/controllers/provider_controllers/chat_provider.dart';
+import '../../../../data/models/model/getCustomizedata.dart';
 
 class UserChat extends StatefulWidget {
   final ScrollController scrollController;

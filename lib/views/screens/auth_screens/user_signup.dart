@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:helix_ai/controllers/provider_controllers/authentication_provider.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/ui_helper.dart';
@@ -15,6 +14,7 @@ import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserSignUp extends StatefulWidget {

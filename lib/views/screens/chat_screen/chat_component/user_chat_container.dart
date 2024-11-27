@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:helix_ai/model/getCustomizedata.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../controllers/provider_controllers/chat_provider.dart';
+import '../../../../data/controllers/provider_controllers/chat_provider.dart';
+import '../../../../data/models/model/getCustomizedata.dart';
 
 class UserChatContainer extends StatelessWidget {
   final String question;
