@@ -56,14 +56,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: HomePage(),
-        routes: {
-          '/login': (context) => UserLogin(),
-          '/sign_up': (context) => UserSignUp(),
-          '/first_profile': (context) => FirstProfile(),
-          '/chat_home': (context) => ChatHome(),
-          '/user_profile': (context) => UserProfile(),
-          '/forgot-password': (context) => UserForgotPassword(),
-        },
+
       ),
     );
   }
@@ -90,13 +83,16 @@ class _HomePageState extends State<HomePage> {
       case Status.Uninitialized:
         break;
       case Status.Unauthenticated:
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserLogin(),));
+
         break;
       case Status.Authenticated:
-        Navigator.pushReplacementNamed(context, '/chat_home');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome(),));
+
         break;
       case Status.FirstTimeAuthenticated:
-        Navigator.pushReplacementNamed(context, '/first_profile');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FirstProfile(),));
+
         break;
     }
   }

@@ -248,7 +248,7 @@ class _UserProfileState extends State<UserProfile> {
                       height: height * 0.07,
                       child: CustomButton(
                         onPressed: () {
-                          // Navigator.pushNamed(context, '/first_profile');
+
                           validateAndSubmit();
                         },
                         buttonText: "Update",
