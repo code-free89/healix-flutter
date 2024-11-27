@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 
+import '../../util/constants/constant.dart';
+
 class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String buttonText;
@@ -20,7 +22,7 @@ class CustomButton extends StatelessWidget {
           ? CircularProgressIndicator(color: Colors.white,)
           : Text(
               buttonText,
-              style: TextStyle(fontFamily: 'Ubuntu-Medium', fontSize: 20, color: buttonTextColor),
+              style: TextStyle(fontFamily: 'Ubuntu-Medium', fontSize: height * 0.021, color: buttonTextColor),
             ),
     );
   }

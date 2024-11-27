@@ -11,6 +11,8 @@ import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_text_fiels_with_label.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 
+import '../../../util/constants/constant.dart';
+
 class FirstProfile extends StatefulWidget {
   const FirstProfile({super.key});
 
@@ -44,7 +46,7 @@ class _FirstProfileState extends State<FirstProfile> {
       return
         SizedBox(
           width: double.infinity,
-          height: 60,
+          height: height*0.07,
           child:CustomButton(
               onPressed: (){
                 validateAndSubmit();
@@ -140,15 +142,17 @@ class _FirstProfileState extends State<FirstProfile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 50.0),
-                        child: SvgPicture.asset(lifeStyleImage ,
-                            fit: BoxFit.cover),
+                        padding:  EdgeInsets.only(top: height*0.06),
+                        child: SizedBox(height: height*0.34,
+                          child: SvgPicture.asset(lifeStyleImage,
+                              fit: BoxFit.fill),
+                        ),
                       ),
                       Expanded(
                         child: CustomContainer(
                           // height: MediaQuery.of(context).size.height,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(28,85,28,0),
+                            padding: EdgeInsets.fromLTRB(height*0.05, height*0.085, height*0.05, 0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -158,10 +162,10 @@ class _FirstProfileState extends State<FirstProfile> {
                                       fontWeight: FontWeight.bold
                                   ),
                                 ),
-                                SizedBox(height: 8,),
+                                SizedBox(height: height*0.02,),
                                 Text("Accurate data will help us to " , style: TextStyle(fontSize: 17 , fontWeight: FontWeight.w500),),
                                 Text("provide you a right guidance. " , style: TextStyle(fontSize: 17 , fontWeight: FontWeight.w500),),
-                                SizedBox(height:50),
+                                SizedBox(height:height*0.04),
                                 Row(
                                   children: [
                                     Expanded(
@@ -178,7 +182,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputAction: TextInputAction.next,
                                         textColor: textFieldColor),
                                     ),
-                                    SizedBox(width: 20,),
+                                    SizedBox(width: height*0.02,),
                                     Expanded(
                                       child: LabelTextField(
                                         stockColor: dividerColor,
@@ -195,7 +199,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10,),
+                                SizedBox(height: height*0.02,),
                                 Row(
                                   children: [
                                     Expanded(
@@ -213,7 +217,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                         textInputAction: TextInputAction.next,
                                         textColor: textFieldColor,),
                                     ),
-                                    SizedBox(width: 20,),
+                                    SizedBox(width: height*0.02,),
                                     Expanded(
                                       child: LabelTextField(
                                         maxLength: 3,
@@ -231,7 +235,7 @@ class _FirstProfileState extends State<FirstProfile> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 50,),
+                                SizedBox(height: height*0.02,),
                                 updateButton(),
                               ],
                             ),

@@ -11,6 +11,8 @@ import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
+import '../../../util/constants/constant.dart';
+
 class UserForgotPassword extends StatefulWidget {
   const UserForgotPassword({super.key});
 
@@ -65,14 +67,14 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 50.0),
+                          padding:  EdgeInsets.only(top: height*0.06),
                           child: SvgPicture.asset(lifeStyleImage, fit: BoxFit.cover),
                         ),
                         Expanded(
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(28, 75, 28, 0),
+                              padding: EdgeInsets.fromLTRB(height*0.05, height*0.085, height*0.05, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -84,7 +86,7 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 18,
+                                    height: height*0.02,
                                   ),
                                   CustomTextField(
                                     textController: loginEmailController,
@@ -96,11 +98,11 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                                     textInputAction: TextInputAction.done,
                                   ),
                                   SizedBox(
-                                    height: 16,
+                                    height: height*0.02,
                                   ),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: 60,
+                                    height: height*0.07,
                                     child: CustomButton(
                                         onPressed: () async {
                                           if (!forgotPasswordFormKey.currentState!.validate()) return;
@@ -115,7 +117,7 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                                         buttonText: "Get password reset link"),
                                   ),
                                   SizedBox(
-                                    height: 12,
+                                    height: height*0.02,
                                   ),
                                 ],
                               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../util/constants/constant.dart';
+
 class ChatText extends StatelessWidget {
 
   final String text;
@@ -11,9 +13,9 @@ class ChatText extends StatelessWidget {
     return Text(
       textAlign: TextAlign.center,
       text,
-      style: const TextStyle(
+      style:  TextStyle(
         color: Color.fromRGBO(51, 51, 51, 1),
-        fontSize: 17
+        fontSize: height * 0.02
       ),
     );
   }

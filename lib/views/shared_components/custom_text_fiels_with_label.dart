@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 
+import '../../util/constants/constant.dart';
+
 class LabelTextField extends StatelessWidget {
 
  final TextEditingController textController;
@@ -39,8 +41,8 @@ class LabelTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text(labelText, style: TextStyle(fontSize: 13 , color: Color.fromRGBO(38, 37, 34, 1) )),
+          padding:  EdgeInsets.only(left: height*0.008),
+          child: Text(labelText, style: TextStyle(fontSize: height*0.015     , color: Color.fromRGBO(38, 37, 34, 1) )),
         ),
         TextFormField(
           initialValue: initialText,

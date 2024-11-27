@@ -14,6 +14,8 @@ import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:provider/provider.dart';
 
+import '../../../util/constants/constant.dart';
+
 class UserSignUp extends StatefulWidget {
   const UserSignUp({super.key});
 
@@ -67,14 +69,17 @@ class _UserSignUpState extends State<UserSignUp> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 50.0),
-                          child: SvgPicture.asset(lifeStyleImage, fit: BoxFit.cover),
+                          padding:  EdgeInsets.only(top: height*0.06),
+                          child: SizedBox(height: height*0.34,
+                            child: SvgPicture.asset(lifeStyleImage,
+                                fit: BoxFit.fill),
+                          ),
                         ),
                         Expanded(
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(28, 75, 28, 0),
+                              padding:  EdgeInsets.fromLTRB(height*0.04, height*0.085, height*0.04, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -87,7 +92,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 18,
+                                    height: height*0.02,
                                   ),
                                   CustomTextField(
                                     textController: signUpEmailController,
@@ -99,7 +104,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     textInputAction: TextInputAction.next,
                                   ),
                                   SizedBox(
-                                    height: 15,
+                                    height: height*0.02,
                                   ),
                                   CustomTextField(
                                     textController: signUpPasswordController,
@@ -115,7 +120,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                   ),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: 60,
+                                    height: height*0.07,
                                     child: CustomButton(
                                         onPressed: () {
                                           validateAndSubmit(authProvider);
@@ -124,7 +129,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                         buttonText: "Signup"),
                                   ),
                                   SizedBox(
-                                    height: 12,
+                                    height: height*0.015,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -152,14 +157,14 @@ class _UserSignUpState extends State<UserSignUp> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 25,
+                                    height: height*0.02,
                                   ),
                                   CustomDivider(),
                                   SizedBox(
-                                    height: 30,
+                                    height: height*0.02,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, right: 40, bottom: 10),
+                                    padding:  EdgeInsets.only(left: height*0.02, right: height*0.02, bottom: height*0.02),
                                     child: SocialLoginButtons(text: "Signup with"),
                                   )
                                 ],

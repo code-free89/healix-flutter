@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 
+import '../../util/constants/constant.dart';
+
 class ProfileGenericTile extends StatelessWidget {
   final VoidCallback onPressed;
   final String assetName;
@@ -26,18 +28,18 @@ class ProfileGenericTile extends StatelessWidget {
                   children: [
                     SvgPicture.asset(assetName),
                     SizedBox(
-                      width: 12,
+                      width: height*0.02,
                     ),
                     Text(
                       text,
-                      style: TextStyle(fontFamily: 'Rubik', fontSize: 17, color: genericTileTextColor),
+                      style: TextStyle(fontFamily: 'Rubik', fontSize: height*0.02, color: genericTileTextColor),
                     )
                   ],
                 ),
                 Spacer(),
                 SizedBox(
-                  height: 24,
-                  width: 24,
+                  height: height*0.02,
+                  width: height*0.02,
                   child: Icon(Icons.chevron_right),
                 )
               ],

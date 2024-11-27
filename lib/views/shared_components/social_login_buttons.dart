@@ -9,6 +9,8 @@ import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 
+import '../../util/constants/constant.dart';
+
 class SocialLoginButtons extends StatelessWidget {
   final String text;
   SocialLoginButtons({super.key, required this.text});
@@ -94,13 +96,13 @@ class SocialLoginButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
               text,
               style: TextStyle(
                   fontFamily: 'Ubuntu-Medium',
-                  fontSize: 20,
+                  fontSize: height*0.024,
                   color: Color.fromRGBO(51, 51, 51, 1)),
             )
           ],
@@ -110,8 +112,8 @@ class SocialLoginButtons extends StatelessWidget {
             InkWell(
               onTap: () => _loginWithGoogle(context), // Google Login Tap
               child: Container(
-                height: 59,
-                width: 59,
+                height: height*0.07,
+                width: height*0.07,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),
@@ -122,13 +124,13 @@ class SocialLoginButtons extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 20,
+              width: height*0.03,
             ),
             InkWell(
               onTap: () => _loginWithFacebook(context), // Facebook Login Tap
               child: Container(
-                height: 59,
-                width: 59,
+                height: height*0.07,
+                width: height*0.07,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),

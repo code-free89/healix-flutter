@@ -6,6 +6,8 @@ import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
 
+import '../../../../util/constants/constant.dart';
+
 class ChatStart extends StatelessWidget {
   ChatStart({super.key});
 
@@ -25,15 +27,15 @@ class ChatStart extends StatelessWidget {
           children: [
             SvgPicture.asset(
               appLogo,
-              height: 70,
-              width: 30,
+              height: height * 0.1,
+              width: height * 0.065,
             ),
             SizedBox(
-              height: 25,
+              height: height * 0.03,
             ),
             ChatText(text: "Gene Capabilities"),
             SizedBox(
-              height: 25,
+              height: height * 0.03,
             ),
             ListView.builder(
               itemCount: capability.length,
@@ -41,11 +43,11 @@ class ChatStart extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Container(
-                  padding: EdgeInsets.all(12),
-                  margin: EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.all(height * 0.0128),
+                  margin: EdgeInsets.only(bottom: height * 0.02),
                   decoration: BoxDecoration(
                       color: f5f5feColor,
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(height * 0.02)),
                   width: double.infinity,
                   child: Column(
                     children: [
@@ -55,11 +57,11 @@ class ChatStart extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 15),
+            SizedBox(height: height * 0.02),
             Text(
               "These are just examples what can I do.",
               style: TextStyle(
-                fontSize: 17,
+                fontSize: height * 0.021,
                 color: gray1Color,
               ),
             )

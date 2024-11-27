@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 
+import '../../util/constants/constant.dart';
+
 class CustomTextField extends StatelessWidget {
 
   final TextEditingController textController;
@@ -27,26 +29,26 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
        controller: textController,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(14, 16, 16, 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+          contentPadding: EdgeInsets.fromLTRB(height*0.015, height*0.02, height*0.02, height*0.015),
+        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
           color: dividerColor,
           width: 1,
         )),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
           color: dividerColor,
           width: 1,
         )),
         hintText: hintText,
         hintStyle: TextStyle(
           fontFamily: 'Urbanist',
-          fontSize: 17
+          fontSize: height*0.02
         ),
         fillColor: textFieldColor,
         filled: true,
         helperText: helperText,
         helperStyle: TextStyle(
-          fontSize: 12,
+          fontSize: height*0.02,
           color: textFieldColor,
         )
       ),

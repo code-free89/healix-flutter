@@ -15,6 +15,8 @@ import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:provider/provider.dart';
 
+import '../../../util/constants/constant.dart';
+
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
 
@@ -135,7 +137,7 @@ class _UserProfileState extends State<UserProfile> {
         ),
         title: Text(
           "Profile",
-          style: TextStyle(fontFamily: 'Rubik', fontSize: 15),
+          style: TextStyle(fontFamily: 'Rubik', fontSize: height * 0.025),
         ),
         centerTitle: true,
       ),
@@ -146,7 +148,7 @@ class _UserProfileState extends State<UserProfile> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
+                padding:  EdgeInsets.only(left: height * 0.02, right: height * 0.02, top: height * 0.02),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -177,7 +179,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         SizedBox(
-                          width: 20,
+                          width: height * 0.02,
                         ),
                         Expanded(
                           child: LabelTextField(
@@ -197,7 +199,7 @@ class _UserProfileState extends State<UserProfile> {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: height * 0.02,
                     ),
                     Row(
                       children: [
@@ -218,7 +220,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         SizedBox(
-                          width: 20,
+                          width: height * 0.02,
                         ),
                         Expanded(
                           child: LabelTextField(
@@ -239,11 +241,11 @@ class _UserProfileState extends State<UserProfile> {
                       ],
                     ),
                     SizedBox(
-                      height: 15,
+                      height: height * 0.02,
                     ),
                     SizedBox(
                       width: double.infinity,
-                      height: 60,
+                      height: height * 0.07,
                       child: CustomButton(
                         onPressed: () {
                           // Navigator.pushNamed(context, '/first_profile');
@@ -257,7 +259,7 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
               SizedBox(
-                height: 85,
+                height: height * 0.1,
               ),
               ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Terms of service"),
               ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Privacy Policy"),
@@ -279,10 +281,10 @@ class _UserProfileState extends State<UserProfile> {
                   assetName: logOut,
                   text: "Log out"),
               SizedBox(
-                height: 45,
+                height: height * 0.07,
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 25.0),
+                padding:  EdgeInsets.only(bottom: height * 0.03),
                 child: SvgPicture.asset(helixVersion),
               )
             ],

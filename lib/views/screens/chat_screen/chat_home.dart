@@ -17,7 +17,13 @@ import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
+
+
+import '../../../util/constants/constant.dart';
+
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -126,7 +132,7 @@ class _ChatHomeState extends State<ChatHome> {
       appBar: AppBar(
         title: Text(
           'Gene',
-          style: TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: height*0.025),
         ),
         leading: SvgPicture.asset(
           appLogo,
@@ -135,7 +141,7 @@ class _ChatHomeState extends State<ChatHome> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: height*0.025),
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -149,7 +155,7 @@ class _ChatHomeState extends State<ChatHome> {
       body: Consumer<ChatProvider>(builder: (_, chatProvider, __) {
         return Padding(
           padding:
-              const EdgeInsets.only(left: 18.0, right: 18, bottom: 36, top: 20),
+               EdgeInsets.only(left: height*0.022, right: height*0.022, bottom: height*0.04, top: height*0.02),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -160,7 +166,7 @@ class _ChatHomeState extends State<ChatHome> {
                         )
                       : ChatStart()),
               SizedBox(
-                height: 22,
+                height: height*0.018,
               ),
               AbsorbPointer(
                 absorbing: chatProvider.isAnswerLoading || isFetching,
@@ -173,21 +179,21 @@ class _ChatHomeState extends State<ChatHome> {
                         },
                         controller: chatController,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(16, 14, 16, 14),
+                          contentPadding: EdgeInsets.fromLTRB(height*0.02, height*0.016, height*0.02, height*0.016),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(height*0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
                               )),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(height*0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
                               )),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(height*0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
@@ -195,7 +201,7 @@ class _ChatHomeState extends State<ChatHome> {
                           hintText: "Ask me anything...",
                           hintStyle: TextStyle(
                               fontFamily: 'Rubik',
-                              fontSize: 17,
+                              fontSize: height*0.021,
                               color: Color.fromRGBO(166, 163, 157, 1)),
                         ),
                       ),
@@ -250,10 +256,10 @@ class _ChatHomeState extends State<ChatHome> {
                         }
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
+                        padding:  EdgeInsets.only(left: height*0.01),
                         child: Container(
-                          height: 50,
-                          width: 50,
+                          height: height*0.065,
+                          width: height*0.065,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: greenThemeColor),
