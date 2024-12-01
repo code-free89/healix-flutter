@@ -56,7 +56,7 @@ class CustomizedResponse {
 class MenuItem {
   String? name;
   String? productId;
-  int? price;
+  double? price;
   String? image;
   List<Customizations>? customizations;
 
