@@ -5,6 +5,7 @@ import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/util/validator.dart';
+import 'package:helix_ai/views/screens/auth_screens/user_info_screen.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/shared_components/custom_button.dart';
 import 'package:helix_ai/views/shared_components/custom_container.dart';
@@ -35,7 +36,7 @@ class _UserSignUpState extends State<UserSignUp> {
       if (await authProvider.signUp(signUpEmailController.text, signUpPasswordController.text)) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => FirstProfile()),
+          MaterialPageRoute(builder: (context) => UserInfoScreen()),
           (Route<dynamic> route) => false,
         );
       } else {

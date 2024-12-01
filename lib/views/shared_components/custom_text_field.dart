@@ -27,30 +27,30 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-       controller: textController,
+      controller: textController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(height*0.015, height*0.02, height*0.02, height*0.015),
-        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
-          color: dividerColor,
-          width: 1,
-        )),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
-          color: dividerColor,
-          width: 1,
-        )),
-        hintText: hintText,
-        hintStyle: TextStyle(
-          fontFamily: 'Urbanist',
-          fontSize: height*0.02
-        ),
-        fillColor: textFieldColor,
-        filled: true,
-        helperText: helperText,
-        helperStyle: TextStyle(
-          fontSize: height*0.02,
-          color: textFieldColor,
-        )
+          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015))),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
+            color: dividerColor,
+            width: 1,
+          )),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(height*0.015)), borderSide: BorderSide(
+            color: dividerColor,
+            width: 1,
+          )),
+          hintText: hintText,
+          hintStyle: TextStyle(
+              fontFamily: 'Urbanist',
+              fontSize: height*0.02
+          ),
+          fillColor: textFieldColor,
+          filled: true,
+          helperText: helperText,
+          helperStyle: TextStyle(
+            fontSize: height*0.02,
+            color: textFieldColor,
+          )
       ),
       obscureText: obsecureText,
       keyboardType: textInputType,
