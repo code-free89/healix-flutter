@@ -15,15 +15,12 @@ import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '../../../data/models/model/gethealthdata.dart';
 import '../../../util/constants/constant.dart';
 
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -65,9 +62,9 @@ class _ChatHomeState extends State<ChatHome> {
   // Function to check if the app is being launched for the first time
   Future<void> _checkFirstInstall() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstLaunch = prefs.getBool('isFirstInstall') ?? true;
-
-    if (isFirstLaunch) {
+    _isFirstInstall = prefs.getBool('isFirstInstall') ?? true;
+    print("isFirstLaunch $_isFirstInstall");
+    if (_isFirstInstall) {
       // Call _fetchHealthData immediately on first install
       _fetchHealthData();
       prefs.setBool(
@@ -132,7 +129,7 @@ class _ChatHomeState extends State<ChatHome> {
       appBar: AppBar(
         title: Text(
           'Gene',
-          style: TextStyle(fontSize: height*0.025),
+          style: TextStyle(fontSize: height * 0.025),
         ),
         leading: SvgPicture.asset(
           appLogo,
@@ -141,7 +138,7 @@ class _ChatHomeState extends State<ChatHome> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: height*0.025),
+            padding: EdgeInsets.only(right: height * 0.025),
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -154,8 +151,11 @@ class _ChatHomeState extends State<ChatHome> {
       ),
       body: Consumer<ChatProvider>(builder: (_, chatProvider, __) {
         return Padding(
-          padding:
-               EdgeInsets.only(left: height*0.022, right: height*0.022, bottom: height*0.04, top: height*0.02),
+          padding: EdgeInsets.only(
+              left: height * 0.022,
+              right: height * 0.022,
+              bottom: height * 0.04,
+              top: height * 0.02),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -166,7 +166,7 @@ class _ChatHomeState extends State<ChatHome> {
                         )
                       : ChatStart()),
               SizedBox(
-                height: height*0.018,
+                height: height * 0.018,
               ),
               AbsorbPointer(
                 absorbing: chatProvider.isAnswerLoading || isFetching,
@@ -179,21 +179,25 @@ class _ChatHomeState extends State<ChatHome> {
                         },
                         controller: chatController,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(height*0.02, height*0.016, height*0.02, height*0.016),
+                          contentPadding: EdgeInsets.fromLTRB(height * 0.02,
+                              height * 0.016, height * 0.02, height * 0.016),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(height*0.02),
+                              borderRadius:
+                                  BorderRadius.circular(height * 0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
                               )),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(height*0.02),
+                              borderRadius:
+                                  BorderRadius.circular(height * 0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
                               )),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(height*0.02),
+                              borderRadius:
+                                  BorderRadius.circular(height * 0.02),
                               borderSide: BorderSide(
                                 color: greenThemeColor,
                                 width: 1,
@@ -201,7 +205,7 @@ class _ChatHomeState extends State<ChatHome> {
                           hintText: "Ask me anything...",
                           hintStyle: TextStyle(
                               fontFamily: 'Rubik',
-                              fontSize: height*0.021,
+                              fontSize: height * 0.021,
                               color: Color.fromRGBO(166, 163, 157, 1)),
                         ),
                       ),
@@ -256,10 +260,10 @@ class _ChatHomeState extends State<ChatHome> {
                         }
                       },
                       child: Padding(
-                        padding:  EdgeInsets.only(left: height*0.01),
+                        padding: EdgeInsets.only(left: height * 0.01),
                         child: Container(
-                          height: height*0.065,
-                          width: height*0.065,
+                          height: height * 0.065,
+                          width: height * 0.065,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: greenThemeColor),
