@@ -29,14 +29,27 @@ class _UserSignUpState extends State<UserSignUp> {
   final signUpFormKey = GlobalKey<FormState>();
 
   final TextEditingController signUpEmailController = TextEditingController();
-  final TextEditingController signUpPasswordController = TextEditingController();
+  final TextEditingController signUpPasswordController =
+      TextEditingController();
+
+  bool isValidFirebaseUID(String uid) {
+    final regex = RegExp(r'^[a-zA-Z0-9_-]{28,36}$');
+    return regex.hasMatch(uid);
+  }
 
   void validateAndSubmit(AuthenticationProvider authProvider) async {
     if (signUpFormKey.currentState!.validate()) {
-      if (await authProvider.signUp(signUpEmailController.text, signUpPasswordController.text)) {
+      var res = await authProvider.signUp(
+          signUpEmailController.text, signUpPasswordController.text);
+
+      if (isValidFirebaseUID(res)) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => UserInfoScreen()),
+          MaterialPageRoute(
+              builder: (context) => UserInfoScreen(
+                    email: signUpEmailController.text,
+                    id: res,
+                  )),
           (Route<dynamic> route) => false,
         );
       } else {
@@ -71,8 +84,9 @@ class _UserSignUpState extends State<UserSignUp> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(top: height*0.06),
-                          child: SizedBox(height: height*0.34,
+                          padding: EdgeInsets.only(top: height * 0.06),
+                          child: SizedBox(
+                            height: height * 0.34,
                             child: SvgPicture.asset(lifeStyleImage,
                                 fit: BoxFit.fill),
                           ),
@@ -81,7 +95,8 @@ class _UserSignUpState extends State<UserSignUp> {
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding:  EdgeInsets.fromLTRB(height*0.04, height*0.085, height*0.04, 0),
+                              padding: EdgeInsets.fromLTRB(height * 0.04,
+                                  height * 0.085, height * 0.04, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -94,7 +109,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomTextField(
                                     textController: signUpEmailController,
@@ -106,7 +121,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                     textInputAction: TextInputAction.next,
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomTextField(
                                     textController: signUpPasswordController,
@@ -122,31 +137,37 @@ class _UserSignUpState extends State<UserSignUp> {
                                   ),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: height*0.07,
+                                    height: height * 0.07,
                                     child: CustomButton(
                                         onPressed: () {
                                           validateAndSubmit(authProvider);
                                         },
-                                        showLoading: authProvider.isSignupLoading,
+                                        showLoading:
+                                            authProvider.isSignupLoading,
                                         buttonText: "Signup"),
                                   ),
                                   SizedBox(
-                                    height: height*0.015,
+                                    height: height * 0.015,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         "Already have an account?",
-                                        style: TextStyle(color: textColor, fontSize: 12),
+                                        style: TextStyle(
+                                            color: textColor, fontSize: 12),
                                       ),
                                       SizedBox(
                                         width: 3,
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserLogin(),));
-
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserLogin(),
+                                              ));
                                         },
                                         child: Text(
                                           "Login",
@@ -160,15 +181,19 @@ class _UserSignUpState extends State<UserSignUp> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomDivider(),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   Padding(
-                                    padding:  EdgeInsets.only(left: height*0.02, right: height*0.02, bottom: height*0.02),
-                                    child: SocialLoginButtons(text: "Signup with"),
+                                    padding: EdgeInsets.only(
+                                        left: height * 0.02,
+                                        right: height * 0.02,
+                                        bottom: height * 0.02),
+                                    child:
+                                        SocialLoginButtons(text: "Signup with"),
                                   )
                                 ],
                               ),

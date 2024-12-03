@@ -1,48 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../data/controllers/provider_controllers/user_info_provider.dart';
+import '../../../data/models/view_model/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';
 import 'favorites_food_screen.dart';
 
-
-class HealthHistoryScreen extends StatefulWidget {
-  const HealthHistoryScreen({super.key});
-
-  @override
-  State<HealthHistoryScreen> createState() => _HealthHistoryScreenState();
-}
-
-class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
-  final List<String> _options = [
-    "Diabetes",
-    "Coronary heart disease (CHD)",
-    "Irritable bowel syndrome (IBS)",
-    "Obesity",
-    "Hypertension",
-  ];
-
-// State to track selected options
-  List<bool> _selected = List.generate(5, (_) => false);
-
-  void _onOptionTap(int index) {
-    setState(() {
-      // Toggle the selection of the tapped option
-      _selected[index] = !_selected[index];
-    });
-  }
+class HealthHistoryScreen extends StatelessWidget {
+  final UserViewModel userData;
+  const HealthHistoryScreen({super.key, required this.userData});
 
   @override
-  Widget build(BuildContext context) {final bool isAnyOptionSelected = _selected.contains(true);
+  Widget build(BuildContext context) {
+    final provider = context.watch<UserInfoProvider>();
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: colorWhite,
       body: Container(
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-            image:
-                DecorationImage(image: AssetImage("assets/images/auth.png"))),
+            image: DecorationImage(image: AssetImage("assets/images/auth.png"))),
         child: Padding(
           padding: EdgeInsets.only(top: size.height * 0.2241),
           child: Container(
@@ -75,18 +56,18 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                     usePoppins: true,
                   ),
                 ),
-
                 SizedBox(height: size.height * 0.0098),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
                   child: WantText(
-                      textOverflow: TextOverflow.fade,
-                      text:
-                          "Is there any medical conditions we should know about? (You can select multiple boxes)",
-                      fontSize: size.width * 0.035,
-                      fontWeight: FontWeight.w500,
-                      textColor: colorGreyText,
-                      usePoppins: false),
+                    textOverflow: TextOverflow.fade,
+                    text:
+                    "Is there any medical conditions we should know about? (You can select multiple boxes)",
+                    fontSize: size.width * 0.035,
+                    fontWeight: FontWeight.w500,
+                    textColor: colorGreyText,
+                    usePoppins: false,
+                  ),
                 ),
                 SizedBox(height: size.height * 0.03),
                 SizedBox(
@@ -95,21 +76,21 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
-                    itemCount: _options.length,
+                    itemCount: provider.healthOptions.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () => _onOptionTap(index),
+                        onTap: () => provider.toggleHealthCondition(index),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: size.width * 0.1),
                           child: Container(
                             height: size.height * 0.064,
                             decoration: BoxDecoration(
-                                color: _selected[index]
+                                color: provider.selectedHealthConditions[index]
                                     ? greenThemeColor.withOpacity(0.2)
                                     : colorWhite,
                                 border: Border.all(
-                                  color: _selected[index]
+                                  color: provider.selectedHealthConditions[index]
                                       ? colorBlack
                                       : colorBlack.withOpacity(0.15),
                                 ),
@@ -124,10 +105,10 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                   ),
                                 ]),
                             margin:
-                                EdgeInsets.only(bottom: size.height * 0.0197),
+                            EdgeInsets.only(bottom: size.height * 0.0197),
                             child: Center(
                               child: WantText(
-                                  text: _options[index],
+                                  text: provider.healthOptions[index],
                                   fontSize: size.width * 0.036,
                                   fontWeight: FontWeight.w500,
                                   textColor: colorBlack,
@@ -138,14 +119,27 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                       );
                     },
                   ),
-                ),   SizedBox(height: size.height * 0.0295),Center(
-                  child: GeneralButton(Width: size.width*0.8, onTap: () {
-                    Navigator.push(
+                ),
+                SizedBox(height: size.height * 0.0295),
+                Center(
+                  child: GeneralButton(
+                    Width: size.width * 0.8,
+                    onTap: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FavoritesFoodScreen(),
-                        ));
-                  }, label: isAnyOptionSelected ? "Next" : "None"),
+                          builder: (context) => FavoritesFoodScreen(
+                            healthHistory:
+                            provider.getSelectedHealthConditions(),
+                            userData: userData,
+                          ),
+                        ),
+                      );
+                    },
+                    label: provider.selectedHealthConditions.contains(true)
+                        ? "Next"
+                        : "None",
+                  ),
                 ),
                 SizedBox(height: size.height * 0.03),
                 Padding(
@@ -173,19 +167,24 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Handle Skip Action
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FavoritesFoodScreen(),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FavoritesFoodScreen(
+                                healthHistory:
+                                provider.getSelectedHealthConditions(),
+                                userData: userData,
+                              ),
+                            ),
+                          );
                         },
                         child: WantText(
-                            text: "Skip",
-                            fontSize: size.width * 0.036,
-                            fontWeight: FontWeight.w500,
-                            textColor: colorBlack,
-                            usePoppins: false),
+                          text: "Skip",
+                          fontSize: size.width * 0.036,
+                          fontWeight: FontWeight.w500,
+                          textColor: colorBlack,
+                          usePoppins: false,
+                        ),
                       ),
                     ],
                   ),

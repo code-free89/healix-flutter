@@ -19,6 +19,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'data/controllers/provider_controllers/authentication_provider.dart';
 import 'data/controllers/provider_controllers/chat_provider.dart';
+import 'data/controllers/provider_controllers/user_info_provider.dart';
 
 
 void main() async {
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => AuthenticationProvider.instance(),
         ),
-        ChangeNotifierProvider<ChatProvider>(create: (_) => ChatProvider())
+        ChangeNotifierProvider<ChatProvider>(create: (_) => ChatProvider()),
+        ChangeNotifierProvider<UserInfoProvider>(create: (_) => UserInfoProvider())
         // Add other providers here
       ],
       child: MaterialApp(

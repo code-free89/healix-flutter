@@ -17,3 +17,4 @@ var colorGrey=Color.fromRGBO(74, 85, 104, 0.07);
 var colorBlack=Color.fromRGBO(67, 67, 67, 1);
 var colorWhite=Colors.white;
 var colorGreyText=Color.fromRGBO(118, 118, 118, 1);
+Color colorRed = Colors.red;

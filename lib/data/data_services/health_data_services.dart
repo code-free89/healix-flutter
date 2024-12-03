@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:async'; // For timeout exceptions
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -13,12 +15,15 @@ import '../../util/constants/api_constants.dart';
 import '../../util/constants/constant.dart';
 import '../../views/shared_components/show_permission_dialog.dart';
 
-
 class HealthDataServices {
+
+  Dio dio = Dio();
+
   final String putHealthDataApiUrl = '$BASEURL/save_health_data';
   final String getHealthDataApiUrl = '$BASEURL/get_health_data';
   final String getCustomizedUrl = '$BASEURL/get_customized_response';
   final String getQuoteData = '$BASEURL/get_final_quote';
+  final String addUserData = '$BASEURL/add_user_profile';
 
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(
@@ -188,4 +193,41 @@ class HealthDataServices {
     }
   }
 
+  Future<bool> addUserProfile(
+      BuildContext context, UserViewModel userData) async {
+    try {
+      print("Sending request to $addUserData");
+      var headers = {'Content-Type': 'application/json'};
+      final response = await dio
+          .post(
+        addUserData,
+        data: userData.toJson(),
+        options: Options(
+          headers: headers,
+        ),
+      )
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
+        print('Request timed out');
+        showPermissionDialog(context, "Error",
+            "The connection has timed out, please try again later.");
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+
+      print(" add_user_profile response status code ${response.statusCode}");
+      print(" add_user_profile response body ${userData.toJson()}");
+      print(" add_user_profile response data ${response.data}");
+
+      if (response.statusCode == 200 || response.statusCode == 202) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Error occurred while fetching customized response: $e');
+      showPermissionDialog(context, "Error",
+          "An error occurred while fetching customized response: $e");
+      throw Exception('Error occurred while fetching customized response: $e');
+    }
+  }
 }

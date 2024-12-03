@@ -1,50 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:helix_ai/util/constants/constant.dart';
+import 'package:provider/provider.dart';
+import '../../../data/controllers/provider_controllers/user_info_provider.dart';
+import '../../../data/models/view_model/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/auth_custom_text_field.dart';
 import '../../shared_components/general_button.dart';
+import '../../shared_components/show_toast.dart';
 import '../../shared_components/want_text.dart';
 import 'health_history_screen.dart';
+import 'package:intl/intl.dart';
 
-class UserInfoScreen extends StatefulWidget {
+class UserInfoScreen extends StatelessWidget {
+  final String id;
+  final String email;
+
+  UserInfoScreen({required this.id, required this.email});
+
   @override
-  State<UserInfoScreen> createState() => _UserInfoScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => UserInfoProvider(),
+      child: _UserInfoScreenContent(id: id, email: email),
+    );
+  }
 }
 
-class _UserInfoScreenState extends State<UserInfoScreen> {
+class _UserInfoScreenContent extends StatelessWidget {
+  final String id;
+  final String email;
+
   final TextEditingController nameController = TextEditingController();
-
   final TextEditingController dobController = TextEditingController();
-
   final TextEditingController phoneController = TextEditingController();
-
   final TextEditingController heightController = TextEditingController();
-
   final TextEditingController weightController = TextEditingController();
 
-  String selectedGender = "";
-  String selectedHeightUnit = "CM"; // Default for height
-  String selectedWeightUnit = "KG";
+  _UserInfoScreenContent({required this.id, required this.email});
 
   void _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(), // Current date
-      firstDate: DateTime(1900),  // Earliest date
-      lastDate: DateTime.now(),  // Latest date
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
     );
 
     if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // Format the date
-      setState(() {
-        dobController.text = formattedDate; // Update the controller
-      });
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      context.read<UserInfoProvider>().updateDob(formattedDate);
+      dobController.text = formattedDate;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final provider = context.watch<UserInfoProvider>();
 
     return Scaffold(
       backgroundColor: colorWhite,
@@ -52,34 +64,33 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-            image:
-                DecorationImage(image: AssetImage("assets/images/auth.png"))),
+          image: DecorationImage(image: AssetImage("assets/images/auth.png")),
+        ),
         child: Padding(
           padding: EdgeInsets.only(top: size.height * 0.192),
           child: Container(
             decoration: BoxDecoration(
-                color: colorWhite,
-                border: Border.all(color: colorGrey),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(size.width * 0.1),
-                    topRight: Radius.circular(size.width * 0.1)),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorBlack.withOpacity(0.2),
-                    blurRadius: 10,
-                    spreadRadius: 6,
-                  ),
-                ]),
+              color: colorWhite,
+              border: Border.all(color: colorGrey),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(size.width * 0.1),
+                topRight: Radius.circular(size.width * 0.1),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorBlack.withOpacity(0.2),
+                  blurRadius: 10,
+                  spreadRadius: 6,
+                ),
+              ],
+            ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: size.height * 0.035),
-
-                    // Text and Input Section
                     WantText(
                       text: "Hi",
                       fontSize: size.width * 0.082,
@@ -87,42 +98,43 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       textColor: colorBlack,
                       usePoppins: true,
                     ),
-
                     SizedBox(height: size.height * 0.0098),
                     WantText(
-                        text: "Tell us more about yourself",
-                        fontSize: size.width * 0.035,
-                        fontWeight: FontWeight.w500,
-                        textColor: colorGreyText,
-                        usePoppins: false),
+                      text: "Tell us more about yourself",
+                      fontSize: size.width * 0.035,
+                      fontWeight: FontWeight.w500,
+                      textColor: colorGreyText,
+                      usePoppins: false,
+                    ),
                     SizedBox(height: size.height * 0.03),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
                           width: size.width * 0.51,
                           child: AuthCustomTextFormField(
-                              labelText: "Name", controller: nameController),
+                            labelText: "Name",
+                            controller: nameController,
+                          ),
                         ),
+                        Spacer(),
                         SizedBox(
-                          width: size.width * 0.25,
+                          width: size.width * 0.27,
                           child: AuthCustomTextFormField(
                             labelText: "Birth Date",
                             controller: dobController,
-                            readOnly: true, // Ensure the field is read-only
-                            onTap: () => _selectDate(context), // Open the date picker on tap
+                            readOnly: true,
+                            onTap: () => _selectDate(context),
                           ),
-
-                        )
+                        ),
                       ],
                     ),
-
                     SizedBox(height: size.height * 0.02),
                     AuthCustomTextFormField(
-                        labelText: "Phone Number", controller: phoneController),
-
+                      keyboardType: TextInputType.phone,
+                      labelText: "Phone Number",
+                      controller: phoneController,
+                    ),
                     SizedBox(height: size.height * 0.0197),
-                    // Gender Selection
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -130,29 +142,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           images: "assets/images/male.png",
                           label: "Male",
                           size: size,
-                          isSelected: selectedGender == "Male",
-                          onSelect: () {
-                            setState(() {
-                              selectedGender = "Male";
-                            });
-                          },
+                          isSelected: provider.selectedGender == "Male",
+                          onSelect: () => provider.selectGender("Male"),
                         ),
                         GenderSelection(
                           images: "assets/images/female.png",
                           label: "Female",
                           size: size,
-                          isSelected: selectedGender == "Female",
-                          onSelect: () {
-                            setState(() {
-                              selectedGender = "Female";
-                            });
-                          },
+                          isSelected: provider.selectedGender == "Female",
+                          onSelect: () => provider.selectGender("Female"),
                         ),
                       ],
                     ),
                     SizedBox(height: size.height * 0.0197),
-                    // Height and Weight
                     AuthCustomTextFormField(
+                      keyboardType: provider.selectedHeightUnit == "CM"
+                          ? TextInputType.number
+                          : TextInputType.text,
                       labelText: "Height",
                       controller: heightController,
                       suffixIcon: SizedBox(
@@ -163,22 +169,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             buildToggleOption(
                               "CM",
                               size.width,
-                              isSelected: selectedHeightUnit == "CM",
-                              onTap: () {
-                                setState(() {
-                                  selectedHeightUnit = "CM";
-                                });
-                              },
+                              isSelected: provider.selectedHeightUnit == "CM",
+                              onTap: () => provider.toggleHeightUnit("CM"),
                             ),
                             buildToggleOption(
                               "FT",
                               size.width,
-                              isSelected: selectedHeightUnit == "FT",
-                              onTap: () {
-                                setState(() {
-                                  selectedHeightUnit = "FT";
-                                });
-                              },
+                              isSelected: provider.selectedHeightUnit == "FT",
+                              onTap: () => provider.toggleHeightUnit("FT"),
                             ),
                           ],
                         ),
@@ -196,22 +194,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             buildToggleOption(
                               "KG",
                               size.width,
-                              isSelected: selectedWeightUnit == "KG",
-                              onTap: () {
-                                setState(() {
-                                  selectedWeightUnit = "KG";
-                                });
-                              },
+                              isSelected: provider.selectedWeightUnit == "KG",
+                              onTap: () => provider.toggleWeightUnit("KG"),
                             ),
                             buildToggleOption(
                               "LB",
                               size.width,
-                              isSelected: selectedWeightUnit == "LB",
-                              onTap: () {
-                                setState(() {
-                                  selectedWeightUnit = "LB";
-                                });
-                              },
+                              isSelected: provider.selectedWeightUnit == "LB",
+                              onTap: () => provider.toggleWeightUnit("LB"),
                             ),
                           ],
                         ),
@@ -219,57 +209,61 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     ),
                     SizedBox(height: size.height * 0.0297),
                     GeneralButton(
-                        Width: size.width,
-                        onTap: () {
+                      Width: size.width,
+                      onTap: () {
+                        if (nameController.text.isEmpty) {
+                          showToast('please add user name', colorRed);
+                        } else if (dobController.text.isEmpty) {
+                          showToast('please add Date of birth', colorRed);
+                        } else if (phoneController.text.isEmpty) {
+                          showToast(
+                              'please add Correct Phone Number', colorRed);
+                        } else if (provider.selectedGender.isEmpty) {
+                          showToast('please select your gender', colorRed);
+                        } else if (heightController.text.isEmpty) {
+                          showToast('please add your height', colorRed);
+                        } else if (weightController.text.isEmpty) {
+                          showToast('please add your weight', colorRed);
+                        } else {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HealthHistoryScreen(),
-                              ));
-                        },
-                        label: "Next"),
-
-                    SizedBox(height: size.height * 0.04),
-
-                    // Skip Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (index) {
-                            return AnimatedContainer(
-                              duration: Duration(milliseconds: 300),
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              height: size.width * 0.0154,
-                              width: size.width * 0.0154,
-                              decoration: BoxDecoration(
-                                color: index == 0
-                                    ? colorBlack
-                                    : colorGreyText.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(5),
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HealthHistoryScreen(
+                                userData: UserViewModel(
+                                  id: id,
+                                  email: email,
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  gender: provider.selectedGender,
+                                  dateOfBirth: dobController.text,
+                                  height: heightController.text,
+                                  weight: weightController.text,
+                                ),
                               ),
-                            );
-                          }),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // Handle Skip Action
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HealthHistoryScreen(),
-                                ));
-                          },
-                          child: WantText(
-                              text: "Skip",
-                              fontSize: size.width * 0.036,
-                              fontWeight: FontWeight.w500,
-                              textColor: colorBlack,
-                              usePoppins: false),
-                        ),
-                      ],
+                            ),
+                          );
+                        }
+                      },
+                      label: "Next",
+                    ),
+                    SizedBox(height: size.height * 0.03),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(5, (index) {
+                        return AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          height: size.width * 0.0154,
+                          width: size.width * 0.0154,
+                          decoration: BoxDecoration(
+                            color: index == 0
+                                ? colorBlack
+                                : colorGreyText.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),

@@ -1,47 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 import 'package:helix_ai/views/screens/auth_screens/profile_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
+import 'package:provider/provider.dart';
 
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../data/controllers/provider_controllers/user_info_provider.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';
 
-class AllergiesSelectionScreen extends StatefulWidget {
-  const AllergiesSelectionScreen({super.key});
+class AllergiesSelectionScreen extends StatelessWidget {
+  final List<String> dietPref;
+  final List<String> favoriteFood;
+  final List<String> healthHistory;
+  final UserViewModel userData;
 
-  @override
-  State<AllergiesSelectionScreen> createState() =>
-      _AllergiesSelectionScreenState();
-}
-
-class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
-  final List<String> allergies = [
-    "Milk",
-    "Egg",
-    "Fish",
-    "Wheat",
-    "Shellfish",
-    "Soy beans",
-    "Gluten",
-    "Peanuts",
-    "Tree nuts",
-    "Sesame"
-  ];
-  final Set<String> selectedAllergies = {};
-
-  void toggleSelection(String allergy) {
-    setState(() {
-      if (selectedAllergies.contains(allergy)) {
-        selectedAllergies.remove(allergy);
-      } else {
-        selectedAllergies.add(allergy);
-      }
-    });
-  }
+  const AllergiesSelectionScreen({
+    super.key,
+    required this.dietPref,
+    required this.favoriteFood,
+    required this.healthHistory,
+    required this.userData,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthenticationProvider>(context);
+    final userInfoProvider = Provider.of<UserInfoProvider>(context);
+
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: colorWhite,
       body: Container(
@@ -51,8 +40,7 @@ class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
             image:
                 DecorationImage(image: AssetImage("assets/images/auth.png"))),
         child: Padding(
-          padding: EdgeInsets.only(top: size.height * 0.45
-          ),
+          padding: EdgeInsets.only(top: size.height * 0.45),
           child: Container(
             decoration: BoxDecoration(
                 color: colorWhite,
@@ -83,7 +71,6 @@ class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
                     textColor: colorBlack,
                     usePoppins: true,
                   ),
-
                   SizedBox(height: size.height * 0.009),
                   WantText(
                       text: "Do you have any allergies we should know\nabout?",
@@ -92,13 +79,16 @@ class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
                       textColor: colorGreyText,
                       usePoppins: false),
                   SizedBox(height: size.height * 0.03),
+
+                  // Allergy Selection Section
                   Wrap(
                     spacing: size.width * 0.02,
                     runSpacing: size.width * 0.02,
-                    children: allergies.map((allergy) {
-                      final isSelected = selectedAllergies.contains(allergy);
+                    children: userInfoProvider.allergies.map((allergy) {
+                      final isSelected =
+                          userInfoProvider.selectedAllergies.contains(allergy);
                       return GestureDetector(
-                        onTap: () => toggleSelection(allergy),
+                        onTap: () => userInfoProvider.toggleAllergy(allergy),
                         child: Container(
                           decoration: BoxDecoration(
                               color: isSelected
@@ -133,26 +123,42 @@ class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
                     }).toList(),
                   ),
                   SizedBox(height: size.height * 0.025),
+
+                  // Next Button
                   Center(
                     child: GeneralButton(
                       Width: size.width * 0.8,
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        var res = await authProvider.addUserProfile(
+                          userData
+                            ..allergies =
+                                userInfoProvider.selectedAllergies.toList()
+                            ..dietPreference = dietPref.toList()
+                            ..cuisinePreference = favoriteFood.toList()
+                            ..healthHistory = healthHistory.toList(),
+                          context,
+                        );
+                        if (res) {
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatHome(),
-                            ));
+                            ),
+                            (route) => false,
+                          );
+                        }
                       },
-                      label: selectedAllergies.isEmpty ? "No allergy" : "Next",
+                      label: userInfoProvider.selectedAllergies.isEmpty
+                          ? "No allergy"
+                          : "Next",
                     ),
                   ),
                   SizedBox(height: size.height * 0.03),
 
-                  // Skip Button
+                  // Skip Button (if needed)
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
@@ -169,22 +175,6 @@ class _AllergiesSelectionScreenState extends State<AllergiesSelectionScreen> {
                             ),
                           );
                         }),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // Handle Skip Action
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
-                              ));
-                        },
-                        child: WantText(
-                            text: "Skip",
-                            fontSize: size.width * 0.036,
-                            fontWeight: FontWeight.w500,
-                            textColor: colorBlack,
-                            usePoppins: false),
                       ),
                     ],
                   ),

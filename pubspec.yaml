@@ -53,6 +53,8 @@ dependencies:
   flutter_secure_storage:
   health: ^11.0.0
   drag_and_drop_lists: ^0.4.2
+  fluttertoast: ^8.2.8
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

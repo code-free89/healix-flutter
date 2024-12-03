@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 
+import '../../models/view_model/user_data_view_model.dart';
+import '../../repositories/ai_chat_repositories/api_repository.dart';
+
 enum Status {
   Uninitialized,
   Authenticated,
@@ -15,6 +18,8 @@ class AuthenticationProvider with ChangeNotifier {
   User? _user;
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
+  ApiRepository apiRepository = ApiRepository();
+
   SharedPreferenceRepository _sharedPreferenceRepository =
       SharedPreferenceRepository();
   bool isSignupLoading = false;
@@ -34,7 +39,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   User? get user => _user;
 
-  Future<bool> signUp(String email, String password) async {
+  Future signUp(String email, String password) async {
     try {
       // _status = Status.Authenticating;
       setIsSignupLoading(true);
@@ -54,7 +59,7 @@ class AuthenticationProvider with ChangeNotifier {
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
       notifyListeners();
-      return true;
+      return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       if (e.code == 'weak-password') {
@@ -66,6 +71,24 @@ class AuthenticationProvider with ChangeNotifier {
       } else {
         _errorMessage = "Unable to signup. Please try again later.";
       }
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> addUserProfile(
+      UserViewModel userData, BuildContext context) async {
+    try {
+      setIsSignupLoading(true);
+      var res = await apiRepository.addUserProfile(context, userData);
+      if (res) {
+        setIsSignupLoading(false);
+        notifyListeners();
+      }
+      return res;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      _errorMessage = "Unable to signup. Please try again later.";
       notifyListeners();
       return false;
     }

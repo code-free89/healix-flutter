@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
 import '../../../../data/models/model/getCustomizedata.dart';
 import '../../../../data/models/view_model/customized_fetch_data_request.dart';
@@ -19,5 +20,10 @@ class ApiRepository {
       CustomizedFetchDataRequest request, BuildContext context) {
     return healthDataController.getFinalQuoteData(request, context);
 
+  }
+
+  Future<bool> addUserProfile(
+    BuildContext context, UserViewModel userData) {
+    return healthDataController.addUserProfile(context, userData);
   }
 }
