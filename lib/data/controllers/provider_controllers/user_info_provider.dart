@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class UserInfoProvider extends ChangeNotifier {
   String selectedGender = "";
   String selectedHeightUnit = "CM";
-  String selectedWeightUnit = "KG";
+  String selectedWeightUnit = "LB";
   String dob = "";
 
   void selectGender(String gender) {

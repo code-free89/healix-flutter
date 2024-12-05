@@ -43,14 +43,13 @@ class _UserSignUpState extends State<UserSignUp> {
           signUpEmailController.text, signUpPasswordController.text);
 
       if (isValidFirebaseUID(res)) {
-        Navigator.pushAndRemoveUntil(
+        Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => UserInfoScreen(
                     email: signUpEmailController.text,
                     id: res,
                   )),
-          (Route<dynamic> route) => false,
         );
       } else {
         authProvider.setIsSignupLoading(false);

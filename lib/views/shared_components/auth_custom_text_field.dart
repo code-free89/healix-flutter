@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../util/constants/colors.dart';
@@ -10,8 +11,11 @@ class AuthCustomTextFormField extends StatelessWidget {
   final TextInputType keyboardType;
   final Widget? suffixIcon;
   final Function(String)? onChanged;
-  final bool readOnly; // To make the field read-only
-  final VoidCallback? onTap; // New onTap callback for custom actions
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final List<TextInputFormatter>? inputFormatters;
+  final Function(String)? onFieldSubmitted;
+  final FocusNode? focusNode; // Added FocusNode parameter
 
   AuthCustomTextFormField({
     required this.labelText,
@@ -21,7 +25,10 @@ class AuthCustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.onChanged,
     this.readOnly = false,
-    this.onTap, // Optional callback for tap actions
+    this.onTap,
+    this.inputFormatters,
+    this.onFieldSubmitted,
+    this.focusNode, // Initialize FocusNode
   });
 
   @override
@@ -47,16 +54,19 @@ class AuthCustomTextFormField extends StatelessWidget {
       height: height * 0.064,
       child: TextFormField(
         controller: controller,
+        focusNode: focusNode, // Attach FocusNode here
         obscureText: obscureText,
         keyboardType: keyboardType,
         readOnly: readOnly,
+        inputFormatters: inputFormatters,
         style: GoogleFonts.roboto(
           color: colorBlack,
           fontSize: width * 0.03733,
           fontWeight: FontWeight.w500,
         ),
         onChanged: onChanged,
-        onTap: onTap, // Trigger the custom action on tap
+        onTap: onTap,
+        onFieldSubmitted: onFieldSubmitted,
         decoration: InputDecoration(
           hintStyle: GoogleFonts.roboto(
             color: colorGreyText,

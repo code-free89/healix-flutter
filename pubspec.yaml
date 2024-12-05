@@ -55,6 +55,7 @@ dependencies:
   drag_and_drop_lists: ^0.4.2
   fluttertoast: ^8.2.8
   dio: ^5.7.0
+  country_code_picker: 3.0.0
 
 dev_dependencies:
   flutter_test:
