@@ -53,6 +53,16 @@ class _UserInfoScreenContent extends StatelessWidget {
     }
   }
 
+  bool isButtonEnabled(BuildContext context) {
+    final provider = context.watch<UserInfoProvider>();
+    return nameController.text.isNotEmpty &&
+        dobController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
+        provider.selectedGender.isNotEmpty &&
+        heightController.text.isNotEmpty &&
+        weightController.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -110,7 +120,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                     Row(
                       children: [
                         SizedBox(
-                          width: size.width * 0.51,
+                          width: size.width * 0.49,
                           child: AuthCustomTextFormField(
                             labelText: "Name",
                             controller: nameController,
@@ -118,7 +128,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                         ),
                         Spacer(),
                         SizedBox(
-                          width: size.width * 0.27,
+                          width: size.width * 0.29,
                           child: AuthCustomTextFormField(
                             labelText: "Birth Date",
                             controller: dobController,
@@ -208,23 +218,12 @@ class _UserInfoScreenContent extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: size.height * 0.0297),
-                    GeneralButton(
-                      Width: size.width,
-                      onTap: () {
-                        if (nameController.text.isEmpty) {
-                          showToast('please add user name', colorRed);
-                        } else if (dobController.text.isEmpty) {
-                          showToast('please add Date of birth', colorRed);
-                        } else if (phoneController.text.isEmpty) {
-                          showToast(
-                              'please add Correct Phone Number', colorRed);
-                        } else if (provider.selectedGender.isEmpty) {
-                          showToast('please select your gender', colorRed);
-                        } else if (heightController.text.isEmpty) {
-                          showToast('please add your height', colorRed);
-                        } else if (weightController.text.isEmpty) {
-                          showToast('please add your weight', colorRed);
-                        } else {
+                    SizedBox(
+                      height: height * 0.064,
+                      width: width,
+                      child: ElevatedButton(
+                        onPressed: isButtonEnabled(context)
+                            ? () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -243,11 +242,26 @@ class _UserInfoScreenContent extends StatelessWidget {
                             ),
                           );
                         }
-                      },
-                      label: "Next",
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isButtonEnabled(context)
+                              ? greenThemeColor
+                              : Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(width * 0.03),
+                          ),
+                        ),
+                        child: Text(
+                          "Next",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: size.width * 0.04,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                     SizedBox(height: size.height * 0.03),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(5, (index) {
@@ -276,11 +290,11 @@ class _UserInfoScreenContent extends StatelessWidget {
   }
 
   Widget buildToggleOption(
-    String label,
-    double width, {
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
+      String label,
+      double width, {
+        required bool isSelected,
+        required VoidCallback onTap,
+      }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -350,7 +364,7 @@ class GenderSelection extends StatelessWidget {
                 fontSize: size.width * 0.036,
                 fontWeight: FontWeight.w500,
                 textColor:
-                    isSelected ? colorBlack : colorBlack.withOpacity(0.7),
+                isSelected ? colorBlack : colorBlack.withOpacity(0.7),
                 usePoppins: false),
           ],
         ),
