@@ -1,12 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:helix_ai/util/constants/colors.dart';
+import 'package:helix_ai/views/shared_components/chat_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../../data/models/model/getCustomizedata.dart';
+import '../../../../util/constants/constant.dart';
+import '../../../../util/constants/images_path.dart';
 
 class UserChatContainer extends StatelessWidget {
   final String question;
@@ -33,24 +37,20 @@ class UserChatContainer extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(51, 0, 7, 22),
             child: Container(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.all(height * 0.015),
               decoration: BoxDecoration(
-                color: greenThemeColor,
+                color: Color(0xffF3F3F3),
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(12),
-                  topLeft: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(3),
+                  topRight: Radius.circular(width * 0.030),
+                  topLeft: Radius.circular(width * 0.030),
+                  bottomLeft: Radius.circular(width * 0.030),
+                  bottomRight: Radius.circular(width * 0.007),
                 ),
               ),
-              child: Text(
-                question,
+              child: ChatText(
+                text: question,
                 textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'Urbanist',
-                  color: Colors.white,
-                ),
+                color: colorBlack,
               ),
             ),
           ),
@@ -59,40 +59,44 @@ class UserChatContainer extends StatelessWidget {
         // Answer or Loading Indicator
         Align(
           alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(2, 0, 55, 22),
-            child: Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: gray5Color,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(12),
-                  topLeft: Radius.circular(12),
-                  bottomLeft: Radius.circular(3),
-                  bottomRight: Radius.circular(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: width * 0.01),
+                height: width * 0.123,
+                width: width * 0.123,
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      color: Color(0x124a5568), blurRadius: 8, spreadRadius: 0)
+                ], color: whiteColor, shape: BoxShape.circle),
+                child: SvgPicture.asset(
+                  appLogo,
+                  fit: BoxFit.none,
                 ),
               ),
-              // Show loading indicator or answer text
-              child: answer != null && answer!.isNotEmpty
-                  ? Text(
-                      answer!,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: 'Urbanist',
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                      ),
-                    )
-                  : SizedBox(
-                      width: 30,
-                      child: JumpingDots(
-                        color: greenThemeColor,
-                        radius: 10,
-                        numberOfDots: 3,
-                        innerPadding: 0,
-                      ),
-                    ),
-            ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, height * 0.01),
+                  child: answer != null && answer!.isNotEmpty
+                      ? ChatText(
+                          text: answer!,
+                          textAlign: TextAlign.left,
+                        )
+                      : SizedBox(
+                          width: 30,
+                          child: JumpingDots(
+                            color: greenThemeColor,
+                            radius: 10,
+                            numberOfDots: 3,
+                            innerPadding: 0,
+                          ),
+                        ),
+                ),
+              ),
+            ],
           ),
         ),
         (isMeal != null && isMeal!)

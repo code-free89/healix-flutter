@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/chat_start.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat.dart';
 import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
+import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
@@ -128,8 +130,12 @@ class _ChatHomeState extends State<ChatHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Gene',
-          style: TextStyle(fontSize: height * 0.025),
+          "Gene",
+          style: TextStyle(
+              fontSize: width * 0.038,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff262522),
+              fontFamily: 'Ubuntu'),
         ),
         leading: SvgPicture.asset(
           appLogo,
@@ -183,30 +189,30 @@ class _ChatHomeState extends State<ChatHome> {
                               height * 0.016, height * 0.02, height * 0.016),
                           border: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.circular(height * 0.02),
+                                  BorderRadius.circular(width * 0.030),
                               borderSide: BorderSide(
-                                color: greenThemeColor,
+                                color: greenBorderColor,
                                 width: 1,
                               )),
                           focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.circular(height * 0.02),
+                                  BorderRadius.circular(width * 0.030),
                               borderSide: BorderSide(
-                                color: greenThemeColor,
+                                color: greenBorderColor,
                                 width: 1,
                               )),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.circular(height * 0.02),
+                                  BorderRadius.circular(width * 0.030),
                               borderSide: BorderSide(
-                                color: greenThemeColor,
+                                color: greenBorderColor,
                                 width: 1,
                               )),
                           hintText: "Ask me anything...",
                           hintStyle: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: height * 0.021,
-                              color: Color.fromRGBO(166, 163, 157, 1)),
+                              fontFamily: 'Roboto',
+                              fontSize: width * 0.035,
+                              color: Color(0xff767676)),
                         ),
                       ),
                     ),
@@ -266,7 +272,7 @@ class _ChatHomeState extends State<ChatHome> {
                           width: height * 0.065,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: greenThemeColor),
+                              color: greenBorderColor),
                           child: SvgPicture.asset(
                             buttonArrow,
                             fit: BoxFit.none,
