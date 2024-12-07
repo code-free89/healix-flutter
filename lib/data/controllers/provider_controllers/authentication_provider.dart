@@ -71,6 +71,8 @@ class AuthenticationProvider with ChangeNotifier {
       } else {
         _errorMessage = "Unable to signup. Please try again later.";
       }
+      setIsSignupLoading(false);
+
       notifyListeners();
       return false;
     }

@@ -42,7 +42,7 @@ class _UserSignUpState extends State<UserSignUp> {
       var res = await authProvider.signUp(
           signUpEmailController.text, signUpPasswordController.text);
 
-      if (isValidFirebaseUID(res)) {
+      if (!(res is bool) && isValidFirebaseUID(res)) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -53,7 +53,6 @@ class _UserSignUpState extends State<UserSignUp> {
         );
       } else {
         authProvider.setIsSignupLoading(false);
-        // authProvider.setStatus(Status.Unauthenticated);
         UiHelper().showSnackBar(context, authProvider.errorMessage);
       }
     }
