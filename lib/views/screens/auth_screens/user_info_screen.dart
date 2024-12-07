@@ -8,8 +8,6 @@ import '../../../data/models/view_model/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared_components/auth_custom_text_field.dart';
-import '../../shared_components/general_button.dart';
-import '../../shared_components/show_toast.dart';
 import '../../shared_components/want_text.dart';
 import 'health_history_screen.dart';
 import 'package:intl/intl.dart';
@@ -44,15 +42,39 @@ class _UserInfoScreenContent extends StatelessWidget {
   _UserInfoScreenContent({required this.id, required this.email});
 
   void _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime now = DateTime.now();
+
+    DateTime? pickedDate = await showDialog<DateTime>(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: colorWhite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: Icon(Icons.close, color: Colors.grey),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              CalendarDatePicker(
+                initialDate: now,
+                firstDate: DateTime(1900),
+                lastDate: now,
+                onDateChanged: (DateTime selectedDate) {
+                  Navigator.pop(context, selectedDate);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
 
     if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
       context.read<UserInfoProvider>().updateDob(formattedDate);
       dobController.text = formattedDate;
     }
@@ -145,83 +167,83 @@ class _UserInfoScreenContent extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: size.height * 0.02),
-                    
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: height * 0.064,
-                          width: width * 0.28,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(width * 0.028)),
-                            border: Border.all(color: colorGrey),
-
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorWhite,
+                        border: Border.all(color: colorBlack.withOpacity(0.15)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(width * 0.03),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colorBlack.withOpacity(0.15),
+                            blurRadius: 10,
+                            spreadRadius: 0.3,
                           ),
-                          child: Container(
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.01,
+                          ),
+                          Container(
+                            width: width * 0.25,
                             decoration: BoxDecoration(
-                              color: colorWhite,
-                              border: Border.all(
-                                  color: colorBlack.withOpacity(0.15)),
+                              color: colorBlack.withOpacity(0.15),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(width * 0.03),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colorBlack.withOpacity(0.15),
-                                  blurRadius: 10,
-                                  spreadRadius: 0.3,
+                            ),
+                            child: CountryCodePicker(
+                              showDropDownButton: false,
+                              padding: EdgeInsets.zero,
+                              boxDecoration: BoxDecoration(
+                                color: colorWhite,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(width * 0.05)),
+                              ),
+                              onChanged: (countryCode) {},
+                              initialSelection: 'US',
+                              favorite: ['+1', 'US'],
+                              showCountryOnly: false,
+                              showOnlyCountryWhenClosed: false,
+                              dialogBackgroundColor: colorWhite,
+                              alignLeft: false,
+                              dialogSize: Size(width * 0.8, height * 0.4),
+                              textStyle: GoogleFonts.roboto(
+                                textStyle: TextStyle(
+                                  fontSize: width * 0.04,
+                                  color: colorBlack,
+                                  fontWeight: FontWeight.w500,
                                 ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.01,
+                          ),
+                          SizedBox(
+                            width: width * 0.5,
+                            child: AuthCustomTextFormField(
+                              decoration:
+                                  BoxDecoration(color: Colors.transparent),
+                              borderColor: Colors.transparent,
+                              labelText: "Phone Number",
+                              controller: phoneController,
+                              keyboardType: TextInputType.phone,
+                              focusNode: phoneFocusNode,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(10),
+                                _PhoneNumberFormatter(onComplete: () {
+                                  phoneFocusNode.unfocus();
+                                })
                               ],
                             ),
-                           child:  CountryCodePicker(
-                             padding: EdgeInsets.all(0),
-                             boxDecoration: BoxDecoration(
-                               color: Color.fromRGBO(235, 225, 230, 1),
-                               borderRadius: BorderRadius.all(
-                                   Radius.circular(width * 0.05)),
-                             ),
-                             onChanged: (countryCode) {
-                               // setState(() {
-                               //   this.countryCode =
-                               //       countryCode.dialCode ?? '+1';
-                               // });
-                             },
-                             initialSelection: 'US',
-                             favorite: ['+1', 'US'],
-                             showCountryOnly: false,
-                             showOnlyCountryWhenClosed: false,                             // optional. aligns the flag and the Text left
-                             alignLeft: false,
-                             dialogSize: Size(width * 0.8, height * 0.4),
-                             textStyle: GoogleFonts.roboto(
-                               textStyle: TextStyle(
-                                 fontSize: width * 0.04,
-                                 color: colorBlack,
-                                 fontWeight: FontWeight.w500,
-                               ),
-                             ),
-                           ),
-
                           ),
-                        ),
-                        SizedBox(
-                          width: width * 0.5,
-                          child: AuthCustomTextFormField(
-                            labelText: "Phone Number",
-                            controller: phoneController,
-                            keyboardType: TextInputType.phone,
-                            focusNode: phoneFocusNode,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(10),
-                              _PhoneNumberFormatter(onComplete: () {
-                                phoneFocusNode
-                                    .unfocus(); // Unfocus the field when 10 digits are complete
-                              })
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: size.height * 0.0197),
                     Row(
@@ -248,52 +270,28 @@ class _UserInfoScreenContent extends StatelessWidget {
                       children: [
                         Expanded(
                           child: AuthCustomTextFormField(
-                            keyboardType: provider.selectedHeightUnit == "CM"
-                                ? TextInputType.number
-                                : TextInputType.text,
+                            keyboardType: TextInputType.number,
                             labelText: "Height",
                             controller: heightFtController,
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: width * 0.015,
-                                  horizontal: width * 0.015),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: colorGreyText.withOpacity(0.2),
-                                  borderRadius:
-                                      BorderRadius.circular(width * 0.015),
-                                ),
-                                width: width * 0.1,
-                                child: Center(
-                                  child: WantText(
-                                      text: "Ft",
-                                      fontSize: width * 0.036,
-                                      fontWeight: FontWeight.bold,
-                                      textColor: colorBlack,
-                                      usePoppins: false),
-                                ),
+                            suffixIcon: Container(
+                              decoration: BoxDecoration(
+                                color: colorGreyText.withOpacity(0.15),
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(width * 0.028),
+                                    bottomRight: Radius.circular(width * 0.028),
+                                    topLeft: Radius.circular(width * 0.015),
+                                    bottomLeft: Radius.circular(width * 0.015)),
+                              ),
+                              width: width * 0.1,
+                              child: Center(
+                                child: WantText(
+                                    text: "Ft",
+                                    fontSize: width * 0.036,
+                                    fontWeight: FontWeight.bold,
+                                    textColor: colorBlack,
+                                    usePoppins: false),
                               ),
                             ),
-                            // suffixIcon: SizedBox(
-                            //   width: size.width * 0.2256,
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       buildToggleOption(
-                            //         "CM",
-                            //         size.width,
-                            //         isSelected: provider.selectedHeightUnit == "CM",
-                            //         onTap: () => provider.toggleHeightUnit("CM"),
-                            //       ),
-                            //       buildToggleOption(
-                            //         "FT",
-                            //         size.width,
-                            //         isSelected: provider.selectedHeightUnit == "FT",
-                            //         onTap: () => provider.toggleHeightUnit("FT"),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                           ),
                         ),
                         SizedBox(
@@ -301,52 +299,28 @@ class _UserInfoScreenContent extends StatelessWidget {
                         ),
                         Expanded(
                           child: AuthCustomTextFormField(
-                            keyboardType: provider.selectedHeightUnit == "CM"
-                                ? TextInputType.number
-                                : TextInputType.text,
+                            keyboardType: TextInputType.number,
                             labelText: "Height",
                             controller: heightInchController,
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: width * 0.015,
-                                  horizontal: width * 0.015),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: colorGreyText.withOpacity(0.2),
-                                  borderRadius:
-                                      BorderRadius.circular(width * 0.015),
-                                ),
-                                width: width * 0.1,
-                                child: Center(
-                                  child: WantText(
-                                      text: "In",
-                                      fontSize: width * 0.036,
-                                      fontWeight: FontWeight.bold,
-                                      textColor: colorBlack,
-                                      usePoppins: false),
-                                ),
+                            suffixIcon: Container(
+                              decoration: BoxDecoration(
+                                color: colorGreyText.withOpacity(0.15),
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(width * 0.028),
+                                    bottomRight: Radius.circular(width * 0.028),
+                                    topLeft: Radius.circular(width * 0.015),
+                                    bottomLeft: Radius.circular(width * 0.015)),
+                              ),
+                              width: width * 0.1,
+                              child: Center(
+                                child: WantText(
+                                    text: "In",
+                                    fontSize: width * 0.036,
+                                    fontWeight: FontWeight.bold,
+                                    textColor: colorBlack,
+                                    usePoppins: false),
                               ),
                             ),
-                            // suffixIcon: SizedBox(
-                            //   width: size.width * 0.2256,
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       buildToggleOption(
-                            //         "CM",
-                            //         size.width,
-                            //         isSelected: provider.selectedHeightUnit == "CM",
-                            //         onTap: () => provider.toggleHeightUnit("CM"),
-                            //       ),
-                            //       buildToggleOption(
-                            //         "FT",
-                            //         size.width,
-                            //         isSelected: provider.selectedHeightUnit == "FT",
-                            //         onTap: () => provider.toggleHeightUnit("FT"),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                           ),
                         ),
                       ],
@@ -361,48 +335,25 @@ class _UserInfoScreenContent extends StatelessWidget {
                         ],
                         labelText: "Weight",
                         controller: weightController,
-                        suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: width * 0.015,
-                              horizontal: width * 0.015),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: colorGreyText.withOpacity(0.2),
-                              borderRadius:
-                                  BorderRadius.circular(width * 0.015),
-                            ),
-                            width: width * 0.1,
-                            child: Center(
-                              child: WantText(
-                                  text: "LB",
-                                  fontSize: width * 0.036,
-                                  fontWeight: FontWeight.bold,
-                                  textColor: colorBlack,
-                                  usePoppins: false),
-                            ),
+                        suffixIcon: Container(
+                          decoration: BoxDecoration(
+                            color: colorGreyText.withOpacity(0.15),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(width * 0.028),
+                                bottomRight: Radius.circular(width * 0.028),
+                                topLeft: Radius.circular(width * 0.015),
+                                bottomLeft: Radius.circular(width * 0.015)),
                           ),
-                        )
-                        // suffixIcon: SizedBox(
-                        //   width: size.width * 0.2256,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.center,
-                        //     children: [
-                        //       buildToggleOption(
-                        //         "KG",
-                        //         size.width,
-                        //         isSelected: provider.selectedWeightUnit == "KG",
-                        //         onTap: () => provider.toggleWeightUnit("KG"),
-                        //       ),
-                        //       buildToggleOption(
-                        //         "LB",
-                        //         size.width,
-                        //         isSelected: provider.selectedWeightUnit == "LB",
-                        //         onTap: () => provider.toggleWeightUnit("LB"),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        ),
+                          width: width * 0.1,
+                          child: Center(
+                            child: WantText(
+                                text: "LB",
+                                fontSize: width * 0.036,
+                                fontWeight: FontWeight.bold,
+                                textColor: colorBlack,
+                                usePoppins: false),
+                          ),
+                        )),
                     SizedBox(height: size.height * 0.0297),
                     SizedBox(
                       height: height * 0.064,
@@ -592,8 +543,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
       keyboardType: TextInputType.phone,
       inputFormatters: [
         _PhoneNumberFormatter(onComplete: () {
-          phoneFocusNode
-              .unfocus(); // Unfocus the field when 10 digits are complete
+          phoneFocusNode.unfocus();
         })
       ],
       decoration: InputDecoration(

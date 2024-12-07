@@ -116,4 +116,9 @@ class UserInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void shuffleList() {
+    foodOptions.shuffle();
+    notifyListeners();
+  }
+
 }

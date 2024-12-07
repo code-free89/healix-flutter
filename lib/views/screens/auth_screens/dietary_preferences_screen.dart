@@ -151,9 +151,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       AllergiesSelectionScreen(
-                                    dietPref: context
-                                        .read<UserInfoProvider>()
-                                        .selectedDietary,
+                                    dietPref: [],
                                     favoriteFood: favoriteFood,
                                     healthHistory: healthHistory,
                                     userData: userData,

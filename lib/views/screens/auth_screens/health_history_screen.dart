@@ -172,7 +172,7 @@ class HealthHistoryScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => FavoritesFoodScreen(
                                 healthHistory:
-                                provider.getSelectedHealthConditions(),
+                                [],
                                 userData: userData,
                               ),
                             ),

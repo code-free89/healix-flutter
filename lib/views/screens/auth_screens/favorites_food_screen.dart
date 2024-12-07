@@ -6,12 +6,11 @@ import '../../../data/models/view_model/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';
-import 'dietary_preferences_screen.dart' ;
+import 'dietary_preferences_screen.dart';
 
 class FavoritesFoodScreen extends StatelessWidget {
   final List<String> healthHistory;
   final UserViewModel userData;
-
 
   FavoritesFoodScreen({
     super.key,
@@ -21,7 +20,8 @@ class FavoritesFoodScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfoProvider =
+        Provider.of<UserInfoProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -73,7 +73,6 @@ class FavoritesFoodContent extends StatelessWidget {
   final UserInfoProvider userInfoProvider;
   final UserViewModel userData;
 
-
   const FavoritesFoodContent({
     required this.size,
     required this.healthHistory,
@@ -106,7 +105,7 @@ class FavoritesFoodContent extends StatelessWidget {
           child: WantText(
             textOverflow: TextOverflow.fade,
             text:
-            "We want to know your cuisine preferences,\norder them by dragging from most to least\nfavorite.",
+                "We want to know your cuisine preferences,\norder them by dragging from most to least\nfavorite.",
             fontSize: size.width * 0.035,
             fontWeight: FontWeight.w500,
             textColor: colorGreyText,
@@ -128,8 +127,8 @@ class FavoritesFoodContent extends StatelessWidget {
               itemCount: userInfoProvider.foodOptions.length,
               itemBuilder: (context, index) {
                 return Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: size.height * 0.00985),
+                  padding:
+                      EdgeInsets.symmetric(vertical: size.height * 0.00985),
                   key: ValueKey(userInfoProvider.foodOptions[index]),
                   child: Container(
                     height: size.height * 0.064,
@@ -174,6 +173,9 @@ class FavoritesFoodContent extends StatelessWidget {
           child: GeneralButton(
             Width: size.width * 0.8,
             onTap: () {
+              if (userInfoProvider.isReordering) {
+                userInfoProvider.shuffleList();
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -221,7 +223,7 @@ class FavoritesFoodContent extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DietaryPreferencesScreen(
-                        favoriteFood: userInfoProvider.foodOptions,
+                        favoriteFood: [],
                         healthHistory: healthHistory,
                         userData: userData,
                       ),

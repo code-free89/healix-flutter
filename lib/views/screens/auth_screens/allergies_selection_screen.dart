@@ -176,6 +176,34 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           );
                         }),
                       ),
+                      GestureDetector(
+                        onTap: () async {
+                          var res = await authProvider.addUserProfile(
+                            userData
+                              ..allergies = []
+                              ..dietPreference = dietPref.toList()
+                              ..cuisinePreference = favoriteFood.toList()
+                              ..healthHistory = healthHistory.toList(),
+                            context,
+                          );
+                          if (res) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatHome(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        },
+                        child: WantText(
+                          text: "Skip",
+                          fontSize: size.width * 0.036,
+                          fontWeight: FontWeight.w500,
+                          textColor: colorBlack,
+                          usePoppins: false,
+                        ),
+                      ),
                     ],
                   ),
                 ],

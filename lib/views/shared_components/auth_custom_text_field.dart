@@ -15,7 +15,9 @@ class AuthCustomTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String)? onFieldSubmitted;
-  final FocusNode? focusNode; // Added FocusNode parameter
+  final FocusNode? focusNode;// Added FocusNode parameter
+  final Color? borderColor;
+  final Decoration? decoration;
 
   AuthCustomTextFormField({
     required this.labelText,
@@ -29,6 +31,8 @@ class AuthCustomTextFormField extends StatelessWidget {
     this.inputFormatters,
     this.onFieldSubmitted,
     this.focusNode, // Initialize FocusNode
+    this.borderColor,
+    this.decoration
   });
 
   @override
@@ -37,9 +41,9 @@ class AuthCustomTextFormField extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: decoration ?? BoxDecoration(
         color: colorWhite,
-        border: Border.all(color: colorBlack.withOpacity(0.15)),
+        border: Border.all(color: borderColor?? colorBlack.withOpacity(0.15)),
         borderRadius: BorderRadius.all(
           Radius.circular(width * 0.03),
         ),
@@ -83,13 +87,13 @@ class AuthCustomTextFormField extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(width * 0.03),
             ),
-            borderSide: BorderSide(color: colorGrey),
+            borderSide: BorderSide(color: borderColor ?? colorGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(width * 0.03),
             ),
-            borderSide: BorderSide(color: colorBlack),
+            borderSide: BorderSide(color: borderColor ??colorBlack),
           ),
           suffixIcon: suffixIcon,
         ),
