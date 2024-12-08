@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
+import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/views/screens/auth_screens/profile_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
@@ -138,15 +139,13 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..healthHistory = healthHistory.toList(),
                           context,
                         );
-                        if (res) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatHome(),
-                            ),
-                            (route) => false,
-                          );
-                        }
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatHome(),
+                          ),
+                          (route) => false,
+                        );
                       },
                       label: userInfoProvider.selectedAllergies.isEmpty
                           ? "No allergy"
@@ -157,8 +156,11 @@ class AllergiesSelectionScreen extends StatelessWidget {
 
                   // Skip Button (if needed)
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      SizedBox(
+                        width: width * 0.001,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
@@ -186,15 +188,13 @@ class AllergiesSelectionScreen extends StatelessWidget {
                               ..healthHistory = healthHistory.toList(),
                             context,
                           );
-                          if (res) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatHome(),
-                              ),
-                              (route) => false,
-                            );
-                          }
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatHome(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         child: WantText(
                           text: "Skip",

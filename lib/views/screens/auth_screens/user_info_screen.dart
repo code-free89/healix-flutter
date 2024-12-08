@@ -150,6 +150,9 @@ class _UserInfoScreenContent extends StatelessWidget {
                         SizedBox(
                           width: size.width * 0.49,
                           child: AuthCustomTextFormField(
+                            inputFormatters: [
+                              NoSpecialCharactersFormatter(),
+                            ],
                             labelText: "Name",
                             controller: nameController,
                           ),
@@ -236,6 +239,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                                 LengthLimitingTextInputFormatter(10),
+
                                 _PhoneNumberFormatter(onComplete: () {
                                   phoneFocusNode.unfocus();
                                 })
@@ -273,34 +277,57 @@ class _UserInfoScreenContent extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             labelText: "Height",
                             controller: heightFtController,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(1),
+                              NoSpecialCharactersFormatter(),
+
+                            ],
+                            onChanged: (value) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).unfocus();
+                              }
+                            },
                             suffixIcon: Container(
                               decoration: BoxDecoration(
                                 color: colorGreyText.withOpacity(0.15),
                                 borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(width * 0.028),
-                                    bottomRight: Radius.circular(width * 0.028),
-                                    topLeft: Radius.circular(width * 0.015),
-                                    bottomLeft: Radius.circular(width * 0.015)),
+                                  topRight: Radius.circular(width * 0.028),
+                                  bottomRight: Radius.circular(width * 0.028),
+                                  topLeft: Radius.circular(width * 0.015),
+                                  bottomLeft: Radius.circular(width * 0.015),
+                                ),
                               ),
                               width: width * 0.1,
                               child: Center(
                                 child: WantText(
-                                    text: "Ft",
-                                    fontSize: width * 0.036,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: colorBlack,
-                                    usePoppins: false),
+                                  text: "FT",
+                                  fontSize: width * 0.036,
+                                  fontWeight: FontWeight.bold,
+                                  textColor: colorBlack,
+                                  usePoppins: false,
+                                ),
                               ),
                             ),
                           ),
                         ),
+
                         SizedBox(
                           width: width * 0.04,
                         ),
                         Expanded(
                           child: AuthCustomTextFormField(
+                            onChanged: (value) {
+                              if (value.length == 2) {
+                                FocusScope.of(context).unfocus();
+                              }
+                            },
                             keyboardType: TextInputType.number,
                             labelText: "Height",
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(2),
+                              NoSpecialCharactersFormatter(),
+
+                            ],
                             controller: heightInchController,
                             suffixIcon: Container(
                               decoration: BoxDecoration(
@@ -314,7 +341,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                               width: width * 0.1,
                               child: Center(
                                 child: WantText(
-                                    text: "In",
+                                    text: "IN",
                                     fontSize: width * 0.036,
                                     fontWeight: FontWeight.bold,
                                     textColor: colorBlack,
@@ -327,12 +354,22 @@ class _UserInfoScreenContent extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * 0.0197),
                     AuthCustomTextFormField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^\d{0,9}(\.\d{0,1})?$')),
+                          NoSpecialCharactersFormatter(),
+
+                          LengthLimitingTextInputFormatter(3),
+
                         ],
+                        onChanged: (value) {
+                          if (value.length == 3) {
+                            FocusScope.of(context).unfocus();
+                          }
+                        },
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+
                         labelText: "Weight",
                         controller: weightController,
                         suffixIcon: Container(
@@ -593,4 +630,21 @@ class _PhoneNumberFormatter extends TextInputFormatter {
       ),
     );
   }
+
 }
+
+
+class NoSpecialCharactersFormatter extends TextInputFormatter {
+  final RegExp _regex = RegExp(r'^[a-zA-Z0-9\s@.]*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
+
