@@ -172,7 +172,7 @@ class HealthHistoryScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => FavoritesFoodScreen(
                                 healthHistory:
-                                [],
+                                ["None"],
                                 userData: userData,
                               ),
                             ),

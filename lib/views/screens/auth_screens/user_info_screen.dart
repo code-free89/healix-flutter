@@ -80,15 +80,16 @@ class _UserInfoScreenContent extends StatelessWidget {
     }
   }
 
-  bool isButtonEnabled(BuildContext context) {
-    final provider = context.watch<UserInfoProvider>();
-    return nameController.text.isNotEmpty &&
-        dobController.text.isNotEmpty &&
-        phoneController.text.isNotEmpty &&
-        provider.selectedGender.isNotEmpty &&
-        heightFtController.text.isNotEmpty &&
-        heightInchController.text.isNotEmpty &&
-        weightController.text.isNotEmpty;
+   isButtonEnabled(BuildContext context) {
+
+      context.read<UserInfoProvider>().updateEnable(nameController.text != '' &&
+          dobController.text != '' &&
+          phoneController.text != '' &&
+          heightFtController.text != '' &&
+          heightInchController.text != '' &&
+          weightController.text != '');
+
+
   }
 
   @override
@@ -150,6 +151,9 @@ class _UserInfoScreenContent extends StatelessWidget {
                         SizedBox(
                           width: size.width * 0.49,
                           child: AuthCustomTextFormField(
+                            onChanged: (_) {
+                              isButtonEnabled(context);
+                            },
                             inputFormatters: [
                               NoSpecialCharactersFormatter(),
                             ],
@@ -206,7 +210,9 @@ class _UserInfoScreenContent extends StatelessWidget {
                                 borderRadius: BorderRadius.all(
                                     Radius.circular(width * 0.05)),
                               ),
-                              onChanged: (countryCode) {},
+                              onChanged: (countryCode) {
+                                provider.selectCountry(countryCode.dialCode);
+                              },
                               initialSelection: 'US',
                               favorite: ['+1', 'US'],
                               showCountryOnly: false,
@@ -229,6 +235,9 @@ class _UserInfoScreenContent extends StatelessWidget {
                           SizedBox(
                             width: width * 0.5,
                             child: AuthCustomTextFormField(
+                              onChanged: (_) {
+                                isButtonEnabled(context);
+                              },
                               decoration:
                                   BoxDecoration(color: Colors.transparent),
                               borderColor: Colors.transparent,
@@ -239,7 +248,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                                 LengthLimitingTextInputFormatter(10),
-
                                 _PhoneNumberFormatter(onComplete: () {
                                   phoneFocusNode.unfocus();
                                 })
@@ -274,15 +282,17 @@ class _UserInfoScreenContent extends StatelessWidget {
                       children: [
                         Expanded(
                           child: AuthCustomTextFormField(
+
                             keyboardType: TextInputType.number,
                             labelText: "Height",
                             controller: heightFtController,
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(1),
                               NoSpecialCharactersFormatter(),
-
                             ],
                             onChanged: (value) {
+                              isButtonEnabled(context);
+
                               if (value.length == 1) {
                                 FocusScope.of(context).unfocus();
                               }
@@ -310,13 +320,14 @@ class _UserInfoScreenContent extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         SizedBox(
                           width: width * 0.04,
                         ),
                         Expanded(
                           child: AuthCustomTextFormField(
+
                             onChanged: (value) {
+                              isButtonEnabled(context);
                               if (value.length == 2) {
                                 FocusScope.of(context).unfocus();
                               }
@@ -326,7 +337,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(2),
                               NoSpecialCharactersFormatter(),
-
                             ],
                             controller: heightInchController,
                             suffixIcon: Container(
@@ -354,22 +364,23 @@ class _UserInfoScreenContent extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * 0.0197),
                     AuthCustomTextFormField(
+
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^\d{0,9}(\.\d{0,1})?$')),
                           NoSpecialCharactersFormatter(),
-
                           LengthLimitingTextInputFormatter(3),
-
                         ],
                         onChanged: (value) {
+                          isButtonEnabled(context);
+
                           if (value.length == 3) {
                             FocusScope.of(context).unfocus();
+
                           }
                         },
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
-
                         labelText: "Weight",
                         controller: weightController,
                         suffixIcon: Container(
@@ -396,7 +407,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                       height: height * 0.064,
                       width: width,
                       child: ElevatedButton(
-                        onPressed: isButtonEnabled(context)
+                        onPressed: provider.isEnable
                             ? () {
                                 String rawPhoneNumber = phoneController.text
                                     .replaceAll(RegExp(r'\D'), '')
@@ -412,7 +423,9 @@ class _UserInfoScreenContent extends StatelessWidget {
                                         id: id,
                                         email: email,
                                         name: nameController.text,
-                                        phone: rawPhoneNumber.trim(),
+                                        phone: provider.selectedCountry +
+                                            ' ' +
+                                            rawPhoneNumber.trim(),
                                         gender: provider.selectedGender,
                                         dateOfBirth: dobController.text,
                                         height: heightFtController.text +
@@ -427,7 +440,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isButtonEnabled(context)
+                          backgroundColor: provider.isEnable
                               ? greenThemeColor
                               : Colors.grey,
                           shape: RoundedRectangleBorder(
@@ -630,9 +643,7 @@ class _PhoneNumberFormatter extends TextInputFormatter {
       ),
     );
   }
-
 }
-
 
 class NoSpecialCharactersFormatter extends TextInputFormatter {
   final RegExp _regex = RegExp(r'^[a-zA-Z0-9\s@.]*$');
@@ -646,5 +657,3 @@ class NoSpecialCharactersFormatter extends TextInputFormatter {
     return oldValue;
   }
 }
-
-

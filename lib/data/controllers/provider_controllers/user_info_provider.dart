@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class UserInfoProvider extends ChangeNotifier {
-  String selectedGender = "";
+  String selectedGender = "Male";
   String selectedHeightUnit = "CM";
   String selectedWeightUnit = "LB";
   String dob = "";
+  bool isEnable = false;
 
   void selectGender(String gender) {
     selectedGender = gender;
@@ -35,7 +38,7 @@ class UserInfoProvider extends ChangeNotifier {
   ];
 
   List<bool> selectedHealthConditions =
-  List.generate(5, (_) => false); // Initial state
+      List.generate(5, (_) => false); // Initial state
 
   void toggleHealthCondition(int index) {
     selectedHealthConditions[index] = !selectedHealthConditions[index];
@@ -50,24 +53,24 @@ class UserInfoProvider extends ChangeNotifier {
   }
 
   List<String> foodOptions = [
-  "American",
-  "Chinese",
-  "Mexican",
-  "Thai",
-  "Indian",
-  "Italian",
+    "American",
+    "Chinese",
+    "Mexican",
+    "Thai",
+    "Indian",
+    "Italian",
   ];
+  String selectedCountry = '+1';
 
   bool isReordering = false;
 
   void updateFoodOrder(int oldIndex, int newIndex) {
-  isReordering = true;
-  if (newIndex > oldIndex) newIndex--;
-  final item = foodOptions.removeAt(oldIndex);
-  foodOptions.insert(newIndex, item);
-  notifyListeners();
+    isReordering = true;
+    if (newIndex > oldIndex) newIndex--;
+    final item = foodOptions.removeAt(oldIndex);
+    foodOptions.insert(newIndex, item);
+    notifyListeners();
   }
-
 
   final List<String> _selectedDietary = [];
 
@@ -90,8 +93,16 @@ class UserInfoProvider extends ChangeNotifier {
   }
 
   final List<String> allergies = [
-    "Milk", "Egg", "Fish", "Wheat", "Shellfish", "Soy beans",
-    "Gluten", "Peanuts", "Tree nuts", "Sesame"
+    "Milk",
+    "Egg",
+    "Fish",
+    "Wheat",
+    "Shellfish",
+    "Soy beans",
+    "Gluten",
+    "Peanuts",
+    "Tree nuts",
+    "Sesame"
   ];
 
   // Set to store selected allergies
@@ -117,8 +128,21 @@ class UserInfoProvider extends ChangeNotifier {
   }
 
   void shuffleList() {
-    foodOptions.shuffle();
+    log('foodOption list old :: $foodOptions');
+
+   foodOptions.shuffle();
+   log('foodOption list new after shuffle:: $foodOptions');
     notifyListeners();
   }
 
+  void selectCountry(String? code) {
+    selectedCountry = code ?? '';
+    log('selectedCountry $selectedCountry');
+    notifyListeners();
+  }
+
+  void updateEnable(bool value) {
+    isEnable = value;
+    notifyListeners();
+  }
 }

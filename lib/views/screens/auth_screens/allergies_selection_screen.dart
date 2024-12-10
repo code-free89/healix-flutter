@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 import 'package:helix_ai/util/constants/constant.dart';
@@ -129,8 +131,8 @@ class AllergiesSelectionScreen extends StatelessWidget {
                   Center(
                     child: GeneralButton(
                       Width: size.width * 0.8,
-                      onTap: () async {
-                        var res = await authProvider.addUserProfile(
+                      onTap: () {
+                        authProvider.addUserProfile(
                           userData
                             ..allergies =
                                 userInfoProvider.selectedAllergies.toList()
@@ -179,10 +181,10 @@ class AllergiesSelectionScreen extends StatelessWidget {
                         }),
                       ),
                       GestureDetector(
-                        onTap: () async {
-                          var res = await authProvider.addUserProfile(
+                        onTap: () {
+                          authProvider.addUserProfile(
                             userData
-                              ..allergies = []
+                              ..allergies = ["No allergy"]
                               ..dietPreference = dietPref.toList()
                               ..cuisinePreference = favoriteFood.toList()
                               ..healthHistory = healthHistory.toList(),
