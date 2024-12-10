@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class UserInfoProvider extends ChangeNotifier {
-  String selectedGender = "Male";
+  String selectedGender = "";
   String selectedHeightUnit = "CM";
   String selectedWeightUnit = "LB";
   String dob = "";
@@ -130,8 +130,8 @@ class UserInfoProvider extends ChangeNotifier {
   void shuffleList() {
     log('foodOption list old :: $foodOptions');
 
-   foodOptions.shuffle();
-   log('foodOption list new after shuffle:: $foodOptions');
+    foodOptions.shuffle();
+    log('foodOption list new after shuffle:: $foodOptions');
     notifyListeners();
   }
 
@@ -142,7 +142,9 @@ class UserInfoProvider extends ChangeNotifier {
   }
 
   void updateEnable(bool value) {
-    isEnable = value;
+    if (selectedGender != "") {
+      isEnable = value;
+    }
     notifyListeners();
   }
 }

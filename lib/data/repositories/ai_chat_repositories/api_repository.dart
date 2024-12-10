@@ -15,6 +15,11 @@ class ApiRepository {
       CustomizedRequest request, BuildContext context) {
     return healthDataController.getCustomizedData(request, context);
   }
+  Future<void> addUserLocation(
+      String userId,
+      double latitude, double longitude) {
+    return healthDataController.addUserLocation( userId, latitude, longitude);
+  }
 
   Future<bool> getFinalQuoteData(
       CustomizedFetchDataRequest request, BuildContext context) {

@@ -2,6 +2,8 @@
     package="com.healix_gpt_app.healix_gpt_app">
 
 
+
+
     <!-- Check whether Health Connect is installed or not -->
     <queries>
         <package android:name="com.google.android.apps.healthdata" />
@@ -69,6 +71,10 @@
     <uses-permission android:name="android.permission.health.READ_MENSTRUATION"/>
     <uses-permission android:name="android.permission.health.WRITE_MENSTRUATION"/>
 
+    <!-- Permissions for location data -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 
 
@@ -76,7 +82,8 @@
         android:label="Healix AI"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"

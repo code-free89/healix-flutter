@@ -16,7 +16,6 @@ import '../../util/constants/constant.dart';
 import '../../views/shared_components/show_permission_dialog.dart';
 
 class HealthDataServices {
-
   Dio dio = Dio();
 
   final String putHealthDataApiUrl = '$BASEURL/save_health_data';
@@ -24,6 +23,7 @@ class HealthDataServices {
   final String getCustomizedUrl = '$BASEURL/get_customized_response';
   final String getQuoteData = '$BASEURL/get_final_quote';
   final String addUserData = '$BASEURL/add_user_profile';
+  final String addUserLocationData = '$BASEURL/save_location';
 
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(
@@ -190,6 +190,36 @@ class HealthDataServices {
       showPermissionDialog(context, "Error",
           "An error occurred while fetching customized response: $e");
       throw Exception('Error occurred while fetching customized response: $e');
+    }
+  }
+
+  Future<void> addUserLocation( String userId,
+      double latitude, double longitude) async {
+    try {
+      print("Sending request to $addUserLocationData");
+      var headers = {'Content-Type': 'application/json'};
+      var data = {"id": userId, "latitude": latitude, "longitude": longitude};
+      final response = await dio
+          .post(
+        addUserLocationData,
+        data: data,
+        options: Options(
+          headers: headers,
+        ),
+      )
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
+        print('Request timed out');
+
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+
+      print(" addUserLocation response status code ${response.statusCode}");
+      print(" addUserLocation response data ${response.data}");
+    } catch (e) {
+      print('Error occurred while sending location data: $e');
+
+      throw Exception('Error occurred while sending location data: $e');
     }
   }
 

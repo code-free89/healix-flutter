@@ -18,17 +18,20 @@ class UserChat extends StatefulWidget {
 
 class _UserChatState extends State<UserChat> {
   bool isFetching = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Add a listener to monitor changes in the messages list
-    Provider.of<ChatProvider>(context, listen: false).addListener(_scrollToBottom);
+    Provider.of<ChatProvider>(context, listen: false)
+        .addListener(_scrollToBottom);
   }
 
   @override
   void dispose() {
     // Remove the listener to prevent memory leaks
-    Provider.of<ChatProvider>(context, listen: false).removeListener(_scrollToBottom);
+    Provider.of<ChatProvider>(context, listen: false)
+        .removeListener(_scrollToBottom);
     super.dispose();
   }
 
@@ -43,48 +46,49 @@ class _UserChatState extends State<UserChat> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Consumer<ChatProvider>(builder: (_, chatProvider, __) {
-          // Ensure that messages are not duplicated in the ListView
-          List messages =
-          chatProvider.messages.toSet().toList(); // Remove duplicates
+        // Ensure that messages are not duplicated in the ListView
+        List messages =
+            chatProvider.messages.toSet().toList(); // Remove duplicates
 
-    return ListView.builder(
-    controller: widget.scrollController,
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: messages.length,
-      // Use the unique list
-      itemBuilder: (context, index) {
-        final message = messages[index];
-        String question = message[questionTitle];
-        String answer = message[answerTitle] ?? '';
-        bool meal = message[isMeal] ?? false;
-        MenuItem? menu = message[menuItem];
+        return ListView.builder(
+          controller: widget.scrollController,
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: messages.length,
+          // Use the unique list
+          itemBuilder: (context, index) {
+            final message = messages[index];
+            String question = message[questionTitle];
+            String answer = message[answerTitle] ?? '';
+            bool meal = message[isMeal] ?? false;
+            MenuItem? menu = message[menuItem];
 
-        // if (question.contains("graph") && !isFetching) {
-        //   isFetching = true;
-        //   return Container(
-        //     padding: EdgeInsets.only(bottom: 20),
-        //     height: 400.0,
-        //     child: Healthbarchart(),
-        //   );
-        // } else {
-        return UserChatContainer(
-          question: question,
-          answer: answer.isNotEmpty ? answer : 'Loading answer...',
-          isMeal: meal,
-          menuItem: menu,
-          // isMeal: chatProvider.isMealOrder,
-          // menuItem: chatProvider.menuItem,
+            // if (question.contains("graph") && !isFetching) {
+            //   isFetching = true;
+            //   return Container(
+            //     padding: EdgeInsets.only(bottom: 20),
+            //     height: 400.0,
+            //     child: Healthbarchart(),
+            //   );
+            // } else {
+            return UserChatContainer(
+              question: question,
+              answer: answer.isNotEmpty ? answer : 'Loading answer...',
+              isMeal: meal,
+              menuItem: menu,
+              // isMeal: chatProvider.isMealOrder,
+              // menuItem: chatProvider.menuItem,
+            );
+            //}
+          },
         );
-        //}
-      },
-    );
-  }),
+      }),
     );
   }
 }

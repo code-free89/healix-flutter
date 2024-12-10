@@ -80,16 +80,13 @@ class _UserInfoScreenContent extends StatelessWidget {
     }
   }
 
-   isButtonEnabled(BuildContext context) {
-
-      context.read<UserInfoProvider>().updateEnable(nameController.text != '' &&
-          dobController.text != '' &&
-          phoneController.text != '' &&
-          heightFtController.text != '' &&
-          heightInchController.text != '' &&
-          weightController.text != '');
-
-
+  isButtonEnabled(BuildContext context) {
+    context.read<UserInfoProvider>().updateEnable(nameController.text != '' &&
+        dobController.text != '' &&
+        phoneController.text != '' &&
+        heightFtController.text != '' &&
+        heightInchController.text != '' &&
+        weightController.text != '');
   }
 
   @override
@@ -262,19 +259,23 @@ class _UserInfoScreenContent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GenderSelection(
-                          images: "assets/images/male.png",
-                          label: "Male",
-                          size: size,
-                          isSelected: provider.selectedGender == "Male",
-                          onSelect: () => provider.selectGender("Male"),
-                        ),
+                            images: "assets/images/male.png",
+                            label: "Male",
+                            size: size,
+                            isSelected: provider.selectedGender == "Male",
+                            onSelect: () {
+                              provider.selectGender("Male");
+                              isButtonEnabled(context);
+                            }),
                         GenderSelection(
-                          images: "assets/images/female.png",
-                          label: "Female",
-                          size: size,
-                          isSelected: provider.selectedGender == "Female",
-                          onSelect: () => provider.selectGender("Female"),
-                        ),
+                            images: "assets/images/female.png",
+                            label: "Female",
+                            size: size,
+                            isSelected: provider.selectedGender == "Female",
+                            onSelect: () {
+                              provider.selectGender("Female");
+                              isButtonEnabled(context);
+                            }),
                       ],
                     ),
                     SizedBox(height: size.height * 0.0197),
@@ -282,7 +283,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                       children: [
                         Expanded(
                           child: AuthCustomTextFormField(
-
                             keyboardType: TextInputType.number,
                             labelText: "Height",
                             controller: heightFtController,
@@ -325,7 +325,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                         ),
                         Expanded(
                           child: AuthCustomTextFormField(
-
                             onChanged: (value) {
                               isButtonEnabled(context);
                               if (value.length == 2) {
@@ -364,7 +363,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * 0.0197),
                     AuthCustomTextFormField(
-
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^\d{0,9}(\.\d{0,1})?$')),
@@ -376,7 +374,6 @@ class _UserInfoScreenContent extends StatelessWidget {
 
                           if (value.length == 3) {
                             FocusScope.of(context).unfocus();
-
                           }
                         },
                         keyboardType:
@@ -414,7 +411,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                                     .trim();
 
                                 print("Raw phone number: $rawPhoneNumber");
-
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -440,9 +436,8 @@ class _UserInfoScreenContent extends StatelessWidget {
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: provider.isEnable
-                              ? greenThemeColor
-                              : Colors.grey,
+                          backgroundColor:
+                              provider.isEnable ? greenThemeColor : Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(width * 0.03),
                           ),

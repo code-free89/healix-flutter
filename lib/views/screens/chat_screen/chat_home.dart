@@ -1,5 +1,5 @@
-
 import 'dart:async';
+import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,7 +31,9 @@ class ChatHome extends StatefulWidget {
   State<ChatHome> createState() => _ChatHomeState();
 }
 
-class _ChatHomeState extends State<ChatHome> {
+class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
+  final List<AppLifecycleState> _stateHistoryList = <AppLifecycleState>[];
+
   TextEditingController chatController = TextEditingController();
   ScrollController scrollController = ScrollController();
   Timer? _fetchHealthDataTimer;
@@ -45,6 +47,12 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   void initState() {
     super.initState();
+    Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
+
+    WidgetsBinding.instance.addObserver(this);
+    if (WidgetsBinding.instance.lifecycleState != null) {
+      _stateHistoryList.add(WidgetsBinding.instance.lifecycleState!);
+    }
     scrollController = ScrollController(onAttach: (position) {
       var chatProvider = Provider.of<ChatProvider>(context, listen: false);
       chatProvider.scrollToBottom(scrollController);
@@ -89,6 +97,19 @@ class _ChatHomeState extends State<ChatHome> {
   Future<void> _updateLastFetchTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lastFetchTime', DateTime.now().millisecondsSinceEpoch);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Check the app lifecycle state
+
+    if (state == AppLifecycleState.resumed) {
+      // Call the location function when the app comes to the foreground
+      if (mounted) {
+        Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
+      }
+    }
   }
 
   // Function to check if it's time to fetch health data

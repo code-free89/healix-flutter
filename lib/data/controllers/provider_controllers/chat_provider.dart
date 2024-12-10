@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
-
 
 import '../../models/model/ai_response.dart';
 import '../../models/model/getCustomizedata.dart';
 import '../../models/view_model/customized_fetch_data_request.dart';
 import '../../models/view_model/customized_request.dart';
 import '../../repositories/ai_chat_repositories/api_repository.dart';
-
+import 'package:geolocator/geolocator.dart';
 
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
@@ -18,6 +18,22 @@ class ChatProvider extends ChangeNotifier {
   bool isMealFinalQuoteLoaded = false;
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
+
+  Future<void> setUserLocationData() async {
+    String? userUid = await SharePreferenceProvider().retrieveUserUid();
+    LocationPermission permission;
+    // Call your API to set user location data
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    apiRepository.addUserLocation(
+        userUid ?? '', position.latitude, position.longitude);
+  }
 
   Future<void> getChatAnswer(String question, BuildContext context) async {
     if (isAnswerLoading) return; // Prevent duplicate calls
