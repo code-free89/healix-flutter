@@ -134,8 +134,10 @@ class AllergiesSelectionScreen extends StatelessWidget {
                       onTap: () {
                         authProvider.addUserProfile(
                           userData
-                            ..allergies =
-                                userInfoProvider.selectedAllergies.toList()
+                            ..allergies = userInfoProvider
+                                    .selectedAllergies.isEmpty
+                                ? ["No allergy"]
+                                : userInfoProvider.selectedAllergies.toList()
                             ..dietPreference = dietPref.toList()
                             ..cuisinePreference = favoriteFood.toList()
                             ..healthHistory = healthHistory.toList(),
@@ -184,7 +186,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                         onTap: () {
                           authProvider.addUserProfile(
                             userData
-                              ..allergies = ["No allergy"]
+                              ..allergies = []
                               ..dietPreference = dietPref.toList()
                               ..cuisinePreference = favoriteFood.toList()
                               ..healthHistory = healthHistory.toList(),

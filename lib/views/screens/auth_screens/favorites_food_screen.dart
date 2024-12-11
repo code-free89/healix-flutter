@@ -173,7 +173,7 @@ class FavoritesFoodContent extends StatelessWidget {
           child: GeneralButton(
             Width: size.width * 0.8,
             onTap: () {
-              if (userInfoProvider.isReordering) {
+              if (!userInfoProvider.isReordering) {
                 userInfoProvider.shuffleList();
               }
               Navigator.push(
