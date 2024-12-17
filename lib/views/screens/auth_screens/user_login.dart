@@ -38,7 +38,7 @@ class _UserLoginState extends State<UserLogin> {
           loginEmailController.text, loginPasswordController.text)) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => ChatHome()),
+          MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: true,)),
           (Route<dynamic> route) => false,
         );
       } else {

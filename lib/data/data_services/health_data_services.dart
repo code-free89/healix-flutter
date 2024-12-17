@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async'; // For timeout exceptions
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/models/model/user_profile_data.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
 import 'package:http/http.dart' as http;
@@ -23,6 +24,7 @@ class HealthDataServices {
   final String getCustomizedUrl = '$BASEURL/get_customized_response';
   final String getQuoteData = '$BASEURL/get_final_quote';
   final String addUserData = '$BASEURL/add_user_profile';
+  final String getUserData = '$BASEURL/get_user_profile';
   final String addUserLocationData = '$BASEURL/save_location';
 
   // MARK: - Function For Put Health Data
@@ -193,8 +195,8 @@ class HealthDataServices {
     }
   }
 
-  Future<void> addUserLocation( String userId,
-      double latitude, double longitude) async {
+  Future<void> addUserLocation(
+      String userId, double latitude, double longitude) async {
     try {
       print("Sending request to $addUserLocationData");
       var headers = {'Content-Type': 'application/json'};
@@ -258,6 +260,51 @@ class HealthDataServices {
       showPermissionDialog(context, "Error",
           "An error occurred while fetching customized response: $e");
       throw Exception('Error occurred while fetching customized response: $e');
+    }
+  }
+
+  Future<UserProfileData> getUserProfileData(
+    BuildContext context,
+    String userId,
+  ) async {
+    try {
+      print("Sending request to $getUserData");
+      var headers = {'Content-Type': 'application/json'};
+      final response = await dio
+          .post(
+        getUserData,
+        data: {
+          "id":userId,
+        },
+        options: Options(
+          headers: headers,
+        ),
+      )
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
+        print('Request timed out');
+        showPermissionDialog(context, "Error",
+            "The connection has timed out, please try again later.");
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+
+      print(" get_user_profile response status code ${response.statusCode}");
+
+      print(" get_user_profile response data ${response.data}");
+
+      if (response.statusCode == 200 || response.statusCode == 202) {
+        UserProfileData userProfileData =
+            await UserProfileData.fromJson(response.data);
+        return userProfileData;
+      } else {
+        throw Exception('Failed to fetch user profile data');
+      }
+    } catch (e) {
+      print('Error occurred while fetching user profile response: $e');
+      showPermissionDialog(context, "Error",
+          "An error occurred while fetching user profile response: $e");
+      throw Exception(
+          'Error occurred while fetching user profile response: $e');
     }
   }
 }

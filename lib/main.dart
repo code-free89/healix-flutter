@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
 
         break;
       case Status.Authenticated:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome(),));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: true,),));
 
         break;
       case Status.FirstTimeAuthenticated:

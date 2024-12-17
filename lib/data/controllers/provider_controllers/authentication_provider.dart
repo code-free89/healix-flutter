@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 
+import '../../models/model/user_profile_data.dart';
 import '../../models/view_model/user_data_view_model.dart';
 import '../../repositories/ai_chat_repositories/api_repository.dart';
 
@@ -19,7 +20,7 @@ class AuthenticationProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
   ApiRepository apiRepository = ApiRepository();
-
+  UserProfileData? userData;
   SharedPreferenceRepository _sharedPreferenceRepository =
       SharedPreferenceRepository();
   bool isSignupLoading = false;
@@ -178,5 +179,33 @@ class AuthenticationProvider with ChangeNotifier {
   void setIsResettingPasswordLoading(bool value) {
     isSendingPasswordResentLinkLoading = value;
     notifyListeners();
+  }
+
+  getUserProfileData(BuildContext context, String id) async {
+    try {
+      var res = await apiRepository.getUserProfileData(context, id);
+      userData = res;
+      notifyListeners();
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      _errorMessage = "Unable to fetch data. Please try again later.";
+      notifyListeners();
+    }
+  }
+
+  Future<bool> updateUserAddress(String newAddress) async {
+    try {
+      bool success = await firestoreService.updateUserAddress(
+          FirebaseAuth.instance.currentUser!.uid, newAddress);
+      if (success) {
+        userData?.address = newAddress; // Update the local user data
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Error updating address: $e");
+      return false;
+    }
   }
 }

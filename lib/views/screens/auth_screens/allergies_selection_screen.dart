@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../data/controllers/provider_controllers/user_info_provider.dart';
 import '../../../util/constants/colors.dart';
+import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';
 
@@ -142,11 +144,18 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..cuisinePreference = favoriteFood.toList()
                             ..healthHistory = healthHistory.toList(),
                           context,
-                        );
+                        ).whenComplete(() async {
+                          String? userUid = await SharePreferenceProvider().retrieveUserUid();
+                          Provider.of<AuthenticationProvider>(context, listen: false)
+                              .getUserProfileData(
+                            context,
+                            userUid ?? '',
+                          );
+                        });
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChatHome(),
+                            builder: (context) => ChatHome(userFromLogin: false,),
                           ),
                           (route) => false,
                         );
@@ -195,7 +204,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChatHome(),
+                              builder: (context) => ChatHome(userFromLogin: false,),
                             ),
                             (route) => false,
                           );

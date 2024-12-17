@@ -43,7 +43,7 @@ class SocialLoginButtons extends StatelessWidget {
             // Navigate to ChatHome after successful login
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ChatHome()),
+              MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)),
             );
           }
         }
@@ -82,7 +82,7 @@ class SocialLoginButtons extends StatelessWidget {
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => ChatHome()),
+            MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)),
           );
         }
       }

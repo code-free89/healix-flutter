@@ -55,6 +55,9 @@
 	<string>523371146946740</string>
 	<key>FacebookClientToken</key>
 	<string>4392604a03940b5f869fa53b0c5e51fe</string>
+	<key>GMSApiKey</key>
+    <string>AIzaSyDp1x3hT9CUpWd0RWbr04j4eqGvJJ1QkvE</string>
+
 	<key>FacebookDisplayName</key>
 	<string>HealixAi</string>
 	<key>LSRequiresIPhoneOS</key>

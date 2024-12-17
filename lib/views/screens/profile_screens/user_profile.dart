@@ -128,7 +128,7 @@ class _UserProfileState extends State<UserProfile> {
         leading: IconButton(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (context) => ChatHome()), (Route<dynamic> route) => false);
+                context, MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)), (Route<dynamic> route) => false);
           },
           icon: Icon(
             Icons.chevron_left,

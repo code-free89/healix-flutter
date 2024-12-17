@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '../../../data/models/model/gethealthdata.dart';
@@ -24,8 +25,12 @@ import '../../../util/constants/constant.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth_screens/profile_screen.dart';
+
 class ChatHome extends StatefulWidget {
-  const ChatHome({super.key});
+  bool userFromLogin;
+
+  ChatHome({super.key, required this.userFromLogin});
 
   @override
   State<ChatHome> createState() => _ChatHomeState();
@@ -43,6 +48,15 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   bool isFetching = false; // Flag to prevent multiple API calls
   int _lastFetchTime = 0; // Store the last fetch time in milliseconds
   bool _isFirstInstall = false; // Flag to check first install
+
+  void getUserData() async {
+    String? userUid = await SharePreferenceProvider().retrieveUserUid();
+    Provider.of<AuthenticationProvider>(context, listen: false)
+        .getUserProfileData(
+      context,
+      userUid ?? '',
+    );
+  }
 
   @override
   void initState() {
@@ -67,6 +81,9 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
         Duration(minutes: HEALTH_DATA_SYNC_INTERVAL), (Timer timer) {
       _checkAndFetchHealthData();
     });
+    if (widget.userFromLogin) {
+      getUserData();
+    }
   }
 
   // Function to check if the app is being launched for the first time
@@ -169,7 +186,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserProfile()));
+                    MaterialPageRoute(builder: (context) => ProfileScreen()));
               },
               child: SvgPicture.asset(userCircle),
             ),

@@ -31,6 +31,7 @@ class ChatProvider extends ChangeNotifier {
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+
     apiRepository.addUserLocation(
         userUid ?? '', position.latitude, position.longitude);
   }

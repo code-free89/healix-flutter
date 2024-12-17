@@ -125,10 +125,13 @@
             android:value="2"/>
 
 
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBdRPuueSVnNx8rHl0IEmppFePEmQc5ml4" />
         ...
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
 
 
 

@@ -46,6 +46,19 @@ class FirestoreService {
     }
   }
 
+  Future<bool> updateUserAddress(String userId, String newAddress) async {
+    try {
+      // Update the address in Firestore
+      await fireStore.collection('UserProfile').doc(userId).update({
+        'address': newAddress,
+      });
+      return true;
+    } catch (e) {
+      print("Error updating address in Firestore: $e");
+      return false;
+    }
+  }
+
   Future<bool> updateUserDetails(String uid, String? username, int? age,
       double? height, double? weight) async {
     try {
