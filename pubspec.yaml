@@ -61,6 +61,8 @@ dependencies:
   google_places_flutter: ^2.0.9
   google_maps_flutter: ^2.10.0
   fluttertoast: ^8.2.8
+  firebase_messaging: ^14.9.4
+
 
 dev_dependencies:
   flutter_test:

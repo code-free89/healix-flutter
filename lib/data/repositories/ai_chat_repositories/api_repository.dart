@@ -11,18 +11,19 @@ class ApiRepository {
   final HealthDataServices healthDataController = HealthDataServices();
 
   // Passing context from the caller
-  Future<CustomizedResponse> getCustomizedData(
-      CustomizedRequest request, BuildContext context) {
+  Future<CustomizedResponse> getCustomizedData(CustomizedRequest request,
+      BuildContext context) {
     return healthDataController.getCustomizedData(request, context);
   }
 
-  Future<void> addUserLocation(
-      String userId, double latitude, double longitude) {
+
+  Future<void> addUserLocation(String userId, double latitude,
+      double longitude) {
     return healthDataController.addUserLocation(userId, latitude, longitude);
   }
 
-  Future<bool> getFinalQuoteData(
-      CustomizedFetchDataRequest request, BuildContext context) {
+  Future<bool> getFinalQuoteData(CustomizedFetchDataRequest request,
+      BuildContext context) {
     return healthDataController.getFinalQuoteData(request, context);
   }
 
@@ -30,13 +31,20 @@ class ApiRepository {
     return healthDataController.addUserProfile(context, userData);
   }
 
-  Future<UserProfileData> getUserProfileData(
-    BuildContext context,
-    String userId,
-  ) {
+
+  Future<UserProfileData> getUserProfileData(BuildContext context,
+      String userId,) {
+
+
     return healthDataController.getUserProfileData(
       context,
       userId,
     );
   }
+
+
+  Future<bool> saveFcmToken(String id, String fcmToken) {
+    return healthDataController.saveFcmToken(id, fcmToken);
+  }
+
 }

@@ -38,7 +38,11 @@ class _UserLoginState extends State<UserLogin> {
           loginEmailController.text, loginPasswordController.text)) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: true,)),
+
+          MaterialPageRoute(
+              builder: (context) => ChatHome(
+                    userFromLogin: true,
+                  )),
           (Route<dynamic> route) => false,
         );
       } else {
@@ -73,8 +77,9 @@ class _UserLoginState extends State<UserLogin> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(top: height*0.06),
-                          child: SizedBox(height: height*0.34,
+                          padding: EdgeInsets.only(top: height * 0.06),
+                          child: SizedBox(
+                            height: height * 0.34,
                             child: SvgPicture.asset(lifeStyleImage,
                                 fit: BoxFit.fill),
                           ),
@@ -83,7 +88,8 @@ class _UserLoginState extends State<UserLogin> {
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding:  EdgeInsets.fromLTRB(height*0.04, height*0.085, height*0.04, 0),
+                              padding: EdgeInsets.fromLTRB(height * 0.04,
+                                  height * 0.085, height * 0.04, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -95,7 +101,7 @@ class _UserLoginState extends State<UserLogin> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomTextField(
                                     textController: loginEmailController,
@@ -107,7 +113,7 @@ class _UserLoginState extends State<UserLogin> {
                                     textInputAction: TextInputAction.next,
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomTextField(
                                     textController: loginPasswordController,
@@ -119,11 +125,11 @@ class _UserLoginState extends State<UserLogin> {
                                     textInputAction: TextInputAction.done,
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: height*0.07,
+                                    height: height * 0.07,
                                     child: CustomButton(
                                         onPressed: () {
                                           validateAndSubmit(authProvider);
@@ -133,7 +139,7 @@ class _UserLoginState extends State<UserLogin> {
                                         buttonText: "Login"),
                                   ),
                                   SizedBox(
-                                    height: height*0.015,
+                                    height: height * 0.015,
                                   ),
                                   Row(
                                     children: [
@@ -143,12 +149,17 @@ class _UserLoginState extends State<UserLogin> {
                                             child: Text(
                                               "Forgot Password",
                                               style: TextStyle(
-                                                fontSize: height*0.016,
+                                                fontSize: height * 0.015,
                                                 color: textColor,
                                               ),
                                             ),
-                                            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => UserForgotPassword(),));
-
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserForgotPassword(),
+                                                  ));
                                             },
                                           )
                                         ],
@@ -159,7 +170,7 @@ class _UserLoginState extends State<UserLogin> {
                                           Text(
                                             "Don't have an account? ",
                                             style: TextStyle(
-                                              fontSize: height*0.016,
+                                              fontSize: height * 0.015,
                                               color: textColor,
                                             ),
                                           ),
@@ -168,13 +179,18 @@ class _UserLoginState extends State<UserLogin> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserSignUp(),));
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserSignUp(),
+                                                  ));
                                             },
                                             child: Text(
                                               "Sign Up",
                                               style: TextStyle(
                                                 fontFamily: 'Ubuntu-Medium',
-                                                fontSize: height*0.016,
+                                                fontSize: height * 0.015,
                                                 color: textColor,
                                               ),
                                             ),
@@ -184,15 +200,17 @@ class _UserLoginState extends State<UserLogin> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomDivider(),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: height*0.02, right: height*0.02, bottom: height*0.02),
+                                    padding: EdgeInsets.only(
+                                        left: height * 0.02,
+                                        right: height * 0.02,
+                                        bottom: height * 0.02),
                                     child:
                                         SocialLoginButtons(text: "Login with"),
                                   )

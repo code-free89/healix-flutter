@@ -1,7 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/data/data_services/health_data_services.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../../models/model/user_profile_data.dart';
 import '../../models/view_model/user_data_view_model.dart';
@@ -97,28 +103,64 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
+  String? _fcmToken;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  String? get fcmToken => _fcmToken;
+
+  // String? get errorMessage => _errorMessage;
+  // String? _errorMessage;
+
+  Future<void> _initializeFCM() async {
+    try {
+      // Fetch the initial FCM token
+      _fcmToken = await _messaging.getToken();
+      print("FCM Token: $_fcmToken");
+
+      // Listen to token refresh
+      _messaging.onTokenRefresh.listen((newToken) {
+        _fcmToken = newToken;
+        print("Refreshed FCM Token: $_fcmToken");
+        notifyListeners();
+      });
+    } catch (e) {
+      print("Error initializing FCM: $e");
+    }
+  }
+
+  final HealthDataServices healthDataController = HealthDataServices();
+
   Future<bool> signIn(String email, String password) async {
     try {
-      // _status = Status.Authenticating;
       setIsLoginLoading(true);
+
+      // Sign in using Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      await _sharedPreferenceRepository.storeUserInfo(
-          uid: userCredential.user!.uid, email: userCredential.user!.email);
-      print("Get User ID");
-      print(userCredential.user!.uid);
+
+      // Store user info in shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uid', userCredential.user!.uid);
+      await prefs.setString('email', userCredential.user!.email ?? "");
+
+      String? uid = prefs.getString('uid');
+      print("User ID: ${userCredential.user!.uid}");
+
+      // Initialize FCM token
+      await _initializeFCM();
+
+      await apiRepository.saveFcmToken(uid.toString(), fcmToken.toString());
+
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
-      _status = Status.Unauthenticated;
+      setIsLoginLoading(false);
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
         _errorMessage = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
         _errorMessage = 'Wrong password provided for that user.';
       } else {
-        _errorMessage = "Unable to login";
+        _errorMessage = "Unable to login.";
       }
       notifyListeners();
       return false;

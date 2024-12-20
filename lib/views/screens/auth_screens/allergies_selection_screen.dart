@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 import 'package:helix_ai/util/constants/constant.dart';
-import 'package:helix_ai/views/screens/auth_screens/profile_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
 
@@ -66,7 +63,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: size.height * 0.03),
+                  SizedBox(height: size.height * 0.02),
 
                   // Text and Input Section
                   WantText(
@@ -76,14 +73,14 @@ class AllergiesSelectionScreen extends StatelessWidget {
                     textColor: colorBlack,
                     usePoppins: true,
                   ),
-                  SizedBox(height: size.height * 0.009),
+                  SizedBox(height: size.height * 0.001),
                   WantText(
                       text: "Do you have any allergies we should know\nabout?",
                       fontSize: size.width * 0.035,
                       fontWeight: FontWeight.w500,
                       textColor: colorGreyText,
                       usePoppins: false),
-                  SizedBox(height: size.height * 0.03),
+                  SizedBox(height: size.height * 0.015),
 
                   // Allergy Selection Section
                   Wrap(
@@ -134,7 +131,8 @@ class AllergiesSelectionScreen extends StatelessWidget {
                     child: GeneralButton(
                       Width: size.width * 0.8,
                       onTap: () {
-                        authProvider.addUserProfile(
+                        authProvider
+                            .addUserProfile(
                           userData
                             ..allergies = userInfoProvider
                                     .selectedAllergies.isEmpty
@@ -144,9 +142,14 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..cuisinePreference = favoriteFood.toList()
                             ..healthHistory = healthHistory.toList(),
                           context,
-                        ).whenComplete(() async {
-                          String? userUid = await SharePreferenceProvider().retrieveUserUid();
-                          Provider.of<AuthenticationProvider>(context, listen: false)
+
+                        )
+                            .whenComplete(() async {
+                          String? userUid =
+                              await SharePreferenceProvider().retrieveUserUid();
+                          Provider.of<AuthenticationProvider>(context,
+                                  listen: false)
+
                               .getUserProfileData(
                             context,
                             userUid ?? '',
@@ -155,7 +158,11 @@ class AllergiesSelectionScreen extends StatelessWidget {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChatHome(userFromLogin: false,),
+
+                            builder: (context) => ChatHome(
+                              userFromLogin: false,
+                            ),
+
                           ),
                           (route) => false,
                         );
@@ -165,7 +172,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           : "Next",
                     ),
                   ),
-                  SizedBox(height: size.height * 0.03),
+                  SizedBox(height: size.height * 0.02),
 
                   // Skip Button (if needed)
                   Row(
@@ -204,7 +211,11 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChatHome(userFromLogin: false,),
+
+                              builder: (context) => ChatHome(
+                                userFromLogin: false,
+                              ),
+
                             ),
                             (route) => false,
                           );
