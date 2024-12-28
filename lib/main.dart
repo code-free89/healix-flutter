@@ -21,7 +21,6 @@ import 'data/controllers/provider_controllers/authentication_provider.dart';
 import 'data/controllers/provider_controllers/chat_provider.dart';
 import 'data/controllers/provider_controllers/user_info_provider.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -41,7 +40,8 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthenticationProvider.instance(),
         ),
         ChangeNotifierProvider<ChatProvider>(create: (_) => ChatProvider()),
-        ChangeNotifierProvider<UserInfoProvider>(create: (_) => UserInfoProvider())
+        ChangeNotifierProvider<UserInfoProvider>(
+            create: (_) => UserInfoProvider())
         // Add other providers here
       ],
       child: MaterialApp(
@@ -60,7 +60,6 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: HomePage(),
-
       ),
     );
   }
@@ -75,30 +74,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
-  }
-
-  Future<void> checkAuthStatus() async {
-    final authProvider =
-        Provider.of<AuthenticationProvider>(context, listen: false);
-    await Future.delayed(Duration(seconds: 2));
-
-    switch (authProvider.status) {
-      case Status.Uninitialized:
-        break;
-      case Status.Unauthenticated:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserLogin(),));
-
-        break;
-      case Status.Authenticated:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: true,),));
-
-        break;
-      case Status.FirstTimeAuthenticated:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FirstProfile(),));
-
-        break;
-    }
   }
 
   @override

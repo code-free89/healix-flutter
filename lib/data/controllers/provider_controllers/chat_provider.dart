@@ -32,8 +32,11 @@ class ChatProvider extends ChangeNotifier {
       desiredAccuracy: LocationAccuracy.high,
     );
 
-    apiRepository.addUserLocation(
-        userUid ?? '', position.latitude, position.longitude);
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      apiRepository.addUserLocation(
+          userUid ?? '', position.latitude, position.longitude);
+    }
   }
 
   Future<void> getChatAnswer(String question, BuildContext context) async {
