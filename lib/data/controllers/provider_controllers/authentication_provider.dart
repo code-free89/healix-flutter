@@ -5,9 +5,6 @@ import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 import '../../models/model/user_profile_data.dart';
 import '../../models/view_model/user_data_view_model.dart';
@@ -138,18 +135,16 @@ class AuthenticationProvider with ChangeNotifier {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      // Store user info in shared preferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', userCredential.user!.uid);
-      await prefs.setString('email', userCredential.user!.email ?? "");
+      await SharedPreferenceRepository().storeUserInfo(
+          uid: userCredential.user!.uid, email: userCredential.user!.email);
 
-      String? uid = prefs.getString('uid');
       print("User ID: ${userCredential.user!.uid}");
 
       // Initialize FCM token
       await _initializeFCM();
 
-      await apiRepository.saveFcmToken(uid.toString(), fcmToken.toString());
+      await apiRepository.saveFcmToken(
+          userCredential.user!.uid, fcmToken.toString());
 
       setIsLoginLoading(false);
       return true;
@@ -170,6 +165,7 @@ class AuthenticationProvider with ChangeNotifier {
   Future signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;
+    await SharedPreferenceRepository().clearSharePreference();
     notifyListeners();
     return Future.delayed(Duration.zero);
   }

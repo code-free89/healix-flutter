@@ -1,4 +1,10 @@
+import 'package:isar/isar.dart';
+
+part 'ai_response.g.dart';
+
+@collection
 class AiResponse {
+  Id isarId = Isar.autoIncrement;
   String? id;
   String? object;
   int? created;
@@ -9,11 +15,11 @@ class AiResponse {
 
   AiResponse(
       {this.id,
-        this.object,
-        this.created,
-        this.model,
-        this.choices,
-        this.usage});
+      this.object,
+      this.created,
+      this.model,
+      this.choices,
+      this.usage});
 
   AiResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,10 +51,12 @@ class AiResponse {
   }
 }
 
+@embedded
 class Choices {
   int? index;
   Message? message;
-  Null? logprobs;
+  @ignore
+  var logprobs;
   String? finishReason;
 
   Choices({this.index, this.message, this.logprobs, this.finishReason});
@@ -56,7 +64,7 @@ class Choices {
   Choices.fromJson(Map<String, dynamic> json) {
     index = json['index'];
     message =
-    json['message'] != null ? new Message.fromJson(json['message']) : null;
+        json['message'] != null ? new Message.fromJson(json['message']) : null;
     // logprobs = json['logprobs'];
     finishReason = json['finish_reason'];
   }
@@ -73,6 +81,7 @@ class Choices {
   }
 }
 
+@embedded
 class Message {
   String? role;
   String? content;
@@ -92,6 +101,7 @@ class Message {
   }
 }
 
+@embedded
 class Usage {
   int? promptTokens;
   int? completionTokens;

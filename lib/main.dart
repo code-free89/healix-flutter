@@ -7,6 +7,7 @@ import 'package:helix_ai/firebase_options.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
+import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';
@@ -14,6 +15,7 @@ import 'package:helix_ai/views/screens/auth_screens/user_forgot_password.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_signup.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,6 +26,7 @@ import 'data/controllers/provider_controllers/user_info_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await SharePreferenceProvider().initSecureStorage();
   // await dotenv.load(fileName: ".env");
   await preCacheInitialAssets();
   Health().configure();

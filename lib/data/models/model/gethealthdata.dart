@@ -1,4 +1,10 @@
+import 'package:isar/isar.dart';
+
+part 'gethealthdata.g.dart';
+
+@collection
 class gethealthdataRequest {
+  Id isarId = Isar.autoIncrement;
   final String id;
   final List<String> items;
   final String startDate;

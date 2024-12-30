@@ -1,4 +1,3 @@
-
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart'; // Added for the alert dialog
 import 'dart:io';
 
 import '../../data/data_services/health_data_services.dart';
-import '../../data/models/model/puthealthdata.dart'  hide NumericHealthValue;
+import '../../data/models/model/puthealthdata.dart' hide NumericHealthValue;
 import 'health_permission.dart';
 
 enum AppState {
@@ -221,7 +220,9 @@ class HealthPermissionManager {
     }).toList();
 
     // Retrieve user UID from shared preferences
-    String? userUid = await sharePreferenceProvider.retrieveUserUid();
+    String? userUid = await sharePreferenceProvider.retrieveUserInfo().then(
+          (value) => value?.id,
+        );
 
     print("userUid, $userUid");
     // Create the request object with the correct user ID and health data items

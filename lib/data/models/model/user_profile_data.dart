@@ -1,4 +1,9 @@
+import 'package:isar/isar.dart';
+part 'user_profile_data.g.dart';
+
+@collection
 class UserProfileData {
+  Id isarId = Isar.autoIncrement;
   String? height;
   String? weight;
   List<String>? healthHistory;
@@ -6,7 +11,9 @@ class UserProfileData {
   String? phone;
   List<String>? allergies;
   List<String>? cuisinePreference;
+  @ignore
   dynamic address;
+  @Index(unique: true)
   String? email;
   List<String>? dietPreference;
   String? gender;

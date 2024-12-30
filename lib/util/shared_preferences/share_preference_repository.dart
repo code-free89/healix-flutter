@@ -18,14 +18,6 @@ class SharedPreferenceRepository {
     );
   }
 
-  Future<String?> retrieveUserUid() async {
-    return await _sharePreferenceProvider.retrieveUserUid();
-  }
-
-  Future<String?> retrieveUserEmail() async {
-    return await _sharePreferenceProvider.retrieveUserEmail();
-  }
-
   Future<void> storeFirstProfileShownStatus(bool isShown) async {
     return await _sharePreferenceProvider.storeFirstProfileShownStatus(isShown);
   }

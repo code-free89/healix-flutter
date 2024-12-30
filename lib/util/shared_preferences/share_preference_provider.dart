@@ -1,54 +1,66 @@
+import 'dart:async';
+
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharePreferenceProvider {
-  late SharedPreferences prefs;
-  static const String keyUserUid = "current_user_uid";
-  static const String keyUserEmail = "current_user_email";
-  static const String keyUserName = "current_user_name";
-  static const String keyIsFirstProfileShown = "is_first_profile_shown";
+import '../../data/models/model/user_profile_data.dart';
 
-  Future _initSecureStorage() async {
-    prefs = await SharedPreferences.getInstance();
+class SharePreferenceProvider {
+  late Isar isar;
+
+  late SharedPreferences prefs;
+  static const String keyIsFirstProfileShown = "is_first_profile_shown";
+  // Singleton instance
+  static final SharePreferenceProvider _instance =
+      SharePreferenceProvider._internal();
+
+  factory SharePreferenceProvider() {
+    return _instance;
+  }
+
+  SharePreferenceProvider._internal();
+
+  Future<void> initSecureStorage() async {
+    try {
+      prefs = await SharedPreferences.getInstance();
+
+      final dir = await getApplicationDocumentsDirectory();
+      isar = await Isar.open(
+        [UserProfileDataSchema],
+        directory: dir.path,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> clearSharePreference() async {
-    await _initSecureStorage();
-    await prefs.remove(keyUserUid);
-    await prefs.remove(keyUserEmail);
+    await prefs.clear();
+    await isar.writeTxn(() => isar.userProfileDatas.clear());
   }
 
   Future<void> storeUserInfo(
       {String? uid,
       String? email,
-      String? displayName}) async {
-    await _initSecureStorage();
-    await prefs.setString(keyUserUid, uid ?? '');
-    await prefs.setString(keyUserEmail, email ?? '');
-    await prefs.setString(keyUserName, displayName ?? '');
+      String? displayName,
+      bool? firstTime}) async {
+    var userProfileData =
+        UserProfileData(id: uid, email: email, name: displayName);
+    await isar.writeTxn(() => isar.userProfileDatas.put(userProfileData));
   }
 
-  Future<String?> retrieveUserEmail() async {
-    await _initSecureStorage();
-    return prefs.getString(keyUserEmail);
-  }
-
-  Future<String?> retrieveUserUid() async {
-    await _initSecureStorage();
-    return prefs.getString(keyUserUid);
-  }
-
-  Future<String?> retrieveUserDisplayName() async {
-    await _initSecureStorage();
-    return prefs.getString(keyUserName);
+  Future<UserProfileData?> retrieveUserInfo() async {
+    UserProfileData? userProfileData =
+        await isar.userProfileDatas.where().findFirst();
+    return userProfileData;
   }
 
   Future<void> storeFirstProfileShownStatus(bool isShown) async {
-    await _initSecureStorage();
     await prefs.setBool(keyIsFirstProfileShown, isShown);
   }
 
   Future<bool?> retrieveFirstProfileShownStatus() async {
-    await _initSecureStorage();
     return prefs.getBool(keyIsFirstProfileShown);
   }
 }

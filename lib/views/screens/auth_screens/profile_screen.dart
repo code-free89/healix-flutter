@@ -9,6 +9,7 @@ import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/shared_components/general_button.dart';
 import 'package:provider/provider.dart';
 import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../util/constants/colors.dart';
 import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/logout_alert_dialog.dart';
@@ -179,6 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onLogout: () async {
                             debugPrint("logout clicked");
                             await authProvider.signOut();
+                            Provider.of<ChatProvider>(context, listen: false)
+                                .resetChat();
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(builder: (_) => UserLogin()),
@@ -279,7 +282,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void getUserData() async {
-    String? userUid = await SharePreferenceProvider().retrieveUserUid();
+    String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
+          (value) => value?.id,
+        );
     Provider.of<AuthenticationProvider>(context, listen: false)
         .getUserProfileData(
       context,

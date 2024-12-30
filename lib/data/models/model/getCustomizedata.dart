@@ -1,18 +1,26 @@
+import 'package:isar/isar.dart';
+
+part 'getCustomizedata.g.dart';
+
+@collection
 class CustomizedResponse {
+  Id isarId = Isar.autoIncrement;
   final String id;
   final String searchText;
   final String gptResponse;
-  final Map<String, dynamic> healthData; // Adjust type as needed
+  @ignore
+  final Map<String, dynamic>? healthData; // Adjust type as needed
   final String intent;
+  @ignore
   final dynamic menuItem; // Can be String or MenuItem
 
   CustomizedResponse({
     required this.id,
     required this.searchText,
     required this.gptResponse,
-    required this.healthData,
+    this.healthData,
     required this.intent,
-    required this.menuItem,
+    this.menuItem,
   });
 
   factory CustomizedResponse.fromJson(Map<String, dynamic> json) {
@@ -83,8 +91,7 @@ class MenuItem {
     data['price'] = price;
     data['image'] = image;
     if (customizations != null) {
-      data['customizations'] =
-          customizations!.map((v) => v.toJson()).toList();
+      data['customizations'] = customizations!.map((v) => v.toJson()).toList();
     }
     return data;
   }

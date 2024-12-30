@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 import 'package:helix_ai/util/constants/constant.dart';
@@ -142,14 +141,15 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..cuisinePreference = favoriteFood.toList()
                             ..healthHistory = healthHistory.toList(),
                           context,
-
                         )
                             .whenComplete(() async {
-                          String? userUid =
-                              await SharePreferenceProvider().retrieveUserUid();
+                          String? userUid = await SharePreferenceProvider()
+                              .retrieveUserInfo()
+                              .then(
+                                (value) => value?.id,
+                              );
                           Provider.of<AuthenticationProvider>(context,
                                   listen: false)
-
                               .getUserProfileData(
                             context,
                             userUid ?? '',
@@ -158,11 +158,9 @@ class AllergiesSelectionScreen extends StatelessWidget {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-
                             builder: (context) => ChatHome(
                               userFromLogin: false,
                             ),
-
                           ),
                           (route) => false,
                         );
@@ -211,11 +209,9 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-
                               builder: (context) => ChatHome(
                                 userFromLogin: false,
                               ),
-
                             ),
                             (route) => false,
                           );

@@ -1,4 +1,10 @@
+import 'package:isar/isar.dart';
+
+part 'puthealthdata.g.dart';
+
+@collection
 class puthealthdata {
+  Id isarId = Isar.autoIncrement;
   final String type;
   final String unit;
   final String dateFrom;
@@ -8,7 +14,8 @@ class puthealthdata {
   final String sourceId;
   final String sourceName;
   final bool isManualEntry;
-  final Map<String, dynamic> value;
+  @ignore
+  final Map<String, dynamic>? value;
 
   puthealthdata({
     required this.type,
@@ -20,7 +27,7 @@ class puthealthdata {
     required this.sourceId,
     required this.sourceName,
     required this.isManualEntry,
-    required this.value,
+    this.value,
   });
 
   Map<String, dynamic> toJson() => {

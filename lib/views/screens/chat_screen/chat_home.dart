@@ -50,7 +50,9 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   bool _isFirstInstall = false; // Flag to check first install
 
   void getUserData() async {
-    String? userUid = await SharePreferenceProvider().retrieveUserUid();
+    String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
+          (value) => value?.id,
+        );
     Provider.of<AuthenticationProvider>(context, listen: false)
         .getUserProfileData(
       context,
@@ -88,14 +90,13 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
 
   // Function to check if the app is being launched for the first time
   Future<void> _checkFirstInstall() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _isFirstInstall = prefs.getBool('isFirstInstall') ?? true;
+    _isFirstInstall =
+        await sharePreferenceProvider.retrieveFirstProfileShownStatus() ?? true;
     print("isFirstLaunch $_isFirstInstall");
     if (_isFirstInstall) {
       // Call _fetchHealthData immediately on first install
       _fetchHealthData();
-      prefs.setBool(
-          'isFirstInstall', false); // Set flag to false after the first launch
+      sharePreferenceProvider.storeFirstProfileShownStatus(false);
     } else {
       // Load the last fetch time if not first launch
       _loadLastFetchTime();
@@ -284,8 +285,11 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
                           isFetching = false;
 
                           // Fetch Health Data
-                          String? userUid =
-                              await sharePreferenceProvider.retrieveUserUid();
+                          String? userUid = await sharePreferenceProvider
+                              .retrieveUserInfo()
+                              .then(
+                                (value) => value?.id,
+                              );
                           DateTime now = DateTime.now();
                           String today = DateFormat('yyyy-MM-dd').format(now);
 
