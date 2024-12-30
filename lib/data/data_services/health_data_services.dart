@@ -29,8 +29,8 @@ class HealthDataServices {
   final String saveFcmTokenUrl = '$BASEURL/save_fcm_token';
 
   // MARK: - Function For Put Health Data
-  Future<void> postHealthData(
-      HealthDataRequest request, BuildContext context) async {
+  Future<void> postHealthData(HealthDataRequest request,
+      BuildContext context) async {
     try {
       print("Sending request to $putHealthDataApiUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
@@ -115,8 +115,8 @@ class HealthDataServices {
   }
 
   // MARK: - Function for Get Customized Response
-  Future<CustomizedResponse> getCustomizedData(
-      CustomizedRequest request, BuildContext context) async {
+  Future<CustomizedResponse> getCustomizedData(CustomizedRequest request,
+      BuildContext context) async {
     try {
       print("Sending request to $getCustomizedUrl");
       print("Request body: ${jsonEncode(request.toJson())}");
@@ -147,10 +147,12 @@ class HealthDataServices {
         }
       } else {
         print(
-            'Failed to fetch customized response. Status code: ${response.statusCode}');
+            'Failed to fetch customized response. Status code: ${response
+                .statusCode}');
         print('Response body: ${response.body}');
         showPermissionDialog(context, "Error",
-            "Failed to fetch customized response. Status code: ${response.statusCode}");
+            "Failed to fetch customized response. Status code: ${response
+                .statusCode}");
         throw Exception('Failed to fetch customized response');
       }
     } catch (e) {
@@ -161,8 +163,8 @@ class HealthDataServices {
     }
   }
 
-  Future<bool> getFinalQuoteData(
-      CustomizedFetchDataRequest request, BuildContext context) async {
+  Future<bool> getFinalQuoteData(CustomizedFetchDataRequest request,
+      BuildContext context) async {
     try {
       print("Sending request to $getQuoteData");
       print("Request body: ${jsonEncode(request.toJson())}");
@@ -196,8 +198,8 @@ class HealthDataServices {
     }
   }
 
-  Future<void> addUserLocation(
-      String userId, double latitude, double longitude) async {
+  Future<void> addUserLocation(String userId, double latitude,
+      double longitude) async {
     try {
       print("Sending request to $addUserLocationData");
       var headers = {'Content-Type': 'application/json'};
@@ -226,8 +228,8 @@ class HealthDataServices {
     }
   }
 
-  Future<bool> addUserProfile(
-      BuildContext context, UserViewModel userData) async {
+  Future<bool> addUserProfile(BuildContext context,
+      UserViewModel userData) async {
     try {
       print("Sending request to $addUserData");
       var headers = {'Content-Type': 'application/json'};
@@ -264,10 +266,8 @@ class HealthDataServices {
     }
   }
 
-  Future<UserProfileData> getUserProfileData(
-    BuildContext context,
-    String userId,
-  ) async {
+  Future<UserProfileData> getUserProfileData(BuildContext context,
+      String userId,) async {
     try {
       print("Sending request to $getUserData");
       var headers = {'Content-Type': 'application/json'};
@@ -275,7 +275,7 @@ class HealthDataServices {
           .post(
         getUserData,
         data: {
-          "id":userId,
+          "id": userId,
         },
         options: Options(
           headers: headers,
@@ -295,7 +295,7 @@ class HealthDataServices {
 
       if (response.statusCode == 200 || response.statusCode == 202) {
         UserProfileData userProfileData =
-            await UserProfileData.fromJson(response.data);
+        await UserProfileData.fromJson(response.data);
         return userProfileData;
       } else {
         throw Exception('Failed to fetch user profile data');
@@ -308,6 +308,7 @@ class HealthDataServices {
           'Error occurred while fetching user profile response: $e');
     }
   }
+
 
   Future<bool> saveFcmToken(String id, String fcmToken) async {
     try {

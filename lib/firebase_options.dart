@@ -59,14 +59,26 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAUabvKOhct2ntxoQ08FLzUD2K8F653Ae0',
-    appId: '1:123873713539:ios:a249e4e9d9407c78552ab6',
+    appId: '1:123873713539:ios:6b157d46163cc474552ab6',
     messagingSenderId: '123873713539',
     projectId: 'smarte-cloudservice-846b2',
     storageBucket: 'smarte-cloudservice-846b2.appspot.com',
     androidClientId: '123873713539-4cenuvbbi9j7bdku3peada0d1psi9r80.apps.googleusercontent.com',
-    iosClientId: '123873713539-kv33qm7ftp0k2kcdnmvuapmqaq4lfh8g.apps.googleusercontent.com',
-    iosBundleId: 'com.example.helixAi',
+    iosClientId: '123873713539-lnmc3mh34f7j8u53hvvu8lcb6diar504.apps.googleusercontent.com',
+    iosBundleId: 'com.smarte.ios',
   );
+  // static const FirebaseOptions ios = FirebaseOptions(
+  //   apiKey: 'AIzaSyAUabvKOhct2ntxoQ08FLzUD2K8F653Ae0',
+  //   appId: '1:123873713539:ios:a249e4e9d9407c78552ab6',
+  //   messagingSenderId: '123873713539',
+  //   projectId: 'smarte-cloudservice-846b2',
+  //   storageBucket: 'smarte-cloudservice-846b2.appspot.com',
+  //   androidClientId:
+  //       '123873713539-4cenuvbbi9j7bdku3peada0d1psi9r80.apps.googleusercontent.com',
+  //   iosClientId:
+  //       '123873713539-kv33qm7ftp0k2kcdnmvuapmqaq4lfh8g.apps.googleusercontent.com',
+  //   iosBundleId: 'com.example.helixAi',
+  // );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAUabvKOhct2ntxoQ08FLzUD2K8F653Ae0',

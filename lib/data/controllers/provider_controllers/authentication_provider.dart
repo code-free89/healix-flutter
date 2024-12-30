@@ -1,11 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:helix_ai/data/data_services/health_data_services.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-
+import '../../data_services/health_data_services.dart';
 import '../../models/model/user_profile_data.dart';
 import '../../models/view_model/user_data_view_model.dart';
 import '../../repositories/ai_chat_repositories/api_repository.dart';
@@ -23,6 +23,8 @@ class AuthenticationProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
   ApiRepository apiRepository = ApiRepository();
+  final HealthDataServices healthDataController = HealthDataServices();
+
   UserProfileData? userData;
   SharedPreferenceRepository _sharedPreferenceRepository =
       SharedPreferenceRepository();
@@ -30,6 +32,10 @@ class AuthenticationProvider with ChangeNotifier {
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
   FirestoreService firestoreService = FirestoreService();
+  String? _fcmToken;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  String? get fcmToken => _fcmToken;
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -100,18 +106,13 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  String? _fcmToken;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  String? get fcmToken => _fcmToken;
-
-  // String? get errorMessage => _errorMessage;
-  // String? _errorMessage;
-
   Future<void> _initializeFCM() async {
     try {
       // Fetch the initial FCM token
       _fcmToken = await _messaging.getToken();
+      if (_fcmToken == null) {
+        throw Exception("Failed to get FCM token");
+      }
       print("FCM Token: $_fcmToken");
 
       // Listen to token refresh
@@ -125,10 +126,9 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  final HealthDataServices healthDataController = HealthDataServices();
-
   Future<bool> signIn(String email, String password) async {
     try {
+      // _status = Status.Authenticating;
       setIsLoginLoading(true);
 
       // Sign in using Firebase Authentication
@@ -137,22 +137,23 @@ class AuthenticationProvider with ChangeNotifier {
 
       await SharedPreferenceRepository().storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);
-
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uid', userCredential.user!.uid);
+      print("Get User ID");
+      print(userCredential.user!.uid);
+      String? uid = prefs.getString('uid');
       print("User ID: ${userCredential.user!.uid}");
-
-      // Initialize FCM token
       await _initializeFCM();
-
-      await apiRepository.saveFcmToken(
-          userCredential.user!.uid, fcmToken.toString());
-
+      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
       setIsLoginLoading(false);
       if (e.code == 'user-not-found') {
+        print('No user found for that email.');
         _errorMessage = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
         _errorMessage = 'Wrong password provided for that user.';
       } else {
         _errorMessage = "Unable to login.";

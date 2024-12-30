@@ -165,4 +165,19 @@ class ChatProvider extends ChangeNotifier {
     messages.clear();
     notifyListeners();
   }
+
+  void updateAnswerWithNotification() {
+    log('messag added ...... Jemin');
+
+    // if (messages.isNotEmpty) {
+      log('messag added ...... Rutvi');
+      // Add a new message with the desired string
+      messages.add({
+        questionTitle: '', // Empty question since it's just a notification
+        answerTitle: 'What is your Blood glucose level in mg/dl?\nA. Less than 80 \nB. 80-120 \nC. 120-160 \nD. 160+',
+      });
+      notifyListeners();
+    // }
+  }
+
 }

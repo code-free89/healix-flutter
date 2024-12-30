@@ -111,6 +111,9 @@
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
         <activity-alias
             android:name="ViewPermissionUsageActivity"
             android:exported="true"

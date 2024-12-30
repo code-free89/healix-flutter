@@ -39,35 +39,54 @@
 			</array>
 		</dict>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>Your location is needed to access this feature.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Your location is needed to access this feature.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Your location is needed to access this feature.</string>
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>location</string>
-    </array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
 	<string>523371146946740</string>
 	<key>FacebookClientToken</key>
 	<string>4392604a03940b5f869fa53b0c5e51fe</string>
-	<key>GMSApiKey</key>
-    <string>AIzaSyDp1x3hT9CUpWd0RWbr04j4eqGvJJ1QkvE</string>
-
 	<key>FacebookDisplayName</key>
 	<string>HealixAi</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>GMSApiKey</key>
+	<string>AIzaSyDp1x3hT9CUpWd0RWbr04j4eqGvJJ1QkvE</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+    <array>
+      <string>fetch</string>
+      <string>remote-notification</string>
+    </array>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>We use this identifier to deliver personalized ads to you.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We use your location to show relevant content.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>We need access to your health data to display it in the app.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>We need access to update your health data.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is needed to access this feature.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is needed to access this feature.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is needed to access this feature.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

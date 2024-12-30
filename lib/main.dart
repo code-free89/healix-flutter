@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:health/health.dart';
-
 import 'package:helix_ai/firebase_options.dart';
+import 'package:helix_ai/util/backend_services/notification/notification.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
@@ -11,20 +11,35 @@ import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart'
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';
-import 'package:helix_ai/views/screens/auth_screens/user_forgot_password.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_signup.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'data/controllers/provider_controllers/authentication_provider.dart';
 import 'data/controllers/provider_controllers/chat_provider.dart';
 import 'data/controllers/provider_controllers/user_info_provider.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseMessaging.instance.requestPermission(
+    announcement: true,
+    carPlay: true,
+    criticalAlert: true,
+    alert: true,
+    sound: true,
+    badge: true,
+    provisional: true,
+  );
+  FirebaseApi().initLocalNotifications();
+  FirebaseApi().initPushNotifications();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharePreferenceProvider().initSecureStorage();
   // await dotenv.load(fileName: ".env");
@@ -44,11 +59,11 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ChatProvider>(create: (_) => ChatProvider()),
         ChangeNotifierProvider<UserInfoProvider>(
-            create: (_) => UserInfoProvider())
-        // Add other providers here
+            create: (_) => UserInfoProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
         title: appName,
         theme: ThemeData(
           // textTheme: GoogleFonts.ubuntu(Theme.of(context).textTheme),
@@ -77,6 +92,44 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    checkAuthStatus();
+  }
+
+  Future<void> checkAuthStatus() async {
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    await Future.delayed(Duration(seconds: 2));
+
+    switch (authProvider.status) {
+      case Status.Uninitialized:
+        break;
+      case Status.Unauthenticated:
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserLogin(),
+            ));
+
+        break;
+      case Status.Authenticated:
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatHome(
+                userFromLogin: true,
+              ),
+            ));
+
+        break;
+      case Status.FirstTimeAuthenticated:
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FirstProfile(),
+            ));
+
+        break;
+    }
   }
 
   @override

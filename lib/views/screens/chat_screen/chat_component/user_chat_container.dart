@@ -32,6 +32,7 @@ class UserChatContainer extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         // User's question bubble
+        question.isNotEmpty?
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
@@ -54,7 +55,7 @@ class UserChatContainer extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ):SizedBox(),
 
         // Answer or Loading Indicator
         Align(

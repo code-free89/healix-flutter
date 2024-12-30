@@ -69,14 +69,6 @@ class _UserChatState extends State<UserChat> {
             bool meal = message[isMeal] ?? false;
             MenuItem? menu = message[menuItem];
 
-            // if (question.contains("graph") && !isFetching) {
-            //   isFetching = true;
-            //   return Container(
-            //     padding: EdgeInsets.only(bottom: 20),
-            //     height: 400.0,
-            //     child: Healthbarchart(),
-            //   );
-            // } else {
             return UserChatContainer(
               question: question,
               answer: answer.isNotEmpty ? answer : 'Loading answer...',
