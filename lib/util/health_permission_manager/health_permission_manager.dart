@@ -82,28 +82,16 @@ class HealthPermissionManager {
         _state = authorized ? AppState.AUTHORIZED : AppState.AUTH_NOT_GRANTED;
 
         // Show alert based on authorization result
-        if (authorized) {
-          showPermissionDialog(context, 'Permission Granted',
-              'Health data permissions were successfully granted.');
-        } else {
-          showPermissionDialog(context, 'Permission Denied',
-              'Failed to grant health data permissions.');
-        }
-
         print(authorized ? 'Successfully Authorized' : 'Authorization Failed');
         return authorized;
       } catch (error) {
         print("Exception in authorize: $error");
         _state = AppState.AUTH_NOT_GRANTED;
-        showPermissionDialog(
-            context, 'Error', 'An error occurred during authorization.');
         return false;
       }
     }
 
     _state = AppState.AUTHORIZED;
-    showPermissionDialog(context, 'Already Authorized',
-        'Health data permissions are already granted.');
     return true;
   }
 
@@ -121,8 +109,6 @@ class HealthPermissionManager {
       // Check authorization before fetching data
       bool isAuthorized = await authorizeHealthPermission(context);
       if (!isAuthorized) {
-        showPermissionDialog(
-            context, 'Error', 'Health permissions not granted');
         _state = AppState.AUTH_NOT_GRANTED;
         return;
       }
@@ -140,8 +126,6 @@ class HealthPermissionManager {
       // Add all the new data points (only the first 100)
       _healthDataList.addAll(healthData);
     } catch (error) {
-      showPermissionDialog(
-          context, 'Error', 'Exception in getHealthDataFromTypes: $error"');
       _state = AppState.NO_DATA;
       return;
     }
@@ -151,7 +135,6 @@ class HealthPermissionManager {
 
     if (_healthDataList.isEmpty) {
       print("No data retrieved.");
-      showPermissionDialog(context, 'Error', 'No data retrieved.');
       _state = AppState.NO_DATA;
     } else {
       _healthDataList.forEach((data) => print(toJsonString(data)));
@@ -234,27 +217,5 @@ class HealthPermissionManager {
     // Create a controller instance and post the health data
     HealthDataServices controller = HealthDataServices();
     await controller.postHealthData(request, context);
-  }
-
-  //TODO: -  Function to show alert dialog
-  void showPermissionDialog(
-      BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

@@ -45,26 +45,19 @@ class HealthDataServices {
       )
           .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
 
       if (response.statusCode == 200) {
         print('Data posted successfully.');
-        showPermissionDialog(context, "Success", "Data posted successfully.");
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
-        showPermissionDialog(context, "Error",
-            "Failed to post data. Status code: ${response.statusCode}");
         throw Exception('Failed to post data');
       }
     } catch (e) {
       print('Error occurred while posting data: $e');
-      showPermissionDialog(
-          context, "Error", "An error occurred while posting data: $e");
       throw Exception('Error occurred while posting data: $e');
     }
   }
@@ -86,8 +79,6 @@ class HealthDataServices {
       )
           .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
@@ -98,7 +89,6 @@ class HealthDataServices {
           final responseJson = jsonDecode(response.body);
           return gethealthdataResponse.fromJson(responseJson);
         } else {
-          showPermissionDialog(context, "Error", "Empty response body");
           throw Exception('Empty response body');
         }
       } else {
@@ -131,8 +121,6 @@ class HealthDataServices {
       )
           .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
@@ -142,7 +130,6 @@ class HealthDataServices {
           final responseJson = jsonDecode(response.body);
           return CustomizedResponse.fromJson(responseJson);
         } else {
-          showPermissionDialog(context, "Error", "Empty response body");
           throw Exception('Empty response body');
         }
       } else {
@@ -150,15 +137,10 @@ class HealthDataServices {
             'Failed to fetch customized response. Status code: ${response
                 .statusCode}');
         print('Response body: ${response.body}');
-        showPermissionDialog(context, "Error",
-            "Failed to fetch customized response. Status code: ${response
-                .statusCode}");
         throw Exception('Failed to fetch customized response');
       }
     } catch (e) {
       print('Error occurred while fetching customized response: $e');
-      showPermissionDialog(context, "Error",
-          "An error occurred while fetching customized response: $e");
       throw Exception('Error occurred while fetching customized response: $e');
     }
   }
@@ -179,8 +161,6 @@ class HealthDataServices {
       )
           .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
@@ -192,12 +172,9 @@ class HealthDataServices {
       }
     } catch (e) {
       print('Error occurred while fetching customized response: $e');
-      showPermissionDialog(context, "Error",
-          "An error occurred while fetching customized response: $e");
       throw Exception('Error occurred while fetching customized response: $e');
     }
   }
-
   Future<void> addUserLocation(String userId, double latitude,
       double longitude) async {
     try {
@@ -243,8 +220,6 @@ class HealthDataServices {
       )
           .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
         print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
         throw TimeoutException(
             'The connection has timed out, please try again later.');
       });
@@ -260,8 +235,6 @@ class HealthDataServices {
       }
     } catch (e) {
       print('Error occurred while fetching customized response: $e');
-      showPermissionDialog(context, "Error",
-          "An error occurred while fetching customized response: $e");
       throw Exception('Error occurred while fetching customized response: $e');
     }
   }
