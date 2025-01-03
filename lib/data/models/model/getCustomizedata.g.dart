@@ -23,18 +23,28 @@ const CustomizedResponseSchema = CollectionSchema(
       name: r'gptResponse',
       type: IsarType.string,
     ),
-    r'id': PropertySchema(
+    r'healthDataMapString': PropertySchema(
       id: 1,
+      name: r'healthDataMapString',
+      type: IsarType.string,
+    ),
+    r'id': PropertySchema(
+      id: 2,
       name: r'id',
       type: IsarType.string,
     ),
     r'intent': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'intent',
       type: IsarType.string,
     ),
+    r'menuItemString': PropertySchema(
+      id: 4,
+      name: r'menuItemString',
+      type: IsarType.string,
+    ),
     r'searchText': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'searchText',
       type: IsarType.string,
     )
@@ -60,8 +70,20 @@ int _customizedResponseEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.gptResponse.length * 3;
+  {
+    final value = object.healthDataMapString;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.intent.length * 3;
+  {
+    final value = object.menuItemString;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.searchText.length * 3;
   return bytesCount;
 }
@@ -73,9 +95,11 @@ void _customizedResponseSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.gptResponse);
-  writer.writeString(offsets[1], object.id);
-  writer.writeString(offsets[2], object.intent);
-  writer.writeString(offsets[3], object.searchText);
+  writer.writeString(offsets[1], object.healthDataMapString);
+  writer.writeString(offsets[2], object.id);
+  writer.writeString(offsets[3], object.intent);
+  writer.writeString(offsets[4], object.menuItemString);
+  writer.writeString(offsets[5], object.searchText);
 }
 
 CustomizedResponse _customizedResponseDeserialize(
@@ -86,9 +110,11 @@ CustomizedResponse _customizedResponseDeserialize(
 ) {
   final object = CustomizedResponse(
     gptResponse: reader.readString(offsets[0]),
-    id: reader.readString(offsets[1]),
-    intent: reader.readString(offsets[2]),
-    searchText: reader.readString(offsets[3]),
+    healthDataMapString: reader.readStringOrNull(offsets[1]),
+    id: reader.readString(offsets[2]),
+    intent: reader.readString(offsets[3]),
+    menuItemString: reader.readStringOrNull(offsets[4]),
+    searchText: reader.readString(offsets[5]),
   );
   object.isarId = id;
   return object;
@@ -104,10 +130,14 @@ P _customizedResponseDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -342,6 +372,160 @@ extension CustomizedResponseQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'gptResponse',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'healthDataMapString',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'healthDataMapString',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'healthDataMapString',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'healthDataMapString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'healthDataMapString',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'healthDataMapString',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      healthDataMapStringIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'healthDataMapString',
         value: '',
       ));
     });
@@ -676,6 +860,160 @@ extension CustomizedResponseQueryFilter
   }
 
   QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'menuItemString',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'menuItemString',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'menuItemString',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'menuItemString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'menuItemString',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'menuItemString',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
+      menuItemStringIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'menuItemString',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterFilterCondition>
       searchTextEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -835,6 +1173,20 @@ extension CustomizedResponseQuerySortBy
   }
 
   QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      sortByHealthDataMapString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'healthDataMapString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      sortByHealthDataMapStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'healthDataMapString', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
       sortById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -859,6 +1211,20 @@ extension CustomizedResponseQuerySortBy
       sortByIntentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'intent', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      sortByMenuItemString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'menuItemString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      sortByMenuItemStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'menuItemString', Sort.desc);
     });
   }
 
@@ -890,6 +1256,20 @@ extension CustomizedResponseQuerySortThenBy
       thenByGptResponseDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gptResponse', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      thenByHealthDataMapString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'healthDataMapString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      thenByHealthDataMapStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'healthDataMapString', Sort.desc);
     });
   }
 
@@ -936,6 +1316,20 @@ extension CustomizedResponseQuerySortThenBy
   }
 
   QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      thenByMenuItemString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'menuItemString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
+      thenByMenuItemStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'menuItemString', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QAfterSortBy>
       thenBySearchText() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'searchText', Sort.asc);
@@ -959,6 +1353,14 @@ extension CustomizedResponseQueryWhereDistinct
     });
   }
 
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QDistinct>
+      distinctByHealthDataMapString({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'healthDataMapString',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<CustomizedResponse, CustomizedResponse, QDistinct> distinctById(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -970,6 +1372,14 @@ extension CustomizedResponseQueryWhereDistinct
       distinctByIntent({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'intent', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, CustomizedResponse, QDistinct>
+      distinctByMenuItemString({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'menuItemString',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -996,6 +1406,13 @@ extension CustomizedResponseQueryProperty
     });
   }
 
+  QueryBuilder<CustomizedResponse, String?, QQueryOperations>
+      healthDataMapStringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'healthDataMapString');
+    });
+  }
+
   QueryBuilder<CustomizedResponse, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1005,6 +1422,13 @@ extension CustomizedResponseQueryProperty
   QueryBuilder<CustomizedResponse, String, QQueryOperations> intentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'intent');
+    });
+  }
+
+  QueryBuilder<CustomizedResponse, String?, QQueryOperations>
+      menuItemStringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'menuItemString');
     });
   }
 

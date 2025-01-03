@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/repositories/message_repository.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
@@ -18,6 +19,28 @@ class ChatProvider extends ChangeNotifier {
   bool isMealFinalQuoteLoaded = false;
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
+  late MessageRepository messageRepository;
+
+  ChatProvider() {
+    initializeMessages();
+  }
+
+  Future<void> initializeMessages() async {
+    messageRepository = MessageRepository();
+    List<CustomizedResponse> savedMessages =
+        await messageRepository.getAllMessages();
+
+    var oldMessages = savedMessages
+        .map((e) => {
+              questionTitle: e.searchText,
+              answerTitle: e.gptResponse,
+              isMeal: e.intent == 'MEAL_ORDER',
+              menuItem: e.menuItem
+            })
+        .toList();
+    messages.addAll(oldMessages);
+    notifyListeners();
+  }
 
   Future<void> setUserLocationData() async {
     String? userUid = await SharePreferenceProvider()
@@ -88,6 +111,7 @@ class ChatProvider extends ChangeNotifier {
           menuItem: res.menuItem,
         };
       }
+      messageRepository.addMessage(res);
     } catch (error) {
       // Update the question with an error message if the API call fails
       messages.last = {
@@ -164,20 +188,21 @@ class ChatProvider extends ChangeNotifier {
   void resetChat() {
     messages.clear();
     notifyListeners();
+    messageRepository.deleteAllMessages();
   }
 
   void updateAnswerWithNotification() {
     log('messag added ...... Jemin');
 
     // if (messages.isNotEmpty) {
-      log('messag added ...... Rutvi');
-      // Add a new message with the desired string
-      messages.add({
-        questionTitle: '', // Empty question since it's just a notification
-        answerTitle: 'What is your Blood glucose level in mg/dl?\nA. Less than 80 \nB. 80-120 \nC. 120-160 \nD. 160+',
-      });
-      notifyListeners();
+    log('messag added ...... Rutvi');
+    // Add a new message with the desired string
+    messages.add({
+      questionTitle: '', // Empty question since it's just a notification
+      answerTitle:
+          'What is your Blood glucose level in mg/dl?\nA. Less than 80 \nB. 80-120 \nC. 120-160 \nD. 160+',
+    });
+    notifyListeners();
     // }
   }
-
 }

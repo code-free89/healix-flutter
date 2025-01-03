@@ -4,11 +4,11 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/models/model/getCustomizedata.dart';
 import '../../data/models/model/user_profile_data.dart';
+import '../../main.dart';
 
 class SharePreferenceProvider {
-  late Isar isar;
-
   late SharedPreferences prefs;
   static const String keyIsFirstProfileShown = "is_first_profile_shown";
   // Singleton instance
@@ -27,7 +27,7 @@ class SharePreferenceProvider {
 
       final dir = await getApplicationDocumentsDirectory();
       isar = await Isar.open(
-        [UserProfileDataSchema],
+        [UserProfileDataSchema, CustomizedResponseSchema],
         directory: dir.path,
       );
     } catch (e) {

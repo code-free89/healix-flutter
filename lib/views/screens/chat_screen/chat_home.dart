@@ -64,7 +64,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
-
     WidgetsBinding.instance.addObserver(this);
     if (WidgetsBinding.instance.lifecycleState != null) {
       _stateHistoryList.add(WidgetsBinding.instance.lifecycleState!);
@@ -92,7 +91,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   Future<void> _checkFirstInstall() async {
     _isFirstInstall =
         await sharePreferenceProvider.retrieveFirstProfileShownStatus() ?? true;
-    print("isFirstLaunch $_isFirstInstall");
     if (_isFirstInstall) {
       // Call _fetchHealthData immediately on first install
       _fetchHealthData();

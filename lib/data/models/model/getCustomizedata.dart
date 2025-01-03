@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:isar/isar.dart';
 
 part 'getCustomizedata.g.dart';
@@ -8,19 +10,26 @@ class CustomizedResponse {
   final String id;
   final String searchText;
   final String gptResponse;
+
   @ignore
   final Map<String, dynamic>? healthData; // Adjust type as needed
+  final String? healthDataMapString;
+
   final String intent;
+
   @ignore
   final dynamic menuItem; // Can be String or MenuItem
+  final String? menuItemString;
 
   CustomizedResponse({
     required this.id,
     required this.searchText,
     required this.gptResponse,
     this.healthData,
+    this.healthDataMapString,
     required this.intent,
     this.menuItem,
+    this.menuItemString,
   });
 
   factory CustomizedResponse.fromJson(Map<String, dynamic> json) {
@@ -39,6 +48,32 @@ class CustomizedResponse {
       healthData: json['health_data'],
       intent: json['intent'],
       menuItem: parsedMenuItem,
+    );
+  }
+
+  factory CustomizedResponse.fromIsar(CustomizedResponse response) {
+    // Convert healthDataMapString to healthData if available
+    Map<String, dynamic>? parsedHealthData;
+    if (response.healthDataMapString != null) {
+      parsedHealthData = Map<String, dynamic>.from(
+          IsarHelper.parseJson(response.healthDataMapString!));
+    }
+
+    // Convert menuItemString to menuItem if available
+    dynamic parsedMenuItem;
+    if (response.menuItemString != null) {
+      parsedMenuItem = IsarHelper.parseMenuItem(response.menuItemString!);
+    }
+
+    return CustomizedResponse(
+      id: response.id,
+      searchText: response.searchText,
+      gptResponse: response.gptResponse,
+      healthData: parsedHealthData,
+      healthDataMapString: response.healthDataMapString,
+      intent: response.intent,
+      menuItem: parsedMenuItem,
+      menuItemString: response.menuItemString,
     );
   }
 
@@ -113,5 +148,29 @@ class Customizations {
     data['option_name'] = optionName;
     data['option_id'] = optionId;
     return data;
+  }
+}
+
+class IsarHelper {
+  static Map<String, dynamic> parseJson(String jsonString) {
+    // Parse JSON string to Map
+    return Map<String, dynamic>.from(
+        IsarHelper.jsonDecode(jsonString) as Map<String, dynamic>);
+  }
+
+  static dynamic parseMenuItem(String menuItemString) {
+    // Deserialize menuItemString
+    final jsonData = IsarHelper.jsonDecode(menuItemString);
+    if (jsonData is String) {
+      return jsonData;
+    } else if (jsonData is Map<String, dynamic>) {
+      return MenuItem.fromJson(jsonData);
+    }
+    return null;
+  }
+
+  static dynamic jsonDecode(String jsonString) {
+    // You can replace with your preferred JSON decoding method
+    return const JsonDecoder().convert(jsonString);
   }
 }

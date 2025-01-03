@@ -12,8 +12,6 @@ import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
-import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
-import 'package:helix_ai/views/screens/auth_screens/user_signup.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,6 +20,7 @@ import 'data/controllers/provider_controllers/chat_provider.dart';
 import 'data/controllers/provider_controllers/user_info_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
+late Isar isar;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
