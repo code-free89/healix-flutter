@@ -74,6 +74,8 @@ class _UserChatState extends State<UserChat> {
               answer: answer.isNotEmpty ? answer : 'Loading answer...',
               isMeal: meal,
               menuItem: menu,
+              isNotification: chatProvider.isNotification,
+
               // isMeal: chatProvider.isMealOrder,
               // menuItem: chatProvider.menuItem,
             );

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:helix_ai/main.dart';
+import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:helix_ai/data/controllers/provider_controllers/chat_provider.dart';
 
@@ -35,7 +36,9 @@ class FirebaseApi {
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
     final context = navigatorKey.currentContext!;
+
     if (context != null) {
+      isNotification = true;
       Provider.of<ChatProvider>(context, listen: false)
           .updateAnswerWithNotification();
     }

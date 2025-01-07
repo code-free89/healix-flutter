@@ -17,6 +17,8 @@ class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
   bool isAnswerLoading = false;
   bool isMealFinalQuoteLoaded = false;
+  bool isNotification = false;
+  bool isNotificationShowed = false;
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
   late MessageRepository messageRepository;
@@ -192,17 +194,26 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void updateAnswerWithNotification() {
-    log('messag added ...... Jemin');
+    for (var i = 0; i < messages.length; i++) {
+      if (messages[i]['question'] == '') {
+        messages.removeAt(i);
+        notifyListeners();
+      }
+    }
 
-    // if (messages.isNotEmpty) {
-    log('messag added ...... Rutvi');
     // Add a new message with the desired string
     messages.add({
-      questionTitle: '', // Empty question since it's just a notification
-      answerTitle:
-          'What is your Blood glucose level in mg/dl?\nA. Less than 80 \nB. 80-120 \nC. 120-160 \nD. 160+',
+      questionTitle: '',
+      // Empty question since it's just a notification
+      answerTitle: 'What is your Blood glucose level in mg/dl?',
     });
+    isNotification = true;
+    isNotificationShowed = false;
     notifyListeners();
-    // }
+  }
+
+  void notificationOptionSelected() {
+    isNotificationShowed = true;
+    notifyListeners();
   }
 }

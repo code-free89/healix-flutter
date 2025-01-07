@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
+import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class UserChatContainer extends StatelessWidget {
   final String question;
   final String? answer;
   final bool? isMeal;
+  final bool? isNotification;
   final MenuItem? menuItem;
 
   const UserChatContainer({
@@ -24,6 +26,7 @@ class UserChatContainer extends StatelessWidget {
     this.answer,
     this.menuItem,
     this.isMeal,
+    this.isNotification,
   });
 
   @override
@@ -32,30 +35,31 @@ class UserChatContainer extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         // User's question bubble
-        question.isNotEmpty?
-        Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(51, 0, 7, 22),
-            child: Container(
-              padding: EdgeInsets.all(height * 0.015),
-              decoration: BoxDecoration(
-                color: Color(0xffF3F3F3),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(width * 0.030),
-                  topLeft: Radius.circular(width * 0.030),
-                  bottomLeft: Radius.circular(width * 0.030),
-                  bottomRight: Radius.circular(width * 0.007),
+        question.isNotEmpty
+            ? Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(51, 0, 7, 22),
+                  child: Container(
+                    padding: EdgeInsets.all(height * 0.015),
+                    decoration: BoxDecoration(
+                      color: Color(0xffF3F3F3),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(width * 0.030),
+                        topLeft: Radius.circular(width * 0.030),
+                        bottomLeft: Radius.circular(width * 0.030),
+                        bottomRight: Radius.circular(width * 0.007),
+                      ),
+                    ),
+                    child: ChatText(
+                      text: question,
+                      textAlign: TextAlign.right,
+                      color: colorBlack,
+                    ),
+                  ),
                 ),
-              ),
-              child: ChatText(
-                text: question,
-                textAlign: TextAlign.right,
-                color: colorBlack,
-              ),
-            ),
-          ),
-        ):SizedBox(),
+              )
+            : SizedBox(),
 
         // Answer or Loading Indicator
         Align(
@@ -244,7 +248,58 @@ class UserChatContainer extends StatelessWidget {
                 ],
               )
             : SizedBox.shrink(),
+        if (isNotification != null && isNotification! && question.isEmpty)
+          Consumer<ChatProvider>(builder: (_, chatProvider, __) {
+            return chatProvider.isNotificationShowed
+                ? SizedBox.shrink()
+                : Padding(
+                    padding: EdgeInsets.only(left: width * 0.15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            NotificationOption(
+                                title: 'A. Less than 80',
+                                onTap: () {
+                                  context.read<ChatProvider>().notificationOptionSelected();
+                                }),
+                            SizedBox(
+                              height: width * 0.02,
+                            ),
+                            NotificationOption(
+                                title: 'B. 80-120', onTap: () {}),
+                          ],
+                        ),
+                        SizedBox(
+                          width: width * 0.04,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            NotificationOption(
+                                title: 'C. 120-160', onTap: () {}),
+                            SizedBox(
+                              height: width * 0.02,
+                            ),
+                            NotificationOption(title: 'D. 160+', onTap: () {}),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+          }),
       ],
     );
+  }
+
+  NotificationOption({required String title, required Null Function() onTap}) {
+    return GestureDetector(
+        onTap: () { onTap(); },
+        child: ChatText(
+          text: title,
+        ));
   }
 }
