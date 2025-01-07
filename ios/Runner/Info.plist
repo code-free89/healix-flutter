@@ -81,6 +81,10 @@
 	<string>Your location is needed to access this feature.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>com.smarte.flutter_background_service_ios</string>
+    </array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

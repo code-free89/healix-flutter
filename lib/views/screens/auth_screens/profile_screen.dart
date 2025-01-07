@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -179,6 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return LogOutAlertDialog(
                           onLogout: () async {
                             debugPrint("logout clicked");
+                            final service = FlutterBackgroundService();
+                            var isRunning = await service.isRunning();
+                            if (isRunning) {
+                              service.invoke("stopService");
+                            }
                             await authProvider.signOut();
                             Provider.of<ChatProvider>(context, listen: false)
                                 .resetChat();

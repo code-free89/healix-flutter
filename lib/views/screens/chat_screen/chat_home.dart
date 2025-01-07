@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
@@ -21,6 +22,7 @@ import '../../../data/controllers/provider_controllers/authentication_provider.d
 import '../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '../../../data/models/model/gethealthdata.dart';
+import '../../../util/background_services.dart';
 import '../../../util/constants/constant.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +65,9 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
+    /// Initialize the background service
+    checkBackgroundService();
     Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
     WidgetsBinding.instance.addObserver(this);
     if (WidgetsBinding.instance.lifecycleState != null) {
@@ -77,11 +82,9 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     // Check if it's the first install
     _checkFirstInstall();
 
-    // Set up the periodic timer to check every 15 minutes
-    _fetchHealthDataTimer = Timer.periodic(
-        Duration(minutes: HEALTH_DATA_SYNC_INTERVAL), (Timer timer) {
-      _checkAndFetchHealthData();
-    });
+    /// Call and post health data when app is opened
+    HealthPermissionManager().fetchHealthData();
+
     if (widget.userFromLogin) {
       getUserData();
     }
@@ -92,13 +95,9 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     _isFirstInstall =
         await sharePreferenceProvider.retrieveFirstProfileShownStatus() ?? true;
     if (_isFirstInstall) {
-      // Call _fetchHealthData immediately on first install
-      _fetchHealthData();
       sharePreferenceProvider.storeFirstProfileShownStatus(false);
     } else {
-      // Load the last fetch time if not first launch
       _loadLastFetchTime();
-      _checkAndFetchHealthData(); // Check if the specific time duration has passed since the last call
     }
   }
 
@@ -109,47 +108,20 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
         prefs.getInt('lastFetchTime') ?? 0; // Default to 0 if not set
   }
 
-  // Function to update the last fetch time in SharedPreferences
-  Future<void> _updateLastFetchTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('lastFetchTime', DateTime.now().millisecondsSinceEpoch);
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     // Check the app lifecycle state
 
+    if (state == AppLifecycleState.detached) {
+      FlutterBackgroundService().invoke("setAsBackground");
+    }
+
     if (state == AppLifecycleState.resumed) {
-      // Call the location function when the app comes to the foreground
+      FlutterBackgroundService().invoke("setAsForeground");
       if (mounted) {
         Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
       }
-    }
-  }
-
-  // Function to check if it's time to fetch health data
-  void _checkAndFetchHealthData() async {
-    int currentTime = DateTime.now().millisecondsSinceEpoch;
-    int elapsedTime = currentTime - _lastFetchTime;
-
-    // If more than 60 minutes have passed since the last fetch
-    if (elapsedTime >
-        HEALTH_DATA_SYNC_INTERVAL * SECONDS_IN_A_MIN * MILLIS_IN_SEC) {
-      _fetchHealthData();
-      await _updateLastFetchTime(); // Update the last fetch time after calling the function
-    } else {
-      print("Not enough time has passed to fetch health data.");
-    }
-  }
-
-  // Function to authorize and fetch health data
-  void _fetchHealthData() async {
-    bool authorized =
-        await HealthPermissionManager().authorizeHealthPermission(context);
-    if (authorized) {
-      await HealthPermissionManager().fetchHealthData(context);
-      print("Health data fetched");
     }
   }
 
@@ -328,5 +300,13 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
         );
       }),
     );
+  }
+
+  Future<void> checkBackgroundService() async {
+    final service = FlutterBackgroundService();
+    var isRunning = await service.isRunning();
+    if (!isRunning) {
+      initializeService();
+    }
   }
 }

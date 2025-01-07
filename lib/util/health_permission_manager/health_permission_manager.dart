@@ -65,7 +65,7 @@ class HealthPermissionManager {
       .toList();
 
   //TODO: - Function to request health permission
-  Future<bool> authorizeHealthPermission(BuildContext context) async {
+  Future<bool> authorizeHealthPermission() async {
     // Request required permissions
     await Permission.activityRecognition.request();
     await Permission.location.request();
@@ -95,8 +95,13 @@ class HealthPermissionManager {
     return true;
   }
 
-  //TODO: - This function performs Fetch Health Data
-  Future<void> fetchHealthData(BuildContext context) async {
+  /// This function performs Fetch Health Data
+  Future<void> fetchHealthData() async {
+    bool authorized = await authorizeHealthPermission();
+    if (!authorized) {
+      print("Health data permission not granted.");
+      return;
+    }
     _state = AppState.FETCHING_DATA;
 
     var now = DateTime.now();
@@ -107,7 +112,7 @@ class HealthPermissionManager {
 
     try {
       // Check authorization before fetching data
-      bool isAuthorized = await authorizeHealthPermission(context);
+      bool isAuthorized = await authorizeHealthPermission();
       if (!isAuthorized) {
         _state = AppState.AUTH_NOT_GRANTED;
         return;
@@ -140,7 +145,7 @@ class HealthPermissionManager {
       _healthDataList.forEach((data) => print(toJsonString(data)));
       _state = AppState.DATA_READY;
       // Call the function to post health data after it's fetched
-      await postFetchedHealthData(context);
+      await postFetchedHealthData();
     }
   }
 
@@ -179,7 +184,7 @@ class HealthPermissionManager {
   }
 
   //TODO: - This function performs Post Health Data
-  Future<void> postFetchedHealthData(BuildContext context) async {
+  Future<void> postFetchedHealthData() async {
     // Map each data point to the required structure
     List<puthealthdata> items = _healthDataList.map((dataPoint) {
       return puthealthdata(
@@ -216,6 +221,6 @@ class HealthPermissionManager {
 
     // Create a controller instance and post the health data
     HealthDataServices controller = HealthDataServices();
-    await controller.postHealthData(request, context);
+    await controller.postHealthData(request);
   }
 }
