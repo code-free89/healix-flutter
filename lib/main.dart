@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:helix_ai/firebase_options.dart';
 import 'package:helix_ai/util/backend_services/notification/notification.dart';
+import 'package:helix_ai/util/background_services.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
@@ -38,6 +39,7 @@ void main() async {
   );
   FirebaseApi().initLocalNotifications();
   FirebaseApi().initPushNotifications();
+  await initializeService();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharePreferenceProvider().initSecureStorage();
   // await dotenv.load(fileName: ".env");

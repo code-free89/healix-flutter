@@ -13,14 +13,16 @@ import '../main.dart';
 import 'health_permission_manager/health_permission_manager.dart';
 
 late String uid;
+
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
 
+  // Use a health-specific channel ID and name
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'my_foreground', // id
-    'MY FOREGROUND SERVICE', // title
-    description: 'background service for sending health data', // description
-    importance: Importance.low, // importance must be at low or higher level
+    'health_foreground_service', // id
+    'Health Monitoring Service', // title
+    description: 'Background service for health data monitoring', // description
+    importance: Importance.low, // Changed to high for health data
   );
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -42,27 +44,20 @@ Future<void> initializeService() async {
 
   await service.configure(
     androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
-
-      // auto start service
-      autoStart: true,
-      isForegroundMode: true,
-
-      notificationChannelId: 'my_foreground',
-      initialNotificationTitle: 'Healix AI',
-      initialNotificationContent: 'Initializing',
-      foregroundServiceNotificationId: 888,
-      foregroundServiceTypes: [AndroidForegroundType.health],
-    ),
+        onStart: onStart,
+        autoStart: true,
+        isForegroundMode: true,
+        notificationChannelId: 'health_foreground_service',
+        initialNotificationTitle: 'Healix AI Health Monitor',
+        initialNotificationContent: 'Monitoring health data...',
+        foregroundServiceNotificationId: 888,
+        foregroundServiceTypes: [
+          AndroidForegroundType.health,
+          AndroidForegroundType.dataSync
+        ]),
     iosConfiguration: IosConfiguration(
-      // auto start service
       autoStart: true,
-
-      // this will be executed when app is in foreground in separated isolate
       onForeground: onStart,
-
-      // you have to enable background fetch capability on xcode project
       onBackground: onIosBackground,
     ),
   );
@@ -73,88 +68,69 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
 
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.reload();
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
 
-  /// call health function here
-  HealthPermissionManager().fetchHealthData(uid);
-  return true;
+    if (uid.isNotEmpty) {
+      await HealthPermissionManager().fetchHealthData(uid);
+    }
+    return true;
+  } catch (e) {
+    debugPrint('iOS background service error: $e');
+    return false;
+  }
 }
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
   DartPluginRegistrant.ensureInitialized();
 
-  /// OPTIONAL when use custom notification
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
   if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
+    try {
       service.setAsForegroundService();
-    });
+    } catch (e) {
+      debugPrint('Error setting foreground service: $e');
+    }
 
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
+    service.on('stopService').listen((event) {
+      service.stopSelf();
     });
   }
+
+  // Handle UID updates
   service.on('dataReceived').listen((event) {
-    debugPrint('FLUTTER BACKGROUND SERVICE: ${event}');
-    uid = event?['uid'];
+    if (event != null && event['uid'] != null) {
+      uid = event['uid'];
+      debugPrint('Received UID: $uid');
+    }
   });
 
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
-
-  /// you can see this log in logcat
-  debugPrint('FLUTTER BACKGROUND SERVICE:Started....../////////');
-
-  // bring to foreground
+  // Set up periodic health data sync
   Timer.periodic(const Duration(minutes: 10), (timer) async {
-
     if (service is AndroidServiceInstance) {
-      if (await service.isForegroundService()) {
-        /// OPTIONAL for use custom notification
-        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-        flutterLocalNotificationsPlugin.show(
-          888,
-          'Healix AI',
-          'Sending health data...',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'my_foreground',
-              'MY FOREGROUND SERVICE',
-              icon: 'ic_bg_service_small',
-              ongoing: false,
-            ),
-          ),
-        );
-
-        // if you don't using custom notification, uncomment this
-        service.setForegroundNotificationInfo(
-          title: "My App Service",
-          content: "Updated at ${DateTime.now()}",
-        );
+      try {
+        if (await service.isForegroundService()) {
+          await service.setForegroundNotificationInfo(
+            title: 'Healix AI Health Monitor',
+            content: 'Syncing health data...',
+          );
+        }
+      } catch (e) {
+        debugPrint('Error updating notification: $e');
       }
     }
 
-    /// you can see this log in logcat
-    debugPrint('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-
-    // test using external plugin
-    final deviceInfo = DeviceInfoPlugin();
-    String? device;
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      device = androidInfo.model;
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      device = iosInfo.model;
+    try {
+      debugPrint('Starting health data sync at: ${DateTime.now()}');
+      if (uid.isNotEmpty) {
+        await HealthPermissionManager().fetchHealthData(uid);
+        debugPrint('Health data sync completed successfully');
+      } else {
+        debugPrint('UID is missing. Skipping health data fetch.');
+      }
+    } catch (e) {
+      debugPrint('Error during health data sync: $e');
     }
-
-    /// calling health function here
-    HealthPermissionManager().fetchHealthData(uid);
   });
 }

@@ -306,7 +306,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
 
     var isRunning = await service.isRunning();
     if (!isRunning) {
-      await initializeService();
+      service.startService();
     }
     service.invoke('dataReceived', {'uid': userUid});
   }
