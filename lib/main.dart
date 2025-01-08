@@ -20,7 +20,6 @@ import 'data/controllers/provider_controllers/chat_provider.dart';
 import 'data/controllers/provider_controllers/user_info_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
-late Isar isar;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

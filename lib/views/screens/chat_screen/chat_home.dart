@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:helix_ai/data/models/model/user_profile_data.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
@@ -66,8 +67,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    /// Initialize the background service
-    checkBackgroundService();
     Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
     WidgetsBinding.instance.addObserver(this);
     if (WidgetsBinding.instance.lifecycleState != null) {
@@ -82,9 +81,8 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     // Check if it's the first install
     _checkFirstInstall();
 
-    /// Call and post health data when app is opened
-    HealthPermissionManager().fetchHealthData();
-
+    /// Initialize the background service
+    checkBackgroundService();
     if (widget.userFromLogin) {
       getUserData();
     }
@@ -303,10 +301,17 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   }
 
   Future<void> checkBackgroundService() async {
+    UserProfileData? user = await sharePreferenceProvider.retrieveUserInfo();
+    String? userUid = user?.id;
+
+    /// Call and post health data when app is opened
+    HealthPermissionManager().fetchHealthData(userUid ?? "");
     final service = FlutterBackgroundService();
+
     var isRunning = await service.isRunning();
     if (!isRunning) {
-      initializeService();
+      await initializeService();
     }
+    service.invoke('dataReceived', {'uid': userUid});
   }
 }

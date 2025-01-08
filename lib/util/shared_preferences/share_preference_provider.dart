@@ -11,6 +11,7 @@ import '../../main.dart';
 class SharePreferenceProvider {
   late SharedPreferences prefs;
   static const String keyIsFirstProfileShown = "is_first_profile_shown";
+  late Isar isar;
   // Singleton instance
   static final SharePreferenceProvider _instance =
       SharePreferenceProvider._internal();
@@ -27,6 +28,7 @@ class SharePreferenceProvider {
 
       final dir = await getApplicationDocumentsDirectory();
       isar = await Isar.open(
+        name: 'isar.db',
         [UserProfileDataSchema, CustomizedResponseSchema],
         directory: dir.path,
       );

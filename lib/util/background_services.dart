@@ -6,11 +6,14 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
 import 'health_permission_manager/health_permission_manager.dart';
 
+late String uid;
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
 
@@ -51,7 +54,7 @@ Future<void> initializeService() async {
       initialNotificationTitle: 'Healix AI',
       initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: 888,
-      foregroundServiceTypes: [AndroidForegroundType.location],
+      foregroundServiceTypes: [AndroidForegroundType.health],
     ),
     iosConfiguration: IosConfiguration(
       // auto start service
@@ -73,10 +76,9 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
   SharedPreferences preferences = await SharedPreferences.getInstance();
   await preferences.reload();
-  final log = preferences.getStringList('log') ?? <String>[];
 
   /// call health function here
-  HealthPermissionManager().fetchHealthData();
+  HealthPermissionManager().fetchHealthData(uid);
   return true;
 }
 
@@ -98,6 +100,10 @@ void onStart(ServiceInstance service) async {
       service.setAsBackgroundService();
     });
   }
+  service.on('dataReceived').listen((event) {
+    debugPrint('FLUTTER BACKGROUND SERVICE: ${event}');
+    uid = event?['uid'];
+  });
 
   service.on('stopService').listen((event) {
     service.stopSelf();
@@ -107,7 +113,7 @@ void onStart(ServiceInstance service) async {
   debugPrint('FLUTTER BACKGROUND SERVICE:Started....../////////');
 
   // bring to foreground
-  Timer.periodic(const Duration(minutes: 60), (timer) async {
+  Timer.periodic(const Duration(seconds: 300), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
@@ -149,7 +155,7 @@ void onStart(ServiceInstance service) async {
     }
 
     /// calling health function here
-    HealthPermissionManager().fetchHealthData();
+    HealthPermissionManager().fetchHealthData(uid);
 
     service.invoke(
       'update',

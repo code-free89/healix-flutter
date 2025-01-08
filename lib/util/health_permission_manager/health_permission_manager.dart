@@ -96,7 +96,7 @@ class HealthPermissionManager {
   }
 
   /// This function performs Fetch Health Data
-  Future<void> fetchHealthData() async {
+  Future<void> fetchHealthData(String userUid) async {
     bool authorized = await authorizeHealthPermission();
     if (!authorized) {
       print("Health data permission not granted.");
@@ -145,7 +145,7 @@ class HealthPermissionManager {
       _healthDataList.forEach((data) => print(toJsonString(data)));
       _state = AppState.DATA_READY;
       // Call the function to post health data after it's fetched
-      await postFetchedHealthData();
+      await postFetchedHealthData(userUid);
     }
   }
 
@@ -184,7 +184,7 @@ class HealthPermissionManager {
   }
 
   //TODO: - This function performs Post Health Data
-  Future<void> postFetchedHealthData() async {
+  Future<void> postFetchedHealthData(String userUid) async {
     // Map each data point to the required structure
     List<puthealthdata> items = _healthDataList.map((dataPoint) {
       return puthealthdata(
@@ -208,9 +208,6 @@ class HealthPermissionManager {
     }).toList();
 
     // Retrieve user UID from shared preferences
-    String? userUid = await sharePreferenceProvider.retrieveUserInfo().then(
-          (value) => value?.id,
-        );
 
     print("userUid, $userUid");
     // Create the request object with the correct user ID and health data items
