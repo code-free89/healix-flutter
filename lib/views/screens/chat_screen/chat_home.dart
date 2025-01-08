@@ -111,10 +111,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     // Check the app lifecycle state
 
-    if (state == AppLifecycleState.detached) {
-      FlutterBackgroundService().invoke("setAsBackground");
-    }
-
     if (state == AppLifecycleState.resumed) {
       FlutterBackgroundService().invoke("setAsForeground");
       if (mounted) {

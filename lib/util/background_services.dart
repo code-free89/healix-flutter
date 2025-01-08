@@ -8,7 +8,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 import '../main.dart';
 import 'health_permission_manager/health_permission_manager.dart';
@@ -113,7 +112,8 @@ void onStart(ServiceInstance service) async {
   debugPrint('FLUTTER BACKGROUND SERVICE:Started....../////////');
 
   // bring to foreground
-  Timer.periodic(const Duration(seconds: 300), (timer) async {
+  Timer.periodic(const Duration(minutes: 10), (timer) async {
+
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
@@ -156,13 +156,5 @@ void onStart(ServiceInstance service) async {
 
     /// calling health function here
     HealthPermissionManager().fetchHealthData(uid);
-
-    service.invoke(
-      'update',
-      {
-        "current_date": DateTime.now().toIso8601String(),
-        "device": "$device ......  11",
-      },
-    );
   });
 }
