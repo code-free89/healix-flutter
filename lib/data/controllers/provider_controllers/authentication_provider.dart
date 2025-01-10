@@ -62,10 +62,22 @@ class AuthenticationProvider with ChangeNotifier {
           email,
         );
       }
+
       await _sharedPreferenceRepository.storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);
       print("Get User ID");
       print(userCredential.user!.uid);
+
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uid', userCredential.user!.uid);
+      print("Get User ID");
+      print(userCredential.user!.uid);
+      String? uid = prefs.getString('uid');
+      print("User ID: ${userCredential.user!.uid}");
+      await _initializeFCM();
+      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
+
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
       notifyListeners();
@@ -83,6 +95,43 @@ class AuthenticationProvider with ChangeNotifier {
       }
       setIsSignupLoading(false);
 
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> signIn(String email, String password) async {
+    try {
+      // _status = Status.Authenticating;
+      setIsLoginLoading(true);
+
+      // Sign in using Firebase Authentication
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      await SharedPreferenceRepository().storeUserInfo(
+          uid: userCredential.user!.uid, email: userCredential.user!.email);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uid', userCredential.user!.uid);
+      print("Get User ID");
+      print(userCredential.user!.uid);
+      String? uid = prefs.getString('uid');
+      print("User ID: ${userCredential.user!.uid}");
+      await _initializeFCM();
+      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
+      setIsLoginLoading(false);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      setIsLoginLoading(false);
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        _errorMessage = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        _errorMessage = 'Wrong password provided for that user.';
+      } else {
+        _errorMessage = "Unable to login.";
+      }
       notifyListeners();
       return false;
     }
@@ -126,42 +175,7 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> signIn(String email, String password) async {
-    try {
-      // _status = Status.Authenticating;
-      setIsLoginLoading(true);
 
-      // Sign in using Firebase Authentication
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-
-      await SharedPreferenceRepository().storeUserInfo(
-          uid: userCredential.user!.uid, email: userCredential.user!.email);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', userCredential.user!.uid);
-      print("Get User ID");
-      print(userCredential.user!.uid);
-      String? uid = prefs.getString('uid');
-      print("User ID: ${userCredential.user!.uid}");
-      await _initializeFCM();
-      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
-      setIsLoginLoading(false);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      setIsLoginLoading(false);
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-        _errorMessage = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-        _errorMessage = 'Wrong password provided for that user.';
-      } else {
-        _errorMessage = "Unable to login.";
-      }
-      notifyListeners();
-      return false;
-    }
-  }
 
   Future signOut() async {
     _auth.signOut();
