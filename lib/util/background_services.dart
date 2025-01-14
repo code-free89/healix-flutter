@@ -2,14 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
 import 'health_permission_manager/health_permission_manager.dart';
 
 late String uid;
@@ -71,7 +68,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   try {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.reload();
-
+    uid = preferences.getString('uid') ?? '';
     if (uid.isNotEmpty) {
       await HealthPermissionManager().fetchHealthData(uid);
     }
@@ -85,6 +82,9 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
+
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.reload();
 
   if (service is AndroidServiceInstance) {
     try {
@@ -103,6 +103,7 @@ void onStart(ServiceInstance service) async {
     if (event != null && event['uid'] != null) {
       uid = event['uid'];
       debugPrint('Received UID: $uid');
+      preferences.setString('uid', uid);
     }
   });
 

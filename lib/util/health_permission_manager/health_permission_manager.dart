@@ -138,15 +138,15 @@ class HealthPermissionManager {
     // Filter out duplicates and merge data points with the same type
     _healthDataList = _mergeHealthDataPoints(_healthDataList);
 
-    if (_healthDataList.isEmpty) {
-      print("No data retrieved.");
-      _state = AppState.NO_DATA;
-    } else {
-      _healthDataList.forEach((data) => print(toJsonString(data)));
-      _state = AppState.DATA_READY;
-      // Call the function to post health data after it's fetched
-      await postFetchedHealthData(userUid);
-    }
+    // if (_healthDataList.isEmpty) {
+    //   print("No data retrieved.");
+    //   _state = AppState.NO_DATA;
+    // } else {
+    _healthDataList.forEach((data) => print(toJsonString(data)));
+    _state = AppState.DATA_READY;
+    // Call the function to post health data after it's fetched
+    await postFetchedHealthData(userUid);
+    // }
   }
 
   //TODO: Function to merge health data points with the same type
