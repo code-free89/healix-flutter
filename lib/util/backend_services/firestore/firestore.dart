@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:helix_ai/util/internet_connetion.dart';
 
-
+import '../../constants/api_constants.dart';
 
 class FirestoreService {
+  Dio dio = Dio();
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   Future<void> addUserDocument(String uid, String email) async {
@@ -111,5 +113,33 @@ class FirestoreService {
       print('Error getting details : $e');
     }
     return null;
+  }
+
+  Future<bool> saveFcmToken(String id, String fcmToken) async {
+    try {
+      final response = await dio.post(
+        saveFcmTokenUrl,
+        data: {
+          "id": id,
+          "fcmToken": fcmToken,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Response: ${response.data}');
+        return true;
+      } else {
+        print('Failed to save FCM token. Status Code: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      print('Error saving FCM token: $error');
+      return false;
+    }
   }
 }

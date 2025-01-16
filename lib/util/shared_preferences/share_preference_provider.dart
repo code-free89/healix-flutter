@@ -15,6 +15,7 @@ class SharePreferenceProvider {
   // Singleton instance
   static final SharePreferenceProvider _instance =
       SharePreferenceProvider._internal();
+  String uid = '';
 
   factory SharePreferenceProvider() {
     return _instance;
@@ -55,6 +56,7 @@ class SharePreferenceProvider {
   Future<UserProfileData?> retrieveUserInfo() async {
     UserProfileData? userProfileData =
         await isar.userProfileDatas.where().findFirst();
+    uid = userProfileData?.id ?? '';
     return userProfileData;
   }
 

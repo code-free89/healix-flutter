@@ -18,16 +18,6 @@ import '../../views/shared_components/show_permission_dialog.dart';
 
 class HealthDataServices {
   Dio dio = Dio();
-
-  final String putHealthDataApiUrl = '$BASEURL/save_health_data';
-  final String getHealthDataApiUrl = '$BASEURL/get_health_data';
-  final String getCustomizedUrl = '$BASEURL/get_customized_response';
-  final String getQuoteData = '$BASEURL/get_final_quote';
-  final String addUserData = '$BASEURL/add_user_profile';
-  final String getUserData = '$BASEURL/get_user_profile';
-  final String addUserLocationData = '$BASEURL/save_location';
-  final String saveFcmTokenUrl = '$BASEURL/save_fcm_token';
-
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(HealthDataRequest request) async {
     try {
@@ -280,34 +270,6 @@ class HealthDataServices {
           "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
-    }
-  }
-
-  Future<bool> saveFcmToken(String id, String fcmToken) async {
-    try {
-      final response = await dio.post(
-        saveFcmTokenUrl,
-        data: {
-          "id": id,
-          "fcmToken": fcmToken,
-        },
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        print('Response: ${response.data}');
-        return true;
-      } else {
-        print('Failed to save FCM token. Status Code: ${response.statusCode}');
-        return false;
-      }
-    } catch (error) {
-      print('Error saving FCM token: $error');
-      return false;
     }
   }
 }

@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
+import 'package:helix_ai/util/firebase_fcm.dart';
+import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,10 +34,6 @@ class AuthenticationProvider with ChangeNotifier {
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
   FirestoreService firestoreService = FirestoreService();
-  String? _fcmToken;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  String? get fcmToken => _fcmToken;
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -68,15 +66,13 @@ class AuthenticationProvider with ChangeNotifier {
       print("Get User ID");
       print(userCredential.user!.uid);
 
-
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('uid', userCredential.user!.uid);
       print("Get User ID");
       print(userCredential.user!.uid);
       String? uid = prefs.getString('uid');
       print("User ID: ${userCredential.user!.uid}");
-      await _initializeFCM();
-      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
+      await FirebaseFCMService().init();
 
       _status = Status.FirstTimeAuthenticated;
       setIsSignupLoading(false);
@@ -111,14 +107,7 @@ class AuthenticationProvider with ChangeNotifier {
 
       await SharedPreferenceRepository().storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', userCredential.user!.uid);
-      print("Get User ID");
-      print(userCredential.user!.uid);
-      String? uid = prefs.getString('uid');
-      print("User ID: ${userCredential.user!.uid}");
-      await _initializeFCM();
-      healthDataController.saveFcmToken(uid.toString(), fcmToken.toString());
+      await FirebaseFCMService().init();
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -155,28 +144,6 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _initializeFCM() async {
-    try {
-      // Fetch the initial FCM token
-      _fcmToken = await _messaging.getToken();
-      if (_fcmToken == null) {
-        throw Exception("Failed to get FCM token");
-      }
-      print("FCM Token: $_fcmToken");
-
-      // Listen to token refresh
-      _messaging.onTokenRefresh.listen((newToken) {
-        _fcmToken = newToken;
-        print("Refreshed FCM Token: $_fcmToken");
-        notifyListeners();
-      });
-    } catch (e) {
-      print("Error initializing FCM: $e");
-    }
-  }
-
-
-
   Future signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;
@@ -190,6 +157,7 @@ class AuthenticationProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       _user = firebaseUser;
+      SharePreferenceProvider().uid = firebaseUser.uid;
       if (await _sharedPreferenceRepository.retrieveFirstProfileShownStatus() ??
           false) {
         _status = Status.FirstTimeAuthenticated;

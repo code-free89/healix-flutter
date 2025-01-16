@@ -8,6 +8,7 @@ import 'package:helix_ai/util/background_services.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
+import 'package:helix_ai/util/firebase_fcm.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
@@ -37,10 +38,8 @@ void main() async {
     badge: true,
     provisional: true,
   );
-  FirebaseApi().initLocalNotifications();
-  FirebaseApi().initPushNotifications();
+  FirebaseApi().initNotifications();
   await initializeService();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharePreferenceProvider().initSecureStorage();
   // await dotenv.load(fileName: ".env");
   await preCacheInitialAssets();
@@ -112,6 +111,7 @@ class _HomePageState extends State<HomePage> {
 
         break;
       case Status.Authenticated:
+        FirebaseFCMService().init();
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
