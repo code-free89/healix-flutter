@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../util/shared_preferences/share_preference_provider.dart';
-import '../../repositories/ai_chat_repositories/api_repository.dart';
+
 
 class UserInfoProvider extends ChangeNotifier {
   String selectedGender = "";

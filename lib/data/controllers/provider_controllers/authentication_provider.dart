@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
@@ -25,7 +24,6 @@ class AuthenticationProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String _errorMessage = "";
   ApiRepository apiRepository = ApiRepository();
-  final HealthDataServices healthDataController = HealthDataServices();
 
   UserProfileData? userData;
   SharedPreferenceRepository _sharedPreferenceRepository =
@@ -34,6 +32,7 @@ class AuthenticationProvider with ChangeNotifier {
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
   FirestoreService firestoreService = FirestoreService();
+  HealthDataServices healthDataService = HealthDataServices();
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -229,4 +228,6 @@ class AuthenticationProvider with ChangeNotifier {
       return false;
     }
   }
+
+
 }

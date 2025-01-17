@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/data_services/health_data_services.dart';
 import 'package:helix_ai/data/repositories/message_repository.dart';
@@ -20,10 +21,12 @@ class ChatProvider extends ChangeNotifier {
   bool isAnswerLoading = false;
   bool isMealFinalQuoteLoaded = false;
   bool isNotification = false;
-  bool isNotificationShowed = false;
+  bool isNotificationClicked = false;
   List<Choices> answers = [];
   List<Map<String, dynamic>> messages = [];
   late MessageRepository messageRepository;
+
+
 
   ChatProvider() {
     initializeMessages();
@@ -210,12 +213,24 @@ class ChatProvider extends ChangeNotifier {
       answerTitle: 'What is your Blood glucose level in mg/dl?',
     });
     isNotification = true;
-    isNotificationShowed = false;
+    isNotificationClicked = false;
     notifyListeners();
   }
 
   void notificationOptionSelected() {
-    isNotificationShowed = true;
+    isNotificationClicked = true;
     notifyListeners();
+  }
+
+  Future<bool> setNotificationResponse(
+      BuildContext context, String query, String notificationResponse) async {
+    try {
+      await apiRepository.setNotificationResponse(context,
+          FirebaseAuth.instance.currentUser!.uid, query, notificationResponse);
+      return true;
+    } catch (e) {
+      print("Error updating address: $e");
+      return false;
+    }
   }
 }

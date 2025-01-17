@@ -14,3 +14,4 @@ final String addUserData = '$BASEURL/add_user_profile';
 final String getUserData = '$BASEURL/get_user_profile';
 final String addUserLocationData = '$BASEURL/save_location';
 final String saveFcmTokenUrl = '$BASEURL/save_fcm_token';
+final String setNotificationResponseUrl = '$BASEURL/save_user_feedback';

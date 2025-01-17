@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
 import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../data/controllers/provider_controllers/authentication_provider.dart';
 import '../../../../data/controllers/provider_controllers/chat_provider.dart';
 import '../../../../data/models/model/getCustomizedata.dart';
 import '../../../../util/constants/constant.dart';
@@ -250,56 +252,96 @@ class UserChatContainer extends StatelessWidget {
             : SizedBox.shrink(),
         if (isNotification != null && isNotification! && question.isEmpty)
           Consumer<ChatProvider>(builder: (_, chatProvider, __) {
-            return chatProvider.isNotificationShowed
-                ? SizedBox.shrink()
-                : Padding(
-                    padding: EdgeInsets.only(left: width * 0.15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            NotificationOption(
-                                title: 'A. Less than 80',
-                                onTap: () {
-                                  context.read<ChatProvider>().notificationOptionSelected();
-                                }),
-                            SizedBox(
-                              height: width * 0.02,
-                            ),
-                            NotificationOption(
-                                title: 'B. 80-120', onTap: () {}),
-                          ],
-                        ),
-                        SizedBox(
-                          width: width * 0.04,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            NotificationOption(
-                                title: 'C. 120-160', onTap: () {}),
-                            SizedBox(
-                              height: width * 0.02,
-                            ),
-                            NotificationOption(title: 'D. 160+', onTap: () {}),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
+            return Padding(
+              padding: EdgeInsets.only(left: width * 0.15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NotificationOption(
+                          title: 'A. Less than 80',
+                          onTap: () {
+                            if (!(chatProvider.isNotificationClicked))
+                              setNotificationResponse(
+                                  context, answer.toString(), 'Less than 80');
+                          },
+                          chatProvider: chatProvider),
+                      SizedBox(
+                        height: width * 0.02,
+                      ),
+                      NotificationOption(
+                          title: 'B. 80-120',
+                          onTap: () {
+                            if (!(chatProvider.isNotificationClicked))
+                              setNotificationResponse(
+                                  context, answer.toString(), '80-120');
+                          },
+                          chatProvider: chatProvider),
+                    ],
+                  ),
+                  SizedBox(
+                    width: width * 0.04,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NotificationOption(
+                          title: 'C. 120-160',
+                          onTap: () {
+                            if (!(chatProvider.isNotificationClicked))
+                              setNotificationResponse(
+                                  context, answer.toString(), '120-160');
+                          },
+                          chatProvider: chatProvider),
+                      SizedBox(
+                        height: width * 0.02,
+                      ),
+                      NotificationOption(
+                          title: 'D. 160+',
+                          onTap: () {
+                            if (!(chatProvider.isNotificationClicked))
+                              setNotificationResponse(
+                                  context, answer.toString(), '160+');
+                          },
+                          chatProvider: chatProvider),
+                    ],
+                  ),
+                ],
+              ),
+            );
           }),
       ],
     );
   }
 
-  NotificationOption({required String title, required Null Function() onTap}) {
+  NotificationOption(
+      {required String title,
+      required Function() onTap,
+      required ChatProvider chatProvider}) {
     return GestureDetector(
-        onTap: () { onTap(); },
+        onTap: () {
+          onTap();
+        },
         child: ChatText(
           text: title,
+          color:
+              ((chatProvider.isNotificationClicked)) ? gray1Color : colorBlack,
         ));
+  }
+
+  void setNotificationResponse(BuildContext context, query, response) async {
+    context.read<ChatProvider>().notificationOptionSelected();
+    Fluttertoast.showToast(
+      msg: res
+          ? 'Thanks for your input'
+          : 'Something Went Wrong!Please try again.',
+    );
+    bool res = await Provider.of<ChatProvider>(context, listen: false)
+        .setNotificationResponse(context, query, response);
+
+    
   }
 }

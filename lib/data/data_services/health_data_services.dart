@@ -14,10 +14,12 @@ import '../../data/models/view_model/customized_fetch_data_request.dart';
 import '../../data/models/view_model/customized_request.dart';
 import '../../util/constants/api_constants.dart';
 import '../../util/constants/constant.dart';
+import '../../util/internet_connetion.dart';
 import '../../views/shared_components/show_permission_dialog.dart';
 
 class HealthDataServices {
   Dio dio = Dio();
+
   // MARK: - Function For Put Health Data
   Future<void> postHealthData(HealthDataRequest request) async {
     try {
@@ -264,6 +266,54 @@ class HealthDataServices {
       } else {
         throw Exception('Failed to fetch user profile data');
       }
+    } catch (e) {
+      print('Error occurred while fetching user profile response: $e');
+      showPermissionDialog(context, "Error",
+          "An error occurred while fetching user profile response: $e");
+      throw Exception(
+          'Error occurred while fetching user profile response: $e');
+    }
+  }
+
+  Future setNotificationResponse(
+    BuildContext context,
+    String userId,
+    String query,
+    String notificationResponse,
+  ) async {
+    bool isConnected = await InternetConnection.checkInternet();
+    if (!isConnected) {
+      return;
+    }
+    try {
+      print("Sending request to $setNotificationResponseUrl");
+      print("User Id: $userId");
+      print("Query $query");
+      print("Notification Response $notificationResponse");
+      var headers = {'Content-Type': 'application/json'};
+      final response = await dio
+          .post(
+        setNotificationResponseUrl,
+        data: {
+          "id": userId,
+          "query": query,
+          "response": notificationResponse,
+        },
+        options: Options(
+          headers: headers,
+        ),
+      )
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
+        print('Request timed out');
+        showPermissionDialog(context, "Error",
+            "The connection has timed out, please try again later.");
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+
+      print(" save_user_feedback response status code ${response.statusCode}");
+
+      print(" save_user_feedback response data ${response.data}");
     } catch (e) {
       print('Error occurred while fetching user profile response: $e');
       showPermissionDialog(context, "Error",

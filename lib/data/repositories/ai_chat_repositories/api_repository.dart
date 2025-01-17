@@ -39,4 +39,18 @@ class ApiRepository {
       userId,
     );
   }
+
+  Future setNotificationResponse(
+    BuildContext context,
+    String userId,
+      String query,
+      String notificationResponse,
+  ) {
+    return healthDataController.setNotificationResponse(
+      context,
+      userId,
+       query,
+       notificationResponse,
+    );
+  }
 }
