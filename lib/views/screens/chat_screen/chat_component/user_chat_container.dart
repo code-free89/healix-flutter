@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:helix_ai/data/models/model/notification_content.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
 import 'package:helix_ai/views/shared_components/want_text.dart';
@@ -250,8 +251,11 @@ class UserChatContainer extends StatelessWidget {
                 ],
               )
             : SizedBox.shrink(),
-        if (isNotification != null && isNotification! && question.isEmpty)
+        if (isNotification != null &&
+            isNotification! &&
+            question.isEmpty)
           Consumer<ChatProvider>(builder: (_, chatProvider, __) {
+
             return Padding(
               padding: EdgeInsets.only(left: width * 0.15),
               child: Row(
@@ -262,22 +266,22 @@ class UserChatContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NotificationOption(
-                          title: 'A. Less than 80',
+                          title: 'A. ${Provider.of<ChatProvider>(context, listen: false).choice!.a}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), 'Less than 80');
+                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.a}');
                           },
                           chatProvider: chatProvider),
                       SizedBox(
                         height: width * 0.02,
                       ),
                       NotificationOption(
-                          title: 'B. 80-120',
+                          title: 'B. ${Provider.of<ChatProvider>(context, listen: false).choice!.b}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '80-120');
+                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.b}');
                           },
                           chatProvider: chatProvider),
                     ],
@@ -289,22 +293,22 @@ class UserChatContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NotificationOption(
-                          title: 'C. 120-160',
+                          title: 'C. ${Provider.of<ChatProvider>(context, listen: false).choice!.c}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '120-160');
+                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.c}');
                           },
                           chatProvider: chatProvider),
                       SizedBox(
                         height: width * 0.02,
                       ),
                       NotificationOption(
-                          title: 'D. 160+',
+                          title: 'D. ${Provider.of<ChatProvider>(context, listen: false).choice!.d}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '160+');
+                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.d}');
                           },
                           chatProvider: chatProvider),
                     ],
@@ -334,14 +338,8 @@ class UserChatContainer extends StatelessWidget {
 
   void setNotificationResponse(BuildContext context, query, response) async {
     context.read<ChatProvider>().notificationOptionSelected();
-    Fluttertoast.showToast(
-      msg: res
-          ? 'Thanks for your input'
-          : 'Something Went Wrong!Please try again.',
-    );
-    bool res = await Provider.of<ChatProvider>(context, listen: false)
+    Fluttertoast.showToast(msg: 'Thanks for your input');
+    await Provider.of<ChatProvider>(context, listen: false)
         .setNotificationResponse(context, query, response);
-
-    
   }
 }

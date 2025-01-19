@@ -7,6 +7,7 @@ import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:helix_ai/data/controllers/provider_controllers/chat_provider.dart';
 
+import '../../../data/models/model/notification_content.dart';
 import '../../firebase_fcm.dart';
 
 // Background message handler
@@ -30,14 +31,24 @@ class FirebaseApi {
 
   final _localNotifications = FlutterLocalNotificationsPlugin();
 
-  void handleMessage(RemoteMessage? message) {
+  Future<void> handleMessage(RemoteMessage? message) async {
     if (message == null) return;
     final context = navigatorKey.currentContext;
 
     if (context != null) {
-      isNotification = true;
-      Provider.of<ChatProvider>(context, listen: false)
-          .updateAnswerWithNotification();
+      var response = await Provider.of<ChatProvider>(context, listen: false)
+          .getNotificationContent(message.notification!.title!);
+      log('notification Message  ::: ${message.notification!.title!}');
+      log('notification res ${response}');
+
+      if(response is NotificationContent) {
+        isNotification = true;
+        Provider.of<ChatProvider>(context, listen: false)
+            .updateAnswerWithNotification(response.query);
+        Provider.of<ChatProvider>(context, listen: false)
+            .updateNotificationOptions(response.choices);
+      }
+
     }
   }
 

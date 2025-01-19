@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:helix_ai/data/data_services/health_data_services.dart';
+import 'package:helix_ai/data/models/model/notification_content.dart'
+    as notification;
 import 'package:helix_ai/data/repositories/message_repository.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
@@ -23,10 +26,9 @@ class ChatProvider extends ChangeNotifier {
   bool isNotification = false;
   bool isNotificationClicked = false;
   List<Choices> answers = [];
+  notification.Choices? choice;
   List<Map<String, dynamic>> messages = [];
   late MessageRepository messageRepository;
-
-
 
   ChatProvider() {
     initializeMessages();
@@ -198,7 +200,7 @@ class ChatProvider extends ChangeNotifier {
     messageRepository.deleteAllMessages();
   }
 
-  void updateAnswerWithNotification() {
+  void updateAnswerWithNotification(notificationQuestion) {
     for (var i = 0; i < messages.length; i++) {
       if (messages[i]['question'] == '') {
         messages.removeAt(i);
@@ -210,7 +212,7 @@ class ChatProvider extends ChangeNotifier {
     messages.add({
       questionTitle: '',
       // Empty question since it's just a notification
-      answerTitle: 'What is your Blood glucose level in mg/dl?',
+      answerTitle: notificationQuestion,
     });
     isNotification = true;
     isNotificationClicked = false;
@@ -229,8 +231,28 @@ class ChatProvider extends ChangeNotifier {
           FirebaseAuth.instance.currentUser!.uid, query, notificationResponse);
       return true;
     } catch (e) {
+      print("Error updating response: $e");
+      return false;
+    }
+  }
+
+  Future getNotificationContent(
+    String notificationTitle,
+  ) async {
+    try {
+      String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
+            (value) => value?.id,
+          );
+      return await apiRepository.getNotificationContent(
+          userUid!, notificationTitle);
+    } catch (e) {
       print("Error updating address: $e");
       return false;
     }
   }
+
+  void updateNotificationOptions(notification.Choices? choices) {
+    choice = choices;
+    notifyListeners();
+    }
 }

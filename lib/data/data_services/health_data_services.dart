@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async'; // For timeout exceptions
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:helix_ai/data/models/model/notification_content.dart';
 import 'package:helix_ai/data/models/model/user_profile_data.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
@@ -318,6 +319,54 @@ class HealthDataServices {
       print('Error occurred while fetching user profile response: $e');
       showPermissionDialog(context, "Error",
           "An error occurred while fetching user profile response: $e");
+      throw Exception(
+          'Error occurred while fetching user profile response: $e');
+    }
+  }
+
+  Future getNotificationContent({
+    required String userId,
+    required String notificationTitle,
+  }) async {
+    bool isConnected = await InternetConnection.checkInternet();
+    if (!isConnected) {
+      return;
+    }
+    try {
+      print("Sending request to $getNotificationContentUrl");
+      print("User Id: $userId");
+
+      var headers = {'Content-Type': 'application/json'};
+      final response = await dio
+          .post(
+        getNotificationContentUrl,
+        data: {
+          "id": userId,
+          "notification_title": notificationTitle,
+        },
+        options: Options(
+          headers: headers,
+        ),
+      )
+          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
+        print('Request timed out');
+        // showPermissionDialog(context, "Error",
+        //     "The connection has timed out, please try again later.");
+        throw TimeoutException(
+            'The connection has timed out, please try again later.');
+      });
+      NotificationContent? notificationContent;
+      if (response.statusCode == 200) {
+        notificationContent = NotificationContent.fromJson(response.data);
+      }
+      print(" save_user_feedback response status code ${response.statusCode}");
+
+      print(" save_user_feedback response data ${response.data}");
+      return notificationContent;
+    } catch (e) {
+      print('Error occurred while fetching user profile response: $e');
+      // showPermissionDialog(context, "Error",
+      //     "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
     }
