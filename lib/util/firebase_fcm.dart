@@ -15,25 +15,30 @@ class FirebaseFCMService {
   bool initialized = false;
 
   init() async {
-    if (Platform.isAndroid) {
-      await _firebaseMessaging.requestPermission();
-      initialized = true;
-    } else if (Platform.isIOS) {
-      final apnsToken = await _firebaseMessaging.getAPNSToken();
-      if (apnsToken != null) {
+    try {
+      if (Platform.isAndroid) {
         await _firebaseMessaging.requestPermission();
         initialized = true;
+      } else if (Platform.isIOS) {
+        final apnsToken = await _firebaseMessaging.getAPNSToken();
+        if (apnsToken != null) {
+          await _firebaseMessaging.requestPermission();
+          initialized = true;
+        }
       }
-    }
-    print('FCM initialized: $initialized');
-    if (initialized) {
-      String fcmToken = await _firebaseMessaging.getToken() ?? '';
-      print('FCM Token: $fcmToken');
-      FirestoreService().saveFcmToken(SharePreferenceProvider().uid, fcmToken);
-      _firebaseMessaging.onTokenRefresh.listen((token) {
-        print('FCM Token: $token');
-        FirestoreService().saveFcmToken(SharePreferenceProvider().uid, token);
-      });
+      print('FCM initialized: $initialized');
+      if (initialized) {
+        String fcmToken = await _firebaseMessaging.getToken() ?? '';
+        print('FCM Token: $fcmToken');
+        FirestoreService()
+            .saveFcmToken(SharePreferenceProvider().uid, fcmToken);
+        _firebaseMessaging.onTokenRefresh.listen((token) {
+          print('FCM Token: $token');
+          FirestoreService().saveFcmToken(SharePreferenceProvider().uid, token);
+        });
+      }
+    } catch (e) {
+      print('FCM initialization error: $e');
     }
   }
 

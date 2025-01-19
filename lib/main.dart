@@ -10,6 +10,7 @@ import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/firebase_fcm.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
+import 'package:helix_ai/views/screens/auth_screens/user_info_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';

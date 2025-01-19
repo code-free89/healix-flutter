@@ -23,7 +23,8 @@ class HealthHistoryScreen extends StatelessWidget {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage("assets/images/auth.png"))),
+            image:
+                DecorationImage(image: AssetImage("assets/images/auth.png"))),
         child: Padding(
           padding: EdgeInsets.only(top: size.height * 0.2241),
           child: Container(
@@ -62,7 +63,7 @@ class HealthHistoryScreen extends StatelessWidget {
                   child: WantText(
                     textOverflow: TextOverflow.fade,
                     text:
-                    "Is there any medical conditions we should know about? (You can select multiple boxes)",
+                        "Is there any medical conditions we should know about? (You can select multiple boxes)",
                     fontSize: size.width * 0.035,
                     fontWeight: FontWeight.w500,
                     textColor: colorGreyText,
@@ -90,9 +91,10 @@ class HealthHistoryScreen extends StatelessWidget {
                                     ? greenThemeColor.withOpacity(0.2)
                                     : colorWhite,
                                 border: Border.all(
-                                  color: provider.selectedHealthConditions[index]
-                                      ? colorBlack
-                                      : colorBlack.withOpacity(0.15),
+                                  color:
+                                      provider.selectedHealthConditions[index]
+                                          ? colorBlack
+                                          : colorBlack.withOpacity(0.15),
                                 ),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(size.width * 0.03),
@@ -105,7 +107,7 @@ class HealthHistoryScreen extends StatelessWidget {
                                   ),
                                 ]),
                             margin:
-                            EdgeInsets.only(bottom: size.height * 0.0197),
+                                EdgeInsets.only(bottom: size.height * 0.0197),
                             child: Center(
                               child: WantText(
                                   text: provider.healthOptions[index],
@@ -130,7 +132,9 @@ class HealthHistoryScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => FavoritesFoodScreen(
                             healthHistory:
-                            provider.selectedHealthConditions.contains(true) ? provider.getSelectedHealthConditions() : ['None'],
+                                provider.selectedHealthConditions.contains(true)
+                                    ? provider.getSelectedHealthConditions()
+                                    : ['None'],
                             userData: userData,
                           ),
                         ),
@@ -171,8 +175,7 @@ class HealthHistoryScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => FavoritesFoodScreen(
-                                healthHistory:
-                                [],
+                                healthHistory: [],
                                 userData: userData,
                               ),
                             ),

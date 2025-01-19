@@ -12,6 +12,7 @@ class UserViewModel {
   List<String>? cuisinePreference;
   List<String>? healthHistory;
   List<String>? dietPreference;
+  List<String>? wellnessGoals = [];
 
   UserViewModel(
       {this.id,
@@ -24,6 +25,7 @@ class UserViewModel {
       this.phone,
       this.address,
       this.allergies,
+      this.wellnessGoals,
       this.cuisinePreference,
       this.healthHistory,
       this.dietPreference});
@@ -62,6 +64,7 @@ class UserViewModel {
     data['cuisinePreference'] = this.cuisinePreference;
     data['healthHistory'] = this.healthHistory;
     data['dietPreference'] = this.dietPreference;
+    data['wellnessGoals'] = this.wellnessGoals;
     return data;
   }
 }

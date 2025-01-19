@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helix_ai/util/constants/constant.dart';
+import 'package:helix_ai/views/screens/auth_screens/wellness_goal_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../data/controllers/provider_controllers/user_info_provider.dart';
 import '../../../data/models/view_model/user_data_view_model.dart';
@@ -414,7 +415,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HealthHistoryScreen(
+                                    builder: (context) => WellnessGoalScreen(
                                       userData: UserViewModel(
                                         id: id,
                                         email: email,

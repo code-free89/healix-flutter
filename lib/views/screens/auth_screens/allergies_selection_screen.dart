@@ -143,16 +143,11 @@ class AllergiesSelectionScreen extends StatelessWidget {
                           context,
                         )
                             .whenComplete(() async {
-                          String? userUid = await SharePreferenceProvider()
-                              .retrieveUserInfo()
-                              .then(
-                                (value) => value?.id,
-                              );
                           Provider.of<AuthenticationProvider>(context,
                                   listen: false)
                               .getUserProfileData(
                             context,
-                            userUid ?? '',
+                            SharePreferenceProvider().uid,
                           );
                         });
                         Navigator.pushAndRemoveUntil(

@@ -11,8 +11,6 @@ class UserInfoProvider extends ChangeNotifier {
   String dob = "";
   bool isEnable = false;
 
-
-
   void selectGender(String gender) {
     selectedGender = gender;
     notifyListeners();
@@ -46,6 +44,20 @@ class UserInfoProvider extends ChangeNotifier {
 
   void toggleHealthCondition(int index) {
     selectedHealthConditions[index] = !selectedHealthConditions[index];
+    notifyListeners();
+  }
+
+  final List<String> wellnessGoalOptions = [
+    "Shed those extra pounds and feel lighter",
+    "Stay energized and active every day",
+    "Manage or improve an existing health condition",
+    "Enjoy wholesome, balanced meals tailored to your needs",
+  ];
+
+  List<bool> selectedWellnessGoals = List.generate(4, (_) => false);
+
+  void toggleWellnessGoal(int index) {
+    selectedWellnessGoals[index] = !selectedWellnessGoals[index];
     notifyListeners();
   }
 
@@ -152,5 +164,11 @@ class UserInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  List<String>? getSelectedWellnessGoals() {
+    if (selectedWellnessGoals.isEmpty) return ['no goals'];
+    return [
+      for (int i = 0; i < selectedWellnessGoals.length; i++)
+        if (selectedWellnessGoals[i]) wellnessGoalOptions[i]
+    ];
+  }
 }
