@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 class BackendCall {
   final Dio _dio = Dio(BaseOptions(baseUrl: BASEURL));
 
-  Future<String> postRequest({
+  Future postRequest({
     required String endpoint,
     Map<String, String>? fields,
     Map<String, File>? files,
@@ -59,7 +59,7 @@ class BackendCall {
           );
         }
 
-        return response.data.toString();
+        return response.data;
       } else if (jsonBody != null) {
         var response = await _dio.post(
           endpoint,
@@ -67,7 +67,6 @@ class BackendCall {
           options: Options(headers: {
             'Content-Type': 'application/json;charset=UTF-8',
             'Charset': 'utf-8',
-            'Authorization': token,
           }),
         );
 
@@ -77,9 +76,10 @@ class BackendCall {
             statusCode: response.statusCode!,
             body: response.data.toString(),
           );
+          throw Exception('Request failed: ${response.data.toString()}');
         }
 
-        return response.data.toString();
+        return response.data;
       }
 
       throw ArgumentError('Invalid API request configuration.');
@@ -89,7 +89,7 @@ class BackendCall {
     }
   }
 
-  Future<String> getRequest({
+  Future getRequest({
     required String endpoint,
     String? parameters,
   }) async {
@@ -108,11 +108,11 @@ class BackendCall {
         _postError(
           endpoint: endpoint,
           statusCode: response.statusCode!,
-          body: response.data.toString(),
+          body: response.data,
         );
       }
 
-      return response.data.toString();
+      return response.data;
     } catch (ex) {
       debugPrint('Exception: $ex');
       throw Exception('Request failed: $ex');

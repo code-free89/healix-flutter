@@ -1,10 +1,43 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/model/getCustomizedata.dart';
+import 'package:helix_ai/util/backend_services/backend_call.dart';
 import 'package:isar/isar.dart';
 
-import '../../main.dart';
+import '../../util/constants/api_constants.dart';
+import '../models/view_model/customized_fetch_data_request.dart';
+import '../models/view_model/customized_request.dart';
 
 class MessageRepository {
+  // MARK: - Function for Get Customized Response
+  Future<CustomizedResponse> getCustomizedData(
+      CustomizedRequest request, BuildContext context) async {
+    try {
+      var response = await BackendCall().postRequest(
+          endpoint: getCustomizedUrl,
+          tokenRequired: false,
+          jsonBody: request.toJson());
+      return CustomizedResponse.fromJson(response);
+    } catch (e) {
+      throw Exception('Error occurred while fetching customized response: $e');
+    }
+  }
+
+  Future<bool> getFinalQuoteData(
+      CustomizedFetchDataRequest request, BuildContext context) async {
+    try {
+      final response = await BackendCall().postRequest(
+          endpoint: getQuoteData,
+          tokenRequired: false,
+          jsonBody: request.toJson());
+      return true;
+    } catch (e) {
+      throw Exception('Error occurred while fetching final quote data: $e');
+    }
+  }
+
   Future<void> addMessage(CustomizedResponse response) async {
     try {
       var isar = Isar.getInstance('isar.db');

@@ -78,8 +78,8 @@ class HealthPermissionManager {
     return true;
   }
 
-  /// This function performs Fetch Health Data
-  Future<void> fetchHealthData(String userUid) async {
+  /// This function performs Fetch Health Data from device
+  Future<void> fetchHealthDataFromDevice(String userUid) async {
     bool authorized = await authorizeHealthPermission();
     if (!authorized) {
       print("Health data permission not granted.");
@@ -107,9 +107,6 @@ class HealthPermissionManager {
         startTime: startOfDay,
         endTime: now,
       );
-
-      print('Total number of data points: ${healthData.length}. '
-          '${healthData.length > 100 ? 'Only showing the first 100.' : ''}');
 
       // Add all the new data points (only the first 100)
       _healthDataList.addAll(healthData);

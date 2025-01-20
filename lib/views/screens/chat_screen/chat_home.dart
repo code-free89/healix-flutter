@@ -295,7 +295,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     String? userUid = user?.id;
 
     /// Call and post health data when app is opened
-    HealthPermissionManager().fetchHealthData(userUid ?? "");
+    HealthPermissionManager().fetchHealthDataFromDevice(userUid ?? "");
     final service = FlutterBackgroundService();
 
     var isRunning = await service.isRunning();

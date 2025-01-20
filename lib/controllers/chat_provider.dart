@@ -151,8 +151,7 @@ class ChatProvider extends ChangeNotifier {
 
     // Prepare the request
     CustomizedFetchDataRequest request = CustomizedFetchDataRequest(
-      // id: '345', // replace with actual user ID if necessary
-      id: userUid ?? "", // replace with actual user ID if necessary
+      id: userUid ?? "",
       menuItem: menuItemView,
     );
 

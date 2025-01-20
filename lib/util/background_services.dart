@@ -70,7 +70,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
     await preferences.reload();
     uid = preferences.getString('uid') ?? '';
     if (uid.isNotEmpty) {
-      await HealthPermissionManager().fetchHealthData(uid);
+      await HealthPermissionManager().fetchHealthDataFromDevice(uid);
     }
     return true;
   } catch (e) {
@@ -125,7 +125,7 @@ void onStart(ServiceInstance service) async {
     try {
       debugPrint('Starting health data sync at: ${DateTime.now()}');
       if (uid.isNotEmpty) {
-        await HealthPermissionManager().fetchHealthData(uid);
+        await HealthPermissionManager().fetchHealthDataFromDevice(uid);
         debugPrint('Health data sync completed successfully');
       } else {
         debugPrint('UID is missing. Skipping health data fetch.');

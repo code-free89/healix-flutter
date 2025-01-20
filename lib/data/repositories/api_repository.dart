@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
+import 'package:helix_ai/data/repositories/message_repository.dart';
 
 import '../../../data/models/model/getCustomizedata.dart';
 import '../../../data/models/view_model/customized_fetch_data_request.dart';
@@ -13,7 +14,7 @@ class ApiRepository {
   // Passing context from the caller
   Future<CustomizedResponse> getCustomizedData(
       CustomizedRequest request, BuildContext context) {
-    return healthDataController.getCustomizedData(request, context);
+    return MessageRepository().getCustomizedData(request, context);
   }
 
   Future<void> addUserLocation(
@@ -23,7 +24,7 @@ class ApiRepository {
 
   Future<bool> getFinalQuoteData(
       CustomizedFetchDataRequest request, BuildContext context) {
-    return healthDataController.getFinalQuoteData(request, context);
+    return MessageRepository().getFinalQuoteData(request, context);
   }
 
   Future<bool> addUserProfile(BuildContext context, UserViewModel userData) {
