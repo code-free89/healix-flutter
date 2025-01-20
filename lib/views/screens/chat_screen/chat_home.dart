@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controllers/provider_controllers/authentication_provider.dart';
-import '../../../controllers/provider_controllers/chat_provider.dart';
+import '../../../controllers/authentication_provider.dart';
+import '../../../controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '../../../data/models/model/gethealthdata.dart';
 import '../../../util/background_services.dart';

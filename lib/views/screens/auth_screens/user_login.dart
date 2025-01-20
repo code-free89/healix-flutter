@@ -17,8 +17,7 @@ import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controllers/provider_controllers/authentication_provider.dart';
-
+import '../../../controllers/authentication_provider.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});
@@ -39,7 +38,6 @@ class _UserLoginState extends State<UserLogin> {
           loginEmailController.text, loginPasswordController.text)) {
         Navigator.pushAndRemoveUntil(
           context,
-
           MaterialPageRoute(
               builder: (context) => ChatHome(
                     userFromLogin: true,

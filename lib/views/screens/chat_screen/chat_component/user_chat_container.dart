@@ -10,7 +10,7 @@ import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../controllers/provider_controllers/chat_provider.dart';
+import '../../../../controllers/chat_provider.dart';
 import '../../../../data/models/model/getCustomizedata.dart';
 import '../../../../util/constants/constant.dart';
 import '../../../../util/constants/images_path.dart';

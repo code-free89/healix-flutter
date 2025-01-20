@@ -6,7 +6,7 @@ import 'package:helix_ai/main.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controllers/provider_controllers/chat_provider.dart';
+import '../../../controllers/chat_provider.dart';
 import '../../../data/models/model/notification_content.dart';
 import '../../firebase_fcm.dart';
 

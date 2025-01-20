@@ -14,7 +14,7 @@ import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserProfile extends StatefulWidget {

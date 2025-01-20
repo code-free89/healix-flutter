@@ -4,7 +4,7 @@ import 'package:helix_ai/views/screens/chat_screen/chat_component/HealthBarChart
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_container.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../controllers/provider_controllers/chat_provider.dart';
+import '../../../../controllers/chat_provider.dart';
 import '../../../../data/models/model/getCustomizedata.dart';
 
 class UserChat extends StatefulWidget {

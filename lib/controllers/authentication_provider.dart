@@ -6,17 +6,11 @@ import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart'
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/data_services/health_data_services.dart';
-import '../../data/models/model/user_profile_data.dart';
-import '../../data/models/view_model/user_data_view_model.dart';
-import '../../data/repositories/api_repository.dart';
-
-enum Status {
-  Uninitialized,
-  Authenticated,
-  Unauthenticated,
-  FirstTimeAuthenticated
-}
+import '../data/data_services/health_data_services.dart';
+import '../data/models/model/user_profile_data.dart';
+import '../data/models/view_model/user_data_view_model.dart';
+import '../data/repositories/api_repository.dart';
+import '../util/constants/enums.dart';
 
 class AuthenticationProvider with ChangeNotifier {
   FirebaseAuth _auth;

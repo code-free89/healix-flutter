@@ -15,3 +15,10 @@ enum AppState {
   PERMISSIONS_REVOKED,
   PERMISSIONS_NOT_REVOKED,
 }
+
+enum Status {
+  Uninitialized,
+  Authenticated,
+  Unauthenticated,
+  FirstTimeAuthenticated
+}
