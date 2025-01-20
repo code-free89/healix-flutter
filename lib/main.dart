@@ -18,9 +18,9 @@ import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'data/controllers/provider_controllers/authentication_provider.dart';
-import 'data/controllers/provider_controllers/chat_provider.dart';
-import 'data/controllers/provider_controllers/user_info_provider.dart';
+import 'controllers/provider_controllers/authentication_provider.dart';
+import 'controllers/provider_controllers/chat_provider.dart';
+import 'controllers/provider_controllers/user_info_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 

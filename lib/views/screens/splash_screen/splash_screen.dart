@@ -6,7 +6,7 @@ import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/authentication_provider.dart';
 import '../chat_screen/chat_home.dart';
 import '../profile_screens/first_profile.dart';
 

@@ -14,7 +14,7 @@ import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserProfile extends StatefulWidget {
@@ -52,11 +52,18 @@ class _UserProfileState extends State<UserProfile> {
         });
 
         String username = usernameController.text.toString();
-        int? age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
-        double? height = heightController.text.isNotEmpty ? double.parse(heightController.text) : null;
-        double? weight = weightController.text.isNotEmpty ? double.parse(weightController.text) : null;
+        int? age = ageController.text.isNotEmpty
+            ? int.parse(ageController.text)
+            : null;
+        double? height = heightController.text.isNotEmpty
+            ? double.parse(heightController.text)
+            : null;
+        double? weight = weightController.text.isNotEmpty
+            ? double.parse(weightController.text)
+            : null;
 
-        status = await firestoreService.updateUserDetails(uid, username, age, height, weight);
+        status = await firestoreService.updateUserDetails(
+            uid, username, age, height, weight);
         debugPrint('update user');
 
         setState(() {
@@ -90,7 +97,8 @@ class _UserProfileState extends State<UserProfile> {
     String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
 
     if (uid != null) {
-      Map<String, dynamic>? userDetails = await firestoreService.showUserDetails(uid);
+      Map<String, dynamic>? userDetails =
+          await firestoreService.showUserDetails(uid);
       setState(() {
         usernameController.text = userDetails?['username'] ?? '';
         ageController.text = (userDetails?['age'] ?? '').toString();
@@ -118,17 +126,17 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
-    // return Provider<AuthenticationProvider>(
-    //     create: (_) => AuthenticationProvider.instance(),
-    //     // we use `builder` to obtain a new `BuildContext` that has access to the provider
-    //     builder: (context, child) {
-    // No longer throws
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)), (Route<dynamic> route) => false);
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatHome(
+                          userFromLogin: false,
+                        )),
+                (Route<dynamic> route) => false);
           },
           icon: Icon(
             Icons.chevron_left,
@@ -148,7 +156,10 @@ class _UserProfileState extends State<UserProfile> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding:  EdgeInsets.only(left: height * 0.02, right: height * 0.02, top: height * 0.02),
+                padding: EdgeInsets.only(
+                    left: height * 0.02,
+                    right: height * 0.02,
+                    top: height * 0.02),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -248,7 +259,6 @@ class _UserProfileState extends State<UserProfile> {
                       height: height * 0.07,
                       child: CustomButton(
                         onPressed: () {
-
                           validateAndSubmit();
                         },
                         buttonText: "Update",
@@ -261,8 +271,14 @@ class _UserProfileState extends State<UserProfile> {
               SizedBox(
                 height: height * 0.1,
               ),
-              ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Terms of service"),
-              ProfileGenericTile(onPressed: () {}, assetName: textFile, text: "Privacy Policy"),
+              ProfileGenericTile(
+                  onPressed: () {},
+                  assetName: textFile,
+                  text: "Terms of service"),
+              ProfileGenericTile(
+                  onPressed: () {},
+                  assetName: textFile,
+                  text: "Privacy Policy"),
               ProfileGenericTile(
                   onPressed: () {
                     showDialog(
@@ -273,7 +289,10 @@ class _UserProfileState extends State<UserProfile> {
                               debugPrint("logout clicked");
                               await authProvider.signOut();
                               Navigator.pushAndRemoveUntil(
-                                  context, MaterialPageRoute(builder: (_) => UserLogin()), (route) => false);
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => UserLogin()),
+                                  (route) => false);
                             },
                           );
                         });
@@ -284,7 +303,7 @@ class _UserProfileState extends State<UserProfile> {
                 height: height * 0.07,
               ),
               Padding(
-                padding:  EdgeInsets.only(bottom: height * 0.03),
+                padding: EdgeInsets.only(bottom: height * 0.03),
                 child: SvgPicture.asset(helixVersion),
               )
             ],

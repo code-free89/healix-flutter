@@ -5,8 +5,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:helix_ai/main.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:provider/provider.dart';
-import 'package:helix_ai/data/controllers/provider_controllers/chat_provider.dart';
 
+import '../../../controllers/provider_controllers/chat_provider.dart';
 import '../../../data/models/model/notification_content.dart';
 import '../../firebase_fcm.dart';
 
@@ -41,14 +41,13 @@ class FirebaseApi {
       log('notification Message  ::: ${message.notification!.title!}');
       log('notification res ${response}');
 
-      if(response is NotificationContent) {
+      if (response is NotificationContent) {
         isNotification = true;
         Provider.of<ChatProvider>(context, listen: false)
             .updateAnswerWithNotification(response.query);
         Provider.of<ChatProvider>(context, listen: false)
             .updateNotificationOptions(response.choices);
       }
-
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/views/screens/auth_screens/wellness_goal_screen.dart';
 import 'package:provider/provider.dart';
-import '../../../data/controllers/provider_controllers/user_info_provider.dart';
+import '../../../controllers/provider_controllers/user_info_provider.dart';
 import '../../../data/models/view_model/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';

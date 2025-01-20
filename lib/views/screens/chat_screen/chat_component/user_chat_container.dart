@@ -10,8 +10,7 @@ import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../data/controllers/provider_controllers/authentication_provider.dart';
-import '../../../../data/controllers/provider_controllers/chat_provider.dart';
+import '../../../../controllers/provider_controllers/chat_provider.dart';
 import '../../../../data/models/model/getCustomizedata.dart';
 import '../../../../util/constants/constant.dart';
 import '../../../../util/constants/images_path.dart';
@@ -251,11 +250,8 @@ class UserChatContainer extends StatelessWidget {
                 ],
               )
             : SizedBox.shrink(),
-        if (isNotification != null &&
-            isNotification! &&
-            question.isEmpty)
+        if (isNotification != null && isNotification! && question.isEmpty)
           Consumer<ChatProvider>(builder: (_, chatProvider, __) {
-
             return Padding(
               padding: EdgeInsets.only(left: width * 0.15),
               child: Row(
@@ -266,22 +262,28 @@ class UserChatContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NotificationOption(
-                          title: 'A. ${Provider.of<ChatProvider>(context, listen: false).choice!.a}',
+                          title:
+                              'A. ${Provider.of<ChatProvider>(context, listen: false).choice!.a}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.a}');
+                                  context,
+                                  answer.toString(),
+                                  '${Provider.of<ChatProvider>(context, listen: false).choice!.a}');
                           },
                           chatProvider: chatProvider),
                       SizedBox(
                         height: width * 0.02,
                       ),
                       NotificationOption(
-                          title: 'B. ${Provider.of<ChatProvider>(context, listen: false).choice!.b}',
+                          title:
+                              'B. ${Provider.of<ChatProvider>(context, listen: false).choice!.b}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.b}');
+                                  context,
+                                  answer.toString(),
+                                  '${Provider.of<ChatProvider>(context, listen: false).choice!.b}');
                           },
                           chatProvider: chatProvider),
                     ],
@@ -293,22 +295,28 @@ class UserChatContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NotificationOption(
-                          title: 'C. ${Provider.of<ChatProvider>(context, listen: false).choice!.c}',
+                          title:
+                              'C. ${Provider.of<ChatProvider>(context, listen: false).choice!.c}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.c}');
+                                  context,
+                                  answer.toString(),
+                                  '${Provider.of<ChatProvider>(context, listen: false).choice!.c}');
                           },
                           chatProvider: chatProvider),
                       SizedBox(
                         height: width * 0.02,
                       ),
                       NotificationOption(
-                          title: 'D. ${Provider.of<ChatProvider>(context, listen: false).choice!.d}',
+                          title:
+                              'D. ${Provider.of<ChatProvider>(context, listen: false).choice!.d}',
                           onTap: () {
                             if (!(chatProvider.isNotificationClicked))
                               setNotificationResponse(
-                                  context, answer.toString(), '${Provider.of<ChatProvider>(context, listen: false).choice!.d}');
+                                  context,
+                                  answer.toString(),
+                                  '${Provider.of<ChatProvider>(context, listen: false).choice!.d}');
                           },
                           chatProvider: chatProvider),
                     ],

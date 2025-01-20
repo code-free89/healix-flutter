@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
-import '../../../data/controllers/provider_controllers/chat_provider.dart';
+import '../../../controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '../../../data/models/model/gethealthdata.dart';
 import '../../../util/background_services.dart';
@@ -53,15 +53,8 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   int _lastFetchTime = 0; // Store the last fetch time in milliseconds
   bool _isFirstInstall = false; // Flag to check first install
 
-  void getUserData() async {
-    String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
-          (value) => value?.id,
-        );
-    Provider.of<AuthenticationProvider>(context, listen: false)
-        .getUserProfileData(
-      context,
-      userUid ?? '',
-    );
+  void getUserData() {
+    String? userUid = SharePreferenceProvider().uid;
   }
 
   @override

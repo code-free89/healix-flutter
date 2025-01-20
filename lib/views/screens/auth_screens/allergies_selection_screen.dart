@@ -4,8 +4,9 @@ import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
-import '../../../data/controllers/provider_controllers/user_info_provider.dart';
+
+import '../../../controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/user_info_provider.dart';
 import '../../../util/constants/colors.dart';
 import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/general_button.dart';

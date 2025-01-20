@@ -7,25 +7,8 @@ import 'dart:io';
 
 import '../../data/data_services/health_data_services.dart';
 import '../../data/models/model/puthealthdata.dart' hide NumericHealthValue;
+import '../constants/enums.dart';
 import 'health_permission.dart';
-
-enum AppState {
-  DATA_NOT_FETCHED,
-  FETCHING_DATA,
-  DATA_READY,
-  NO_DATA,
-  AUTHORIZED,
-  AUTH_NOT_GRANTED,
-  DATA_ADDED,
-  DATA_DELETED,
-  DATA_NOT_ADDED,
-  DATA_NOT_DELETED,
-  STEPS_READY,
-  HEALTH_CONNECT_STATUS,
-  PERMISSIONS_REVOKING,
-  PERMISSIONS_REVOKED,
-  PERMISSIONS_NOT_REVOKED,
-}
 
 class HealthPermissionManager {
   // Private constructor

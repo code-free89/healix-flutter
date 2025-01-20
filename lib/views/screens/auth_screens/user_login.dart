@@ -17,7 +17,8 @@ import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/authentication_provider.dart';
+
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});

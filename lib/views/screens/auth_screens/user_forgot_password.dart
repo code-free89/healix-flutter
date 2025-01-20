@@ -10,7 +10,7 @@ import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/controllers/provider_controllers/authentication_provider.dart';
+import '../../../controllers/provider_controllers/authentication_provider.dart';
 import '../../../util/constants/constant.dart';
 
 class UserForgotPassword extends StatefulWidget {
@@ -67,14 +67,16 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(top: height*0.06),
-                          child: SvgPicture.asset(lifeStyleImage, fit: BoxFit.cover),
+                          padding: EdgeInsets.only(top: height * 0.06),
+                          child: SvgPicture.asset(lifeStyleImage,
+                              fit: BoxFit.cover),
                         ),
                         Expanded(
                           child: CustomContainer(
                             // height: MediaQuery.of(context).size.height,
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(height*0.05, height*0.085, height*0.05, 0),
+                              padding: EdgeInsets.fromLTRB(height * 0.05,
+                                  height * 0.085, height * 0.05, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -86,7 +88,7 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   CustomTextField(
                                     textController: loginEmailController,
@@ -98,26 +100,33 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
                                     textInputAction: TextInputAction.done,
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: height*0.07,
+                                    height: height * 0.07,
                                     child: CustomButton(
                                         onPressed: () async {
-                                          if (!forgotPasswordFormKey.currentState!.validate()) return;
+                                          if (!forgotPasswordFormKey
+                                              .currentState!
+                                              .validate()) return;
 
-                                          if (await authProvider.sendPasswordResetEmail(loginEmailController.text)) {
-                                            UiHelper().showSnackBar(context, "Password reset link sent to your email");
+                                          if (await authProvider
+                                              .sendPasswordResetEmail(
+                                                  loginEmailController.text)) {
+                                            UiHelper().showSnackBar(context,
+                                                "Password reset link sent to your email");
                                           } else {
-                                            UiHelper().showSnackBar(context, "Unable to send password reset link");
+                                            UiHelper().showSnackBar(context,
+                                                "Unable to send password reset link");
                                           }
                                         },
-                                        showLoading: authProvider.isSendingPasswordResentLinkLoading,
+                                        showLoading: authProvider
+                                            .isSendingPasswordResentLinkLoading,
                                         buttonText: "Get password reset link"),
                                   ),
                                   SizedBox(
-                                    height: height*0.02,
+                                    height: height * 0.02,
                                   ),
                                 ],
                               ),

@@ -12,12 +12,12 @@ import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
 import '../../../util/firebase_fcm.dart';
-import '../../models/model/ai_response.dart';
-import '../../models/model/getCustomizedata.dart';
-import '../../models/view_model/customized_fetch_data_request.dart';
-import '../../models/view_model/customized_request.dart';
-import '../../repositories/ai_chat_repositories/api_repository.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../data/models/model/getCustomizedata.dart';
+import '../../data/models/view_model/customized_fetch_data_request.dart';
+import '../../data/models/view_model/customized_request.dart';
+import '../../data/repositories/api_repository.dart';
 
 class ChatProvider extends ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
@@ -25,7 +25,7 @@ class ChatProvider extends ChangeNotifier {
   bool isMealFinalQuoteLoaded = false;
   bool isNotification = false;
   bool isNotificationClicked = false;
-  List<Choices> answers = [];
+  List<notification.Choices> answers = [];
   notification.Choices? choice;
   List<Map<String, dynamic>> messages = [];
   late MessageRepository messageRepository;
@@ -254,5 +254,5 @@ class ChatProvider extends ChangeNotifier {
   void updateNotificationOptions(notification.Choices? choices) {
     choice = choices;
     notifyListeners();
-    }
+  }
 }

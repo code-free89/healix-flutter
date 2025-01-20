@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
-import '../../../../data/models/model/getCustomizedata.dart';
-import '../../../../data/models/view_model/customized_fetch_data_request.dart';
-import '../../../../data/models/view_model/customized_request.dart';
-import '../../data_services/health_data_services.dart';
-import '../../models/model/user_profile_data.dart';
+import '../../../data/models/model/getCustomizedata.dart';
+import '../../../data/models/view_model/customized_fetch_data_request.dart';
+import '../../../data/models/view_model/customized_request.dart';
+import '../data_services/health_data_services.dart';
+import '../models/model/user_profile_data.dart';
 
 class ApiRepository {
   final HealthDataServices healthDataController = HealthDataServices();
