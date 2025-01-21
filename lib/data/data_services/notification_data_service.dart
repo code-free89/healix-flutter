@@ -8,7 +8,6 @@ import '../../views/shared_components/show_permission_dialog.dart';
 
 class NotificationDataServices {
   Future setNotificationResponse(
-    BuildContext context,
     String userId,
     String query,
     String notificationResponse,
@@ -27,8 +26,6 @@ class NotificationDataServices {
       });
     } catch (e) {
       print('Error occurred while fetching user profile response: $e');
-      showErrorDialog(context, "Error",
-          "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
     }

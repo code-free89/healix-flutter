@@ -15,8 +15,9 @@ class ApiRepository {
 
   // Passing context from the caller
   Future<CustomizedResponse> getCustomizedData(
-      CustomizedRequest request, BuildContext context) {
-    return MessageRepository().getCustomizedData(request, context);
+    CustomizedRequest request,
+  ) {
+    return MessageRepository().getCustomizedData(request);
   }
 
   Future<void> addUserLocation(
@@ -25,32 +26,29 @@ class ApiRepository {
   }
 
   Future<bool> getFinalQuoteData(
-      CustomizedFetchDataRequest request, BuildContext context) {
-    return MessageRepository().getFinalQuoteData(request, context);
+    CustomizedFetchDataRequest request,
+  ) {
+    return MessageRepository().getFinalQuoteData(request);
   }
 
-  Future<bool> addUserProfile(BuildContext context, UserViewModel userData) {
-    return UserDataServices().addUserProfile(context, userData);
+  Future<bool> addUserProfile(UserViewModel userData) {
+    return UserDataServices().addUserProfile(userData);
   }
 
   Future<UserProfileData> getUserProfileData(
-    BuildContext context,
     String userId,
   ) {
     return UserDataServices().getUserProfileData(
-      context,
       userId,
     );
   }
 
   Future setNotificationResponse(
-    BuildContext context,
     String userId,
     String query,
     String notificationResponse,
   ) {
     return NotificationDataServices().setNotificationResponse(
-      context,
       userId,
       query,
       notificationResponse,

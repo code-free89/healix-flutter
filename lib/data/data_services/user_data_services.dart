@@ -20,8 +20,7 @@ class UserDataServices {
     }
   }
 
-  Future<bool> addUserProfile(
-      BuildContext context, UserViewModel userData) async {
+  Future<bool> addUserProfile(UserViewModel userData) async {
     try {
       print("Sending request to $addUserData");
 
@@ -37,7 +36,6 @@ class UserDataServices {
   }
 
   Future<UserProfileData> getUserProfileData(
-    BuildContext context,
     String userId,
   ) async {
     try {
@@ -50,8 +48,6 @@ class UserDataServices {
       return UserProfileData.fromJson(response);
     } catch (e) {
       print('Error occurred while fetching user profile response: $e');
-      showErrorDialog(context, "Error",
-          "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
     }

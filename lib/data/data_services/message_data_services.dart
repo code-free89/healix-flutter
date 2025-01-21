@@ -13,7 +13,7 @@ import '../../util/constants/api_constants.dart';
 class MessageRepository {
   // MARK: - Function for Get Customized Response
   Future<CustomizedResponse> getCustomizedData(
-      CustomizedRequest request, BuildContext context) async {
+      CustomizedRequest request) async {
     try {
       var response = await BackendCall()
           .postRequest(endpoint: getCustomizedUrl, jsonBody: request.toJson());
@@ -23,8 +23,7 @@ class MessageRepository {
     }
   }
 
-  Future<bool> getFinalQuoteData(
-      CustomizedFetchDataRequest request, BuildContext context) async {
+  Future<bool> getFinalQuoteData(CustomizedFetchDataRequest request) async {
     try {
       final response = await BackendCall()
           .postRequest(endpoint: getQuoteData, jsonBody: request.toJson());

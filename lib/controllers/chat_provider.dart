@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../views/shared_components/show_permission_dialog.dart';
 import '/models/notification_content.dart' as notification;
 import 'package:helix_ai/data/data_services/message_data_services.dart';
 
@@ -96,8 +97,7 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       // Call your API to get the customized response
-      CustomizedResponse res =
-          await apiRepository.getCustomizedData(request, context);
+      CustomizedResponse res = await apiRepository.getCustomizedData(request);
 
       // Assuming your API response has a field 'gpt_response'
       String gptResponse =
@@ -154,7 +154,7 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       // Fetch data
-      bool success = await apiRepository.getFinalQuoteData(request, context);
+      bool success = await apiRepository.getFinalQuoteData(request);
 
       if (success) {
         // Replace the placeholder with the final success message
@@ -223,10 +223,12 @@ class ChatProvider extends ChangeNotifier {
   Future<bool> setNotificationResponse(
       BuildContext context, String query, String notificationResponse) async {
     try {
-      await apiRepository.setNotificationResponse(context,
+      await apiRepository.setNotificationResponse(
           FirebaseAuth.instance.currentUser!.uid, query, notificationResponse);
       return true;
     } catch (e) {
+      showErrorDialog(context, "Error",
+          "An error occurred while fetching user profile response: $e");
       print("Error updating response: $e");
       return false;
     }

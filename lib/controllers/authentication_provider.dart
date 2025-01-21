@@ -7,6 +7,7 @@ import 'package:helix_ai/util/shared_preferences/share_preference_repository.dar
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/data_services/health_data_services.dart';
+import '../views/shared_components/show_permission_dialog.dart';
 import '/models/user_profile_data.dart';
 import '/models/user_data_view_model.dart';
 import '../data/repositories/api_repository.dart';
@@ -123,7 +124,7 @@ class AuthenticationProvider with ChangeNotifier {
       UserViewModel userData, BuildContext context) async {
     try {
       setIsSignupLoading(true);
-      var res = await apiRepository.addUserProfile(context, userData);
+      var res = await apiRepository.addUserProfile(userData);
       if (res) {
         setIsSignupLoading(false);
         notifyListeners();
@@ -197,11 +198,13 @@ class AuthenticationProvider with ChangeNotifier {
 
   getUserProfileData(BuildContext context, String id) async {
     try {
-      var res = await apiRepository.getUserProfileData(context, id);
+      var res = await apiRepository.getUserProfileData(id);
       userData = res;
       notifyListeners();
     } catch (e) {
       _status = Status.Unauthenticated;
+      showErrorDialog(context, "Error",
+          "An error occurred while fetching user profile response: $e");
       _errorMessage = "Unable to fetch data. Please try again later.";
       notifyListeners();
     }
