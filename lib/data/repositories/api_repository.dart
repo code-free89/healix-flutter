@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/data/data_services/user_data_services.dart';
-import 'package:helix_ai/data/repositories/message_repository.dart';
+import 'package:helix_ai/data/data_services/message_data_services.dart';
 
 import '../../models/customized_fetch_data_request.dart';
 import '../../models/customized_request.dart';
@@ -8,6 +8,7 @@ import '../../models/getCustomizedata.dart';
 import '../../models/user_data_view_model.dart';
 import '../../models/user_profile_data.dart';
 import '../data_services/health_data_services.dart';
+import '../data_services/notification_data_service.dart';
 
 class ApiRepository {
   final HealthDataServices healthDataController = HealthDataServices();
@@ -48,7 +49,7 @@ class ApiRepository {
     String query,
     String notificationResponse,
   ) {
-    return healthDataController.setNotificationResponse(
+    return NotificationDataServices().setNotificationResponse(
       context,
       userId,
       query,
@@ -60,7 +61,7 @@ class ApiRepository {
     String userId,
     String notificationTitle,
   ) {
-    return healthDataController.getNotificationContent(
+    return NotificationDataServices().getNotificationContent(
       userId: userId,
       notificationTitle: notificationTitle,
     );

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Function to show permission dialog
-void showPermissionDialog(
-    BuildContext context, String title, String message) {
+void showErrorDialog(BuildContext context, String title, String message) {
   showDialog(
     context: context,
     builder: (BuildContext context) {

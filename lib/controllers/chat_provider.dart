@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/models/notification_content.dart' as notification;
-import 'package:helix_ai/data/repositories/message_repository.dart';
+import 'package:helix_ai/data/data_services/message_data_services.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';

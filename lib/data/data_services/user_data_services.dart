@@ -50,7 +50,7 @@ class UserDataServices {
       return UserProfileData.fromJson(response);
     } catch (e) {
       print('Error occurred while fetching user profile response: $e');
-      showPermissionDialog(context, "Error",
+      showErrorDialog(context, "Error",
           "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
