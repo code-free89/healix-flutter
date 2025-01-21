@@ -5,7 +5,7 @@ import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_cont
 import 'package:provider/provider.dart';
 
 import '../../../../controllers/chat_provider.dart';
-import '../../../../data/models/model/getCustomizedata.dart';
+import '/models/getCustomizedata.dart';
 
 class UserChat extends StatefulWidget {
   final ScrollController scrollController;

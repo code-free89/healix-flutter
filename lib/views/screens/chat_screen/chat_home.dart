@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:helix_ai/data/models/model/user_profile_data.dart';
+import '/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
@@ -22,7 +22,7 @@ import 'package:intl/intl.dart';
 import '../../../controllers/authentication_provider.dart';
 import '../../../controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
-import '../../../data/models/model/gethealthdata.dart';
+import '/models/gethealthdata.dart';
 import '../../../util/background_services.dart';
 import '../../../util/constants/constant.dart';
 

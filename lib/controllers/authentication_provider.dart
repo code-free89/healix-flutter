@@ -7,8 +7,8 @@ import 'package:helix_ai/util/shared_preferences/share_preference_repository.dar
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/data_services/health_data_services.dart';
-import '../data/models/model/user_profile_data.dart';
-import '../data/models/view_model/user_data_view_model.dart';
+import '/models/user_profile_data.dart';
+import '/models/user_data_view_model.dart';
 import '../data/repositories/api_repository.dart';
 import '../util/constants/enums.dart';
 

@@ -4,9 +4,10 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/models/model/getCustomizedata.dart';
-import '../../data/models/model/user_profile_data.dart';
+
 import '../../main.dart';
+import '../../models/getCustomizedata.dart';
+import '../../models/user_profile_data.dart';
 
 class SharePreferenceProvider {
   late SharedPreferences prefs;

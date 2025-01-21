@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:helix_ai/data/models/model/notification_content.dart';
+import '/models/notification_content.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
 import 'package:helix_ai/views/shared_components/want_text.dart';
@@ -11,7 +11,7 @@ import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../controllers/chat_provider.dart';
-import '../../../../data/models/model/getCustomizedata.dart';
+import '/models/getCustomizedata.dart';
 import '../../../../util/constants/constant.dart';
 import '../../../../util/constants/images_path.dart';
 

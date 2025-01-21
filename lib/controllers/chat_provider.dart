@@ -3,20 +3,17 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:helix_ai/data/data_services/health_data_services.dart';
-import 'package:helix_ai/data/models/model/notification_content.dart'
-    as notification;
+import '/models/notification_content.dart' as notification;
 import 'package:helix_ai/data/repositories/message_repository.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
-import '../../../util/firebase_fcm.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../data/models/model/getCustomizedata.dart';
-import '../../data/models/view_model/customized_fetch_data_request.dart';
-import '../../data/models/view_model/customized_request.dart';
+import '/models/getCustomizedata.dart';
+import '/models/customized_fetch_data_request.dart';
+import '/models/customized_request.dart';
 import '../../data/repositories/api_repository.dart';
 
 class ChatProvider extends ChangeNotifier {

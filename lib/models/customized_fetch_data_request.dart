@@ -1,7 +1,4 @@
-
-
-
-import '../model/getCustomizedata.dart';
+import 'getCustomizedata.dart';
 
 class CustomizedFetchDataRequest {
   final String id;
@@ -10,7 +7,7 @@ class CustomizedFetchDataRequest {
   CustomizedFetchDataRequest({required this.id, required this.menuItem});
 
   Map<String, dynamic> toJson() => {
-    'user_id': id,
-    'menu_item': menuItem.toJson(),
-  };
+        'user_id': id,
+        'menu_item': menuItem.toJson(),
+      };
 }

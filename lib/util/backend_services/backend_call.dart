@@ -13,7 +13,6 @@ class BackendCall {
     Map<String, String>? fields,
     Map<String, File>? files,
     Map<String, dynamic>? jsonBody,
-    required bool tokenRequired,
   }) async {
     try {
       if ((fields != null && jsonBody != null) ||
@@ -21,9 +20,6 @@ class BackendCall {
         throw ArgumentError(
             'Specify either fields/files for form-data or jsonBody, not both.');
       }
-
-      String token =
-          tokenRequired ? 'Bearer ${SharePreferenceProvider().uid}' : "";
 
       if (fields != null || files != null) {
         // Handle form-data
@@ -46,9 +42,7 @@ class BackendCall {
         var response = await _dio.post(
           endpoint,
           data: formData,
-          options: Options(headers: {
-            'Authorization': token,
-          }),
+          options: Options(headers: {}),
         );
 
         if (response.statusCode! < 200 || response.statusCode! > 299) {

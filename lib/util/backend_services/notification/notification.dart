@@ -7,7 +7,7 @@ import 'package:helix_ai/util/constants/string_constants.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/chat_provider.dart';
-import '../../../data/models/model/notification_content.dart';
+import '../../../models/notification_content.dart';
 import '../../firebase_fcm.dart';
 
 // Background message handler

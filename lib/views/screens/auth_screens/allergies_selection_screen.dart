@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/authentication_provider.dart';
 import '../../../controllers/user_info_provider.dart';
+import '../../../models/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/general_button.dart';

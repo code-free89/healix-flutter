@@ -1,7 +1,5 @@
 import 'package:isar/isar.dart';
 
-part 'ai_response.g.dart';
-
 @collection
 class AiResponse {
   Id isarId = Isar.autoIncrement;

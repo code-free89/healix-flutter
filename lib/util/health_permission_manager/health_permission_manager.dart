@@ -6,7 +6,7 @@ import 'package:flutter/material.dart'; // Added for the alert dialog
 import 'dart:io';
 
 import '../../data/data_services/health_data_services.dart';
-import '../../data/models/model/puthealthdata.dart' hide NumericHealthValue;
+import '/models/puthealthdata.dart' hide NumericHealthValue;
 import '../constants/enums.dart';
 import 'health_permission.dart';
 

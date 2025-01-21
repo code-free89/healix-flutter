@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
+import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/data/repositories/message_repository.dart';
 
-import '../../../data/models/model/getCustomizedata.dart';
-import '../../../data/models/view_model/customized_fetch_data_request.dart';
-import '../../../data/models/view_model/customized_request.dart';
+import '../../models/customized_fetch_data_request.dart';
+import '../../models/customized_request.dart';
+import '../../models/getCustomizedata.dart';
+import '../../models/user_data_view_model.dart';
+import '../../models/user_profile_data.dart';
 import '../data_services/health_data_services.dart';
-import '../models/model/user_profile_data.dart';
 
 class ApiRepository {
   final HealthDataServices healthDataController = HealthDataServices();
@@ -19,7 +20,7 @@ class ApiRepository {
 
   Future<void> addUserLocation(
       String userId, double latitude, double longitude) {
-    return healthDataController.addUserLocation(userId, latitude, longitude);
+    return UserDataServices().addUserLocation(userId, latitude, longitude);
   }
 
   Future<bool> getFinalQuoteData(
@@ -28,14 +29,14 @@ class ApiRepository {
   }
 
   Future<bool> addUserProfile(BuildContext context, UserViewModel userData) {
-    return healthDataController.addUserProfile(context, userData);
+    return UserDataServices().addUserProfile(context, userData);
   }
 
   Future<UserProfileData> getUserProfileData(
     BuildContext context,
     String userId,
   ) {
-    return healthDataController.getUserProfileData(
+    return UserDataServices().getUserProfileData(
       context,
       userId,
     );

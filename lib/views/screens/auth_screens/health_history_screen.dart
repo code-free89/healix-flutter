@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/user_info_provider.dart';
-import '../../../data/models/view_model/user_data_view_model.dart';
+import '/models/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';

@@ -1,7 +1,7 @@
 // Function for showing dialog to get input from the user
 import 'package:flutter/material.dart';
 
-import '../../data/models/view_model/customized_request.dart';
+import '/models/customized_request.dart';
 
 Future<CustomizedRequest?> showCustomizedRequestDialog(
     BuildContext context) async {

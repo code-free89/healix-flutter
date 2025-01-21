@@ -2,17 +2,12 @@ import 'dart:convert';
 import 'dart:async'; // For timeout exceptions
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:helix_ai/data/models/model/notification_content.dart';
-import 'package:helix_ai/data/models/model/user_profile_data.dart';
-import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../../data/models/model/getCustomizedata.dart';
-import '../../data/models/model/gethealthdata.dart';
-import '../../data/models/model/puthealthdata.dart';
-import '../../data/models/view_model/customized_fetch_data_request.dart';
-import '../../data/models/view_model/customized_request.dart';
+import '../../models/gethealthdata.dart';
+import '../../models/notification_content.dart';
+import '../../models/puthealthdata.dart';
 import '../../util/constants/api_constants.dart';
 import '../../util/constants/constant.dart';
 import '../../util/internet_connetion.dart';
@@ -93,115 +88,6 @@ class HealthDataServices {
       print('Error occurred while fetching data: $e');
 
       throw Exception('Error occurred while getting data: $e');
-    }
-  }
-
-  Future<void> addUserLocation(
-      String userId, double latitude, double longitude) async {
-    try {
-      print("Sending request to $addUserLocationData");
-      var headers = {'Content-Type': 'application/json'};
-      var data = {"id": userId, "latitude": latitude, "longitude": longitude};
-      final response = await dio
-          .post(
-        addUserLocationData,
-        data: data,
-        options: Options(
-          headers: headers,
-        ),
-      )
-          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
-        print('Request timed out');
-
-        throw TimeoutException(
-            'The connection has timed out, please try again later.');
-      });
-
-      print(" addUserLocation response status code ${response.statusCode}");
-      print(" addUserLocation response data ${response.data}");
-    } catch (e) {
-      print('Error occurred while sending location data: $e');
-
-      throw Exception('Error occurred while sending location data: $e');
-    }
-  }
-
-  Future<bool> addUserProfile(
-      BuildContext context, UserViewModel userData) async {
-    try {
-      print("Sending request to $addUserData");
-      var headers = {'Content-Type': 'application/json'};
-      final response = await dio
-          .post(
-        addUserData,
-        data: userData.toJson(),
-        options: Options(
-          headers: headers,
-        ),
-      )
-          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
-        print('Request timed out');
-        throw TimeoutException(
-            'The connection has timed out, please try again later.');
-      });
-
-      print(" add_user_profile response status code ${response.statusCode}");
-      print(" add_user_profile response body ${userData.toJson()}");
-      print(" add_user_profile response data ${response.data}");
-
-      if (response.statusCode == 200 || response.statusCode == 202) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Error occurred while fetching customized response: $e');
-      throw Exception('Error occurred while fetching customized response: $e');
-    }
-  }
-
-  Future<UserProfileData> getUserProfileData(
-    BuildContext context,
-    String userId,
-  ) async {
-    try {
-      print("Sending request to $getUserData");
-      var headers = {'Content-Type': 'application/json'};
-      final response = await dio
-          .post(
-        getUserData,
-        data: {
-          "id": userId,
-        },
-        options: Options(
-          headers: headers,
-        ),
-      )
-          .timeout(Duration(seconds: TIME_OUT_SECONDS), onTimeout: () {
-        print('Request timed out');
-        showPermissionDialog(context, "Error",
-            "The connection has timed out, please try again later.");
-        throw TimeoutException(
-            'The connection has timed out, please try again later.');
-      });
-
-      print(" get_user_profile response status code ${response.statusCode}");
-
-      print(" get_user_profile response data ${response.data}");
-
-      if (response.statusCode == 200 || response.statusCode == 202) {
-        UserProfileData userProfileData =
-            await UserProfileData.fromJson(response.data);
-        return userProfileData;
-      } else {
-        throw Exception('Failed to fetch user profile data');
-      }
-    } catch (e) {
-      print('Error occurred while fetching user profile response: $e');
-      showPermissionDialog(context, "Error",
-          "An error occurred while fetching user profile response: $e");
-      throw Exception(
-          'Error occurred while fetching user profile response: $e');
     }
   }
 

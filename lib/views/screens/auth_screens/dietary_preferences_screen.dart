@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:helix_ai/data/models/view_model/user_data_view_model.dart';
+import '/models/user_data_view_model.dart';
 
 import '../../../controllers/user_info_provider.dart';
 import '../../../util/constants/colors.dart';
