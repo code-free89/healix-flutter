@@ -3,9 +3,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../data/health_manager/health_manager.dart';
 import '/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
-import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/util/ui_helper.dart';
@@ -288,7 +288,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     String? userUid = user?.id;
 
     /// Call and post health data when app is opened
-    HealthPermissionManager().fetchHealthDataFromDevice(userUid ?? "");
+    HealthManager().fetchHealthDataFromDevice(userUid ?? "");
     final service = FlutterBackgroundService();
 
     var isRunning = await service.isRunning();

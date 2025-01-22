@@ -7,7 +7,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../util/health_permission_manager/health_permission_manager.dart';
+import '../health_manager/health_manager.dart';
 
 late String uid;
 
@@ -70,7 +70,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
     await preferences.reload();
     uid = preferences.getString('uid') ?? '';
     if (uid.isNotEmpty) {
-      await HealthPermissionManager().fetchHealthDataFromDevice(uid);
+      await HealthManager().fetchHealthDataFromDevice(uid);
     }
     return true;
   } catch (e) {
@@ -125,7 +125,7 @@ void onStart(ServiceInstance service) async {
     try {
       debugPrint('Starting health data sync at: ${DateTime.now()}');
       if (uid.isNotEmpty) {
-        await HealthPermissionManager().fetchHealthDataFromDevice(uid);
+        await HealthManager().fetchHealthDataFromDevice(uid);
         debugPrint('Health data sync completed successfully');
       } else {
         debugPrint('UID is missing. Skipping health data fetch.');

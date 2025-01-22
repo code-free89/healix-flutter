@@ -2,23 +2,21 @@ import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart'
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
-import 'package:flutter/material.dart'; // Added for the alert dialog
 import 'dart:io';
 
 import '../../data/data_services/health_data_services.dart';
+import '../../util/constants/enums.dart';
 import '/models/puthealthdata.dart' hide NumericHealthValue;
-import '../constants/enums.dart';
-import 'health_permission.dart';
+import 'health_permission_list.dart';
 
-class HealthPermissionManager {
+class HealthManager {
   // Private constructor
-  HealthPermissionManager._privateConstructor();
+  HealthManager._privateConstructor();
   final sharePreferenceProvider = SharePreferenceProvider();
   // Singleton instance
-  static final HealthPermissionManager _instance =
-      HealthPermissionManager._privateConstructor();
+  static final HealthManager _instance = HealthManager._privateConstructor();
   // Factory method to return the same instance
-  factory HealthPermissionManager() {
+  factory HealthManager() {
     return _instance;
   }
 

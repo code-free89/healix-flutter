@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class FirestoreService {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   Future<bool> updateUserAddress(String userId, String newAddress) async {
     try {
-      // Update the address in Firestore
       await fireStore.collection('UserProfile').doc(userId).update({
         'address': newAddress,
       });
