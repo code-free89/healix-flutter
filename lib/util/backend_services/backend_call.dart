@@ -59,8 +59,7 @@ class BackendCall {
           endpoint,
           data: jsonBody,
           options: Options(headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Charset': 'utf-8',
+            'Content-Type': 'application/json',
           }),
         );
 
@@ -78,7 +77,7 @@ class BackendCall {
 
       throw ArgumentError('Invalid API request configuration.');
     } catch (ex) {
-      debugPrint('Exception: $ex');
+      debugPrint('Exception: $ex\n......\n.....\n.............\n $endpoint');
       throw Exception('Request failed: $ex');
     }
   }
@@ -108,7 +107,7 @@ class BackendCall {
 
       return response.data;
     } catch (ex) {
-      debugPrint('Exception: $ex');
+      debugPrint('Exception: $ex\n...\n $endpoint');
       throw Exception('Request failed: $ex');
     }
   }
