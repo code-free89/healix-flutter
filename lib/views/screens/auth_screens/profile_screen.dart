@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/shared_components/general_button.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/authentication_provider.dart';
 import '../../../controllers/chat_provider.dart';
+import '../../../data/shared_preferences/share_preferences_data.dart';
 import '../../../util/constants/colors.dart';
-import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/logout_alert_dialog.dart';
 import '../../shared_components/want_text.dart';
 
@@ -288,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void getUserData() async {
-    String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
+    String? userUid = await SharePreferenceData().retrieveUserInfo().then(
           (value) => value?.id,
         );
     Provider.of<AuthenticationProvider>(context, listen: false)
@@ -308,7 +309,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       isScrollControlled: true,
       builder: (BuildContext context) {
-        const String apiKey = "AIzaSyBdRPuueSVnNx8rHl0IEmppFePEmQc5ml4";
         List<String> _placeSuggestions = [];
         bool _isLoading = false;
 
@@ -316,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (input.isEmpty) return;
 
           final String url =
-              'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$apiKey';
+              'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$googleMapsAPIkey';
 
           try {
             final response = await http.get(Uri.parse(url));

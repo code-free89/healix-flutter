@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../data/health_manager/health_manager.dart';
+import '../../../data/shared_preferences/share_preferences_data.dart';
 import '/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/chat_start.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat.dart';
@@ -40,14 +40,14 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   ScrollController scrollController = ScrollController();
   Timer? _fetchHealthDataTimer;
   late Future<void> futureHealthData;
-  final sharePreferenceProvider = SharePreferenceProvider();
+  final sharePreferenceProvider = SharePreferenceData();
   HealthDataServices controller = HealthDataServices();
   bool isFetching = false; // Flag to prevent multiple API calls
   int _lastFetchTime = 0; // Store the last fetch time in milliseconds
   bool _isFirstInstall = false; // Flag to check first install
 
   void getUserData() {
-    String? userUid = SharePreferenceProvider().uid;
+    String? userUid = SharePreferenceData().uid;
   }
 
   @override

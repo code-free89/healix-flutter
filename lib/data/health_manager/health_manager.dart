@@ -1,4 +1,3 @@
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:health/health.dart';
@@ -12,7 +11,6 @@ import 'health_permission_list.dart';
 class HealthManager {
   // Private constructor
   HealthManager._privateConstructor();
-  final sharePreferenceProvider = SharePreferenceProvider();
   // Singleton instance
   static final HealthManager _instance = HealthManager._privateConstructor();
   // Factory method to return the same instance

@@ -8,7 +8,6 @@ import 'package:helix_ai/util/constants/enums.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_info_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';
@@ -21,6 +20,7 @@ import 'controllers/chat_provider.dart';
 import 'controllers/user_info_provider.dart';
 import 'data/backend_services/firebase_fcm.dart';
 import 'data/backend_services/notification/notification.dart';
+import 'data/shared_preferences/share_preferences_data.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -41,7 +41,7 @@ void main() async {
   );
   FirebaseApi().initNotifications();
   await initializeService();
-  await SharePreferenceProvider().initSecureStorage();
+  await SharePreferenceData().initSecureStorage();
   // await dotenv.load(fileName: ".env");
   await preCacheInitialAssets();
   Health().configure();

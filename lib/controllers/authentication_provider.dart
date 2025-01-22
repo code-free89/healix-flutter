@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/data/shared_preferences/share_preferences_data.dart';
 
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/backend_services/firebase_fcm.dart';
@@ -22,8 +21,6 @@ class AuthenticationProvider with ChangeNotifier {
   ApiRepository apiRepository = ApiRepository();
 
   UserProfileData? userData;
-  SharedPreferenceRepository _sharedPreferenceRepository =
-      SharedPreferenceRepository();
   bool isSignupLoading = false;
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
@@ -49,7 +46,7 @@ class AuthenticationProvider with ChangeNotifier {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      await _sharedPreferenceRepository.storeUserInfo(
+      await SharePreferenceData().storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);
       print("Get User ID");
       print(userCredential.user!.uid);
@@ -93,7 +90,7 @@ class AuthenticationProvider with ChangeNotifier {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      await SharedPreferenceRepository().storeUserInfo(
+      await SharePreferenceData().storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);
       await FirebaseFCMService().init();
       setIsLoginLoading(false);
@@ -135,7 +132,7 @@ class AuthenticationProvider with ChangeNotifier {
   Future signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;
-    await SharedPreferenceRepository().clearSharePreference();
+    await SharePreferenceData().clearSharePreference();
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
@@ -145,11 +142,11 @@ class AuthenticationProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       _user = firebaseUser;
-      SharePreferenceProvider().uid = firebaseUser.uid;
-      if (await _sharedPreferenceRepository.retrieveFirstProfileShownStatus() ??
+      SharePreferenceData().uid = firebaseUser.uid;
+      if (await SharePreferenceData().retrieveFirstProfileShownStatus() ??
           false) {
         _status = Status.FirstTimeAuthenticated;
-        await _sharedPreferenceRepository.storeFirstProfileShownStatus(true);
+        await SharePreferenceData().storeFirstProfileShownStatus(true);
       } else {
         _status = Status.Authenticated;
       }

@@ -3,6 +3,8 @@ int HEALTH_DATA_SYNC_INTERVAL = 60;
 int SECONDS_IN_A_MIN = 60;
 int MILLIS_IN_SEC = 1000;
 
+const String googleMapsAPIkey = "AIzaSyBdRPuueSVnNx8rHl0IEmppFePEmQc5ml4";
+
 /// api routes
 const String BASEURL =
     'https://us-central1-smarte-cloudservice-846b2.cloudfunctions.net';

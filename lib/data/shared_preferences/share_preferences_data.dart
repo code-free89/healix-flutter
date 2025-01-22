@@ -7,20 +7,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/getCustomizedata.dart';
 import '../../models/user_profile_data.dart';
 
-class SharePreferenceProvider {
+class SharePreferenceData {
   late SharedPreferences prefs;
   static const String keyIsFirstProfileShown = "is_first_profile_shown";
   late Isar isar;
   // Singleton instance
-  static final SharePreferenceProvider _instance =
-      SharePreferenceProvider._internal();
+  static final SharePreferenceData _instance = SharePreferenceData._internal();
   String uid = '';
 
-  factory SharePreferenceProvider() {
+  factory SharePreferenceData() {
     return _instance;
   }
 
-  SharePreferenceProvider._internal();
+  SharePreferenceData._internal();
 
   Future<void> initSecureStorage() async {
     try {

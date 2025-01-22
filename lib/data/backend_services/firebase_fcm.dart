@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:helix_ai/data/data_services/notification_data_service.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 
+import '../shared_preferences/share_preferences_data.dart';
 import 'firestore/firestore.dart';
 
 class FirebaseFCMService {
@@ -32,11 +32,11 @@ class FirebaseFCMService {
         String fcmToken = await _firebaseMessaging.getToken() ?? '';
         print('FCM Token: $fcmToken');
         NotificationDataServices()
-            .saveFcmToken(SharePreferenceProvider().uid, fcmToken);
+            .saveFcmToken(SharePreferenceData().uid, fcmToken);
         _firebaseMessaging.onTokenRefresh.listen((token) {
           print('FCM Token: $token');
           NotificationDataServices()
-              .saveFcmToken(SharePreferenceProvider().uid, token);
+              .saveFcmToken(SharePreferenceData().uid, token);
         });
       }
     } catch (e) {
@@ -50,8 +50,7 @@ class FirebaseFCMService {
     }
     final token = await _firebaseMessaging.getToken();
     if (token == null) return;
-    NotificationDataServices()
-        .saveFcmToken(SharePreferenceProvider().uid, token);
+    NotificationDataServices().saveFcmToken(SharePreferenceData().uid, token);
   }
 
   Future<String?> getToken() async {

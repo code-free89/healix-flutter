@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../shared_preferences/share_preferences_data.dart';
 
 class BackendCall {
   final Dio _dio = Dio(BaseOptions(baseUrl: BASEURL));
@@ -87,7 +88,7 @@ class BackendCall {
     String? parameters,
   }) async {
     try {
-      String token = 'Bearer ${SharePreferenceProvider().uid}';
+      String token = 'Bearer ${SharePreferenceData().uid}';
 
       var response = await _dio.get(
         endpoint,

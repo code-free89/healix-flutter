@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../../controllers/authentication_provider.dart';
 import '../../../controllers/user_info_provider.dart';
+import '../../../data/shared_preferences/share_preferences_data.dart';
 import '../../../models/user_data_view_model.dart';
 import '../../../util/constants/colors.dart';
-import '../../../util/shared_preferences/share_preference_provider.dart';
 import '../../shared_components/general_button.dart';
 import '../../shared_components/want_text.dart';
 
@@ -147,7 +147,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                                   listen: false)
                               .getUserProfileData(
                             context,
-                            SharePreferenceProvider().uid,
+                            SharePreferenceData().uid,
                           );
                         });
                         Navigator.pushAndRemoveUntil(

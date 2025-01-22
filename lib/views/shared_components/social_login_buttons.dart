@@ -6,16 +6,14 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 
+import '../../data/shared_preferences/share_preferences_data.dart';
 import '../../util/constants/constant.dart';
 
 class SocialLoginButtons extends StatelessWidget {
   final String text;
   SocialLoginButtons({super.key, required this.text});
-  SharedPreferenceRepository _sharedPreferenceRepository =
-      SharedPreferenceRepository();
   // Google Sign-In instance
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -37,13 +35,16 @@ class SocialLoginButtons extends StatelessWidget {
           final User? user = userCredential.user;
           if (user != null) {
             print('Facebook Firebase Login Success: ${user.uid}');
-            await _sharedPreferenceRepository.storeUserInfo(
+            await SharePreferenceData().storeUserInfo(
                 uid: userCredential.user!.uid,
                 email: userCredential.user!.email);
             // Navigate to ChatHome after successful login
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)),
+              MaterialPageRoute(
+                  builder: (context) => ChatHome(
+                        userFromLogin: false,
+                      )),
             );
           }
         }
@@ -77,12 +78,15 @@ class SocialLoginButtons extends StatelessWidget {
         if (user != null) {
           print('Google Firebase Login Success: ${user.uid}');
 
-          await _sharedPreferenceRepository.storeUserInfo(
+          await SharePreferenceData().storeUserInfo(
               uid: userCredential.user!.uid, email: userCredential.user!.email);
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => ChatHome(userFromLogin: false,)),
+            MaterialPageRoute(
+                builder: (context) => ChatHome(
+                      userFromLogin: false,
+                    )),
           );
         }
       }
@@ -96,13 +100,14 @@ class SocialLoginButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
               text,
               style: TextStyle(
                   fontFamily: 'Ubuntu-Medium',
-                  fontSize: height*0.024,
+                  fontSize: height * 0.024,
                   color: Color.fromRGBO(51, 51, 51, 1)),
             )
           ],
@@ -112,8 +117,8 @@ class SocialLoginButtons extends StatelessWidget {
             InkWell(
               onTap: () => _loginWithGoogle(context), // Google Login Tap
               child: Container(
-                height: height*0.07,
-                width: height*0.07,
+                height: height * 0.07,
+                width: height * 0.07,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),
@@ -124,13 +129,13 @@ class SocialLoginButtons extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: height*0.03,
+              width: height * 0.03,
             ),
             InkWell(
               onTap: () => _loginWithFacebook(context), // Facebook Login Tap
               child: Container(
-                height: height*0.07,
-                width: height*0.07,
+                height: height * 0.07,
+                width: height * 0.07,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),

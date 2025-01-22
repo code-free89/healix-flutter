@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../data/shared_preferences/share_preferences_data.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/notification_content.dart' as notification;
 import 'package:helix_ai/data/data_services/message_data_services.dart';
 
 import 'package:helix_ai/util/constants/string_constants.dart';
-import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
-
 import 'package:geolocator/geolocator.dart';
 
 import '/models/getCustomizedata.dart';
@@ -50,7 +49,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> setUserLocationData() async {
-    String? userUid = await SharePreferenceProvider()
+    String? userUid = await SharePreferenceData()
         .retrieveUserInfo()
         .then((value) => value?.id);
     LocationPermission permission;
@@ -77,7 +76,7 @@ class ChatProvider extends ChangeNotifier {
     isAnswerLoading = true;
     notifyListeners();
 
-    String? userUid = await SharePreferenceProvider()
+    String? userUid = await SharePreferenceData()
         .retrieveUserInfo()
         .then((value) => value?.id);
 
@@ -142,7 +141,7 @@ class ChatProvider extends ChangeNotifier {
 
     int currentMessageIndex =
         messages.length - 1; // Get index of the placeholder
-    String? userUid = await SharePreferenceProvider()
+    String? userUid = await SharePreferenceData()
         .retrieveUserInfo()
         .then((value) => value?.id);
 
@@ -238,7 +237,7 @@ class ChatProvider extends ChangeNotifier {
     String notificationTitle,
   ) async {
     try {
-      String? userUid = await SharePreferenceProvider().retrieveUserInfo().then(
+      String? userUid = await SharePreferenceData().retrieveUserInfo().then(
             (value) => value?.id,
           );
       return await apiRepository.getNotificationContent(
