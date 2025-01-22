@@ -1,11 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:helix_ai/util/backend_services/firestore/firestore.dart';
-import 'package:helix_ai/util/firebase_fcm.dart';
+
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/backend_services/firebase_fcm.dart';
+import '../data/backend_services/firestore/firestore.dart';
 import '../data/data_services/health_data_services.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/user_profile_data.dart';
@@ -47,13 +48,6 @@ class AuthenticationProvider with ChangeNotifier {
       setIsSignupLoading(true);
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
-      User? user = userCredential.user;
-      if (user != null) {
-        await firestoreService.addUserDocument(
-          user.uid,
-          email,
-        );
-      }
 
       await _sharedPreferenceRepository.storeUserInfo(
           uid: userCredential.user!.uid, email: userCredential.user!.email);

@@ -10,7 +10,6 @@ import '../../../util/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared_components/auth_custom_text_field.dart';
 import '../../shared_components/want_text.dart';
-import 'health_history_screen.dart';
 import 'package:intl/intl.dart';
 
 class UserInfoScreen extends StatelessWidget {

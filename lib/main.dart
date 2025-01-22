@@ -3,17 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:helix_ai/firebase_options.dart';
-import 'package:helix_ai/util/backend_services/notification/notification.dart';
-import 'package:helix_ai/util/background_services.dart';
+import 'package:helix_ai/data/backend_services/background_services.dart';
 import 'package:helix_ai/util/constants/enums.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
-import 'package:helix_ai/util/firebase_fcm.dart';
 import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_info_screen.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
-import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:helix_ai/views/screens/splash_screen/splash_screen.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:isar/isar.dart';
@@ -22,7 +19,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'controllers/authentication_provider.dart';
 import 'controllers/chat_provider.dart';
 import 'controllers/user_info_provider.dart';
-
+import 'data/backend_services/firebase_fcm.dart';
+import 'data/backend_services/notification/notification.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -125,12 +123,6 @@ class _HomePageState extends State<HomePage> {
 
         break;
       case Status.FirstTimeAuthenticated:
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FirstProfile(),
-            ));
-
         break;
     }
   }

@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import '../../../controllers/authentication_provider.dart';
 import '../../../util/constants/enums.dart';
 import '../chat_screen/chat_home.dart';
-import '../profile_screens/first_profile.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -55,12 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
         break;
       case Status.FirstTimeAuthenticated:
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FirstProfile(),
-            ));
-
         break;
     }
   }

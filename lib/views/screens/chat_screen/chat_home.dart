@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/models/user_profile_data.dart';
-import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/health_permission_manager/health_permission_manager.dart';
 import 'package:helix_ai/util/constants/colors.dart';
@@ -13,22 +11,17 @@ import 'package:helix_ai/util/shared_preferences/share_preference_provider.dart'
 import 'package:helix_ai/util/ui_helper.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/chat_start.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat.dart';
-import 'package:helix_ai/views/screens/profile_screens/user_profile.dart';
-import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:provider/provider.dart';
 import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controllers/authentication_provider.dart';
 import '../../../controllers/chat_provider.dart';
 import '../../../data/data_services/health_data_services.dart';
 import '/models/gethealthdata.dart';
-import '../../../util/background_services.dart';
 import '../../../util/constants/constant.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../util/firebase_fcm.dart';
 import '../auth_screens/profile_screen.dart';
 
 class ChatHome extends StatefulWidget {

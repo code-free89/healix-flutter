@@ -43,8 +43,8 @@ class HealthPermissionManager {
             HealthDataType.IRREGULAR_HEART_RATE_EVENT,
             HealthDataType.EXERCISE_TIME,
           ].contains(type)
-              ? HealthDataAccess.READ_WRITE
-              : HealthDataAccess.READ_WRITE)
+              ? HealthDataAccess.READ
+              : HealthDataAccess.READ)
       .toList();
 
   //TODO: - Function to request health permission

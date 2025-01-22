@@ -12,7 +12,6 @@ import 'package:helix_ai/views/shared_components/custom_container.dart';
 import 'package:helix_ai/views/shared_components/custom_divider.dart';
 import 'package:helix_ai/views/shared_components/custom_text_field.dart';
 import 'package:helix_ai/views/shared_components/social_login_buttons.dart';
-import 'package:helix_ai/views/screens/profile_screens/first_profile.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/authentication_provider.dart';

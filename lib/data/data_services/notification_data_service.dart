@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:helix_ai/util/backend_services/backend_call.dart';
 
 import '../../models/notification_content.dart';
 import '../../util/constants/api_constants.dart';
 import '../../util/internet_connetion.dart';
 import '../../views/shared_components/show_permission_dialog.dart';
+import '../backend_services/backend_call.dart';
 
 class NotificationDataServices {
   Future setNotificationResponse(
@@ -59,6 +59,20 @@ class NotificationDataServices {
       //     "An error occurred while fetching user profile response: $e");
       throw Exception(
           'Error occurred while fetching user profile response: $e');
+    }
+  }
+
+  Future<bool> saveFcmToken(String id, String fcmToken) async {
+    try {
+      final response =
+          await BackendCall().postRequest(endpoint: saveFcmTokenUrl, jsonBody: {
+        "id": id,
+        "fcmToken": fcmToken,
+      });
+      return true;
+    } catch (error) {
+      print('Error saving FCM token: $error');
+      return false;
     }
   }
 }
