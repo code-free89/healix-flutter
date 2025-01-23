@@ -130,8 +130,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                     child: GeneralButton(
                       Width: size.width * 0.8,
                       onTap: () {
-                        authProvider
-                            .addUserProfile(
+                        authProvider.addUserProfile(
                           userData
                             ..allergies = userInfoProvider
                                     .selectedAllergies.isEmpty
@@ -141,15 +140,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..cuisinePreference = favoriteFood.toList()
                             ..healthHistory = healthHistory.toList(),
                           context,
-                        )
-                            .whenComplete(() async {
-                          Provider.of<AuthenticationProvider>(context,
-                                  listen: false)
-                              .getUserProfileData(
-                            context,
-                            SharePreferenceData().uid,
-                          );
-                        });
+                        );
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

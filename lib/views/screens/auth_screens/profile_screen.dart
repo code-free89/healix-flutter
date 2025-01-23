@@ -289,13 +289,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void getUserData() async {
-    String? userUid = await SharePreferenceData().retrieveUserInfo().then(
-          (value) => value?.id,
-        );
-    Provider.of<AuthenticationProvider>(context, listen: false)
+    await Provider.of<AuthenticationProvider>(context, listen: false)
         .getUserProfileData(
       context,
-      userUid ?? '',
+      SharePreferenceData().uid,
     );
   }
 

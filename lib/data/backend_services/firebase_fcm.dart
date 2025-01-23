@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:helix_ai/data/data_services/notification_data_service.dart';
 
 import '../shared_preferences/share_preferences_data.dart';
-import 'firestore/firestore.dart';
 
 class FirebaseFCMService {
   static final FirebaseFCMService _firebaseFCMService =
