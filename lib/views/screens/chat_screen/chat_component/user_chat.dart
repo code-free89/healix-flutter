@@ -28,10 +28,12 @@ class _UserChatState extends State<UserChat> {
   }
 
   @override
+  @override
   void dispose() {
-    // Remove the listener to prevent memory leaks
-    Provider.of<ChatProvider>(context, listen: false)
-        .removeListener(_scrollToBottom);
+    if (mounted) {
+      Provider.of<ChatProvider>(context, listen: false)
+          .removeListener(_scrollToBottom);
+    }
     super.dispose();
   }
 

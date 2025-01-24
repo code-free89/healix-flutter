@@ -54,21 +54,16 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
+    scrollController = ScrollController();
     Provider.of<ChatProvider>(context, listen: false).setUserLocationData();
     WidgetsBinding.instance.addObserver(this);
+
     if (WidgetsBinding.instance.lifecycleState != null) {
       _stateHistoryList.add(WidgetsBinding.instance.lifecycleState!);
     }
-    scrollController = ScrollController(onAttach: (position) {
-      var chatProvider = Provider.of<ChatProvider>(context, listen: false);
-      chatProvider.scrollToBottom(scrollController);
-    });
+
     Health().configure();
-
-    // Check if it's the first install
     _checkFirstInstall();
-
-    /// Initialize the background service
     checkBackgroundService();
     if (widget.userFromLogin) {
       getUserData();
@@ -117,6 +112,10 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ChatProvider>(context, listen: false)
+          .scrollToBottom(scrollController);
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(

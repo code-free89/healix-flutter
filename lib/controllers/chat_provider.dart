@@ -25,26 +25,30 @@ class ChatProvider extends ChangeNotifier {
   List<notification.Choices> answers = [];
   notification.Choices? choice;
   List<Map<String, dynamic>> messages = [];
-  late MessageRepository messageRepository;
+  late MessageDataServices messagesDataservices;
 
   ChatProvider() {
     initializeMessages();
   }
 
   Future<void> initializeMessages() async {
-    messageRepository = MessageRepository();
+    messagesDataservices = MessageDataServices();
     List<CustomizedResponse> savedMessages =
-        await messageRepository.getAllMessages();
+        await messagesDataservices.getAllMessages();
 
-    var oldMessages = savedMessages
-        .map((e) => {
-              questionTitle: e.searchText,
-              answerTitle: e.gptResponse,
-              isMeal: e.intent == 'MEAL_ORDER',
-              menuItem: e.menuItem
-            })
-        .toList();
-    messages.addAll(oldMessages);
+    var oldMessages = savedMessages.map((e) {
+      final menuItem = e.menuItemString != null
+          ? IsarHelper.parseMenuItem(e.menuItemString!)
+          : null;
+
+      return {
+        questionTitle: e.searchText,
+        answerTitle: e.gptResponse,
+        isMeal: e.intent == 'MEAL_ORDER',
+        menuItem: menuItem,
+      };
+    }).toList();
+    messages.addAll(oldMessages as Iterable<Map<String, dynamic>>);
     notifyListeners();
   }
 
@@ -116,7 +120,7 @@ class ChatProvider extends ChangeNotifier {
           menuItem: res.menuItem,
         };
       }
-      messageRepository.addMessage(res);
+      messagesDataservices.addMessage(res);
     } catch (error) {
       // Update the question with an error message if the API call fails
       messages.last = {
@@ -180,10 +184,13 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void scrollToBottom(ScrollController scrollController) {
-    if (scrollController.hasClients) {
+    if (scrollController.hasClients &&
+        scrollController.position.hasViewportDimension) {
       for (int i = 0; i < 12; i++) {
         Future.delayed(Duration(milliseconds: i * 50), () {
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          if (scrollController.hasClients) {
+            scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          }
         });
       }
     }
@@ -192,7 +199,7 @@ class ChatProvider extends ChangeNotifier {
   void resetChat() {
     messages.clear();
     notifyListeners();
-    messageRepository.deleteAllMessages();
+    messagesDataservices.deleteAllMessages();
   }
 
   void updateAnswerWithNotification(notificationQuestion) {

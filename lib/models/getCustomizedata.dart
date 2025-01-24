@@ -7,19 +7,19 @@ part 'getCustomizedata.g.dart';
 @collection
 class CustomizedResponse {
   Id isarId = Isar.autoIncrement;
-  final String id;
-  final String searchText;
-  final String gptResponse;
+  String id;
+  String searchText;
+  String gptResponse;
 
   @ignore
   final Map<String, dynamic>? healthData; // Adjust type as needed
-  final String? healthDataMapString;
+  String? healthDataMapString;
 
-  final String intent;
+  String intent;
 
   @ignore
-  final dynamic menuItem; // Can be String or MenuItem
-  final String? menuItemString;
+  dynamic menuItem; // Can be String or MenuItem
+  String? menuItemString;
 
   CustomizedResponse({
     required this.id,
@@ -52,25 +52,15 @@ class CustomizedResponse {
   }
 
   factory CustomizedResponse.fromIsar(CustomizedResponse response) {
-    // Convert healthDataMapString to healthData if available
-    Map<String, dynamic>? parsedHealthData;
-    if (response.healthDataMapString != null) {
-      parsedHealthData = Map<String, dynamic>.from(
-          IsarHelper.parseJson(response.healthDataMapString!));
-    }
-
-    // Convert menuItemString to menuItem if available
     dynamic parsedMenuItem;
     if (response.menuItemString != null) {
       parsedMenuItem = IsarHelper.parseMenuItem(response.menuItemString!);
     }
-
     return CustomizedResponse(
       id: response.id,
       searchText: response.searchText,
       gptResponse: response.gptResponse,
-      healthData: parsedHealthData,
-      healthDataMapString: response.healthDataMapString,
+      healthData: response.healthData,
       intent: response.intent,
       menuItem: parsedMenuItem,
       menuItemString: response.menuItemString,

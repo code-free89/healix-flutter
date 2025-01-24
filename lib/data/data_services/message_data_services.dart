@@ -10,7 +10,7 @@ import '../../models/getCustomizedata.dart';
 import '../../util/constants/api_constants.dart';
 import '../backend_services/backend_call.dart';
 
-class MessageRepository {
+class MessageDataServices {
   // MARK: - Function for Get Customized Response
   Future<CustomizedResponse> getCustomizedData(
       CustomizedRequest request) async {
@@ -35,6 +35,9 @@ class MessageRepository {
 
   Future<void> addMessage(CustomizedResponse response) async {
     try {
+      response.menuItemString = response.menuItem != null
+          ? jsonEncode(response.menuItem.toJson())
+          : null;
       var isar = Isar.getInstance('isar.db');
       await isar?.writeTxn(() async {
         await isar.customizedResponses.put(response);

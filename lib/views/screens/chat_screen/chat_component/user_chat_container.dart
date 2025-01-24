@@ -135,19 +135,19 @@ class UserChatContainer extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.18,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                      color: Colors.white),
-                                  child: Image.network(
-                                    menuItem!.image!,
-                                    fit: BoxFit.contain,
-                                  )),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.18,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10)),
+                                    color: Colors.white),
+                                child: Image.network(
+                                  menuItem?.image ?? "",
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                               Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.07,
@@ -170,20 +170,22 @@ class UserChatContainer extends StatelessWidget {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Text(
-                                        menuItem!.name!,
+                                        menuItem?.name ?? "No Name",
                                         style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.042),
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.042,
+                                        ),
                                       ),
                                       Text(
-                                        "\$" + menuItem!.price!.toString(),
+                                        "\$${menuItem?.price?.toString() ?? "N/A"}",
                                         style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.04),
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.04,
+                                        ),
                                       ),
                                     ],
                                   ),

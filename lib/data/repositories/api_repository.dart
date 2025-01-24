@@ -17,7 +17,7 @@ class ApiRepository {
   Future<CustomizedResponse> getCustomizedData(
     CustomizedRequest request,
   ) {
-    return MessageRepository().getCustomizedData(request);
+    return MessageDataServices().getCustomizedData(request);
   }
 
   Future<void> addUserLocation(
@@ -28,7 +28,7 @@ class ApiRepository {
   Future<bool> getFinalQuoteData(
     CustomizedFetchDataRequest request,
   ) {
-    return MessageRepository().getFinalQuoteData(request);
+    return MessageDataServices().getFinalQuoteData(request);
   }
 
   Future<bool> addUserProfile(UserViewModel userData) {
