@@ -47,11 +47,11 @@ class HealthManager {
   Future<bool> authorizeHealthPermission() async {
     // Request required permissions
     await Permission.activityRecognition.request();
-    await Permission.location.request();
 
     // Check if we already have health permissions
     bool? hasPermissions =
         await Health().hasPermissions(types, permissions: permissions);
+    await Permission.location.request();
 
     // Request permissions if not granted
     if (hasPermissions == false || hasPermissions == null) {
@@ -76,11 +76,14 @@ class HealthManager {
 
   /// This function performs Fetch Health Data from device
   Future<void> fetchHealthDataFromDevice(String userUid) async {
-    bool authorized = await authorizeHealthPermission();
-    if (!authorized) {
-      print("Health data permission not granted.");
-      return;
+    if (_state != AppState.AUTHORIZED) {
+      bool authorized = await authorizeHealthPermission();
+      if (!authorized) {
+        print("Health data permission not granted.");
+        return;
+      }
     }
+
     _state = AppState.FETCHING_DATA;
 
     var now = DateTime.now();
@@ -90,13 +93,6 @@ class HealthManager {
     _healthDataList.clear();
 
     try {
-      // Check authorization before fetching data
-      bool isAuthorized = await authorizeHealthPermission();
-      if (!isAuthorized) {
-        _state = AppState.AUTH_NOT_GRANTED;
-        return;
-      }
-
       // Fetch health data
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
         types: types,
@@ -104,25 +100,22 @@ class HealthManager {
         endTime: now,
       );
 
-      // Add all the new data points (only the first 100)
       _healthDataList.addAll(healthData);
     } catch (error) {
       _state = AppState.NO_DATA;
       return;
     }
 
-    // Filter out duplicates and merge data points with the same type
     _healthDataList = _mergeHealthDataPoints(_healthDataList);
 
-    // if (_healthDataList.isEmpty) {
-    //   print("No data retrieved.");
-    //   _state = AppState.NO_DATA;
-    // } else {
-    _healthDataList.forEach((data) => print(toJsonString(data)));
-    _state = AppState.DATA_READY;
-    // Call the function to post health data after it's fetched
-    await postFetchedHealthData(userUid);
-    // }
+    if (_healthDataList.isEmpty) {
+      print("No data retrieved.");
+      _state = AppState.NO_DATA;
+    } else {
+      print("Health data retrieved successfully.");
+      await postFetchedHealthData(userUid);
+      _state = AppState.DATA_READY;
+    }
   }
 
   //TODO: Function to merge health data points with the same type

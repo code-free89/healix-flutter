@@ -146,6 +146,9 @@ class UserChatContainer extends StatelessWidget {
                                 child: Image.network(
                                   menuItem?.image ?? "",
                                   fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Text("");
+                                  },
                                 ),
                               ),
                               Container(

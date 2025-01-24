@@ -5,7 +5,6 @@ import 'package:helix_ai/data/shared_preferences/share_preferences_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/backend_services/firebase_fcm.dart';
-import '../data/backend_services/firestore/firestore.dart';
 import '../data/data_services/health_data_services.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/user_profile_data.dart';
@@ -24,8 +23,6 @@ class AuthenticationProvider with ChangeNotifier {
   bool isSignupLoading = false;
   bool isLoginLoading = false;
   bool isSendingPasswordResentLinkLoading = false;
-  FirestoreService firestoreService = FirestoreService();
-  HealthDataServices healthDataService = HealthDataServices();
 
   AuthenticationProvider.instance()
       : _auth = FirebaseAuth.instance,
@@ -203,8 +200,8 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<bool> updateUserAddress(String newAddress) async {
     try {
-      bool success = await firestoreService.updateUserAddress(
-          FirebaseAuth.instance.currentUser!.uid, newAddress);
+      bool success = await apiRepository.updateUserAddress(
+          SharePreferenceData().uid, newAddress);
       if (success) {
         userData?.address = newAddress; // Update the local user data
         notifyListeners();

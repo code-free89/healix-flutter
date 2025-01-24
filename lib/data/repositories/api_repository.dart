@@ -64,4 +64,8 @@ class ApiRepository {
       notificationTitle: notificationTitle,
     );
   }
+
+  Future<bool> updateUserAddress(String uid, String newAddress) async {
+    return await UserDataServices().updateUserAddress(uid, newAddress);
+  }
 }

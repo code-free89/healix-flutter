@@ -36,19 +36,22 @@ class ChatProvider extends ChangeNotifier {
     List<CustomizedResponse> savedMessages =
         await messagesDataservices.getAllMessages();
 
-    var oldMessages = savedMessages.map((e) {
-      final menuItem = e.menuItemString != null
-          ? IsarHelper.parseMenuItem(e.menuItemString!)
-          : null;
+    var oldMessages = savedMessages.map<Map<String, dynamic>>((e) {
+      // Parse menuItemString into a MenuItem object
+      MenuItem? menuItem;
+      if (e.menuItemString != null) {
+        menuItem = IsarHelper.parseMenuItem(e.menuItemString!); // Parse it
+      }
 
       return {
         questionTitle: e.searchText,
         answerTitle: e.gptResponse,
         isMeal: e.intent == 'MEAL_ORDER',
-        menuItem: menuItem,
+        // menuItem: menuItem, // Use parsed MenuItem object
       };
     }).toList();
-    messages.addAll(oldMessages as Iterable<Map<String, dynamic>>);
+
+    messages.addAll(oldMessages); // Add parsed messages to the list
     notifyListeners();
   }
 

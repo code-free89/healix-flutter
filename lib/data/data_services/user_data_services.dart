@@ -52,4 +52,16 @@ class UserDataServices {
           'Error occurred while fetching user profile response: $e');
     }
   }
+
+  Future<bool> updateUserAddress(String uid, String newAddress) async {
+    try {
+      var data = {"id": uid, "address": newAddress};
+      final response = await BackendCall()
+          .postRequest(endpoint: addUserData, jsonBody: data);
+      return true;
+    } catch (e) {
+      print('Error occurred while sending location data: $e');
+      throw Exception('Error occurred while sending location data: $e');
+    }
+  }
 }
