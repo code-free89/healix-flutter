@@ -27,15 +27,14 @@ class _UserChatState extends State<UserChat> {
         .addListener(_scrollToBottom);
   }
 
-  @override
-  @override
-  void dispose() {
-    if (mounted) {
-      Provider.of<ChatProvider>(context, listen: false)
-          .removeListener(_scrollToBottom);
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   if (mounted) {
+  //     Provider.of<ChatProvider>(context, listen: false)
+  //         .removeListener(_scrollToBottom);
+  //   }
+  //   super.dispose();
+  // }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {

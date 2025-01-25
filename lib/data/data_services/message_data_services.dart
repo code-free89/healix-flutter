@@ -35,9 +35,6 @@ class MessageDataServices {
 
   Future<void> addMessage(CustomizedResponse response) async {
     try {
-      response.menuItemString = response.menuItem != null
-          ? jsonEncode(response.menuItem.toJson())
-          : null;
       var isar = Isar.getInstance('isar.db');
       await isar?.writeTxn(() async {
         await isar.customizedResponses.put(response);
