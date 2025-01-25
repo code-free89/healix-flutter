@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
@@ -30,6 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController phoneController = TextEditingController();
 
   bool _isInitialized = false; // Flag to track initialization
+  String addressBlock = "";
+  int selectedAddreessIndex = 0;
+  Map<String, String> suggestion = {};
 
   @override
   void dispose() {
@@ -56,6 +60,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getUserData();
 
     super.initState();
+  }
+
+//MARK: - Code for Get Place Details
+  String? _getAddressComponent(List components, String type) {
+    try {
+      return components.firstWhere(
+          (component) => (component['types'] as List).contains(type),
+          orElse: () => null)?['long_name'];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Map<String, String>> _getPlaceDetails(String placeId) async {
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$googleMapsAPIkey';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final addressComponents = data['result']['address_components'] as List;
+
+        return {
+          'street': _getAddressComponent(addressComponents, 'route') ?? '',
+          'unit': _getAddressComponent(addressComponents, 'subpremise') ?? '',
+          'city': _getAddressComponent(addressComponents, 'locality') ?? '',
+          'state': _getAddressComponent(
+                  addressComponents, 'administrative_area_level_1') ??
+              '',
+          'country': _getAddressComponent(addressComponents, 'country') ?? '',
+          'zipcode':
+              _getAddressComponent(addressComponents, 'postal_code') ?? '',
+        };
+      } else {
+        print('Error fetching place details: ${response.reasonPhrase}');
+        return {};
+      }
+    } catch (e) {
+      print('Error fetching place details: $e');
+      return {};
+    }
+  }
+
+  void _onSuggestionSelected(Map<String, String> suggestion) async {
+    final placeId = suggestion['place_id'];
+    if (placeId != null) {
+      final addressDetails = await _getPlaceDetails(placeId);
+
+      // Convert addressDetails to JSON string
+      addressBlock = jsonEncode(addressDetails);
+
+      print('Address Details: $addressBlock');
+      // Output will be in JSON string format
+    }
   }
 
   @override
@@ -306,7 +365,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       isScrollControlled: true,
       builder: (BuildContext context) {
-        List<String> _placeSuggestions = [];
+        List<Map<String, String>> _placeSuggestions = [];
+
         bool _isLoading = false;
 
         Future<void> _getPlaceSuggestions(String input) async {
@@ -323,7 +383,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               setState(() {
                 _placeSuggestions = predictions
-                    .map<String>((p) => p['description'] as String)
+                    .map<Map<String, String>>((p) => {
+                          'description': p['description'] as String,
+                          'place_id': p['place_id'] as String,
+                        })
                     .toList();
               });
             } else {
@@ -455,12 +518,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _placeSuggestions.length,
                                 itemBuilder: (context, index) {
+                                  selectedAddreessIndex = index;
+                                  suggestion = _placeSuggestions[index];
                                   return ListTile(
-                                    title: Text(_placeSuggestions[index]),
+                                    title: Text(_placeSuggestions[index]
+                                            ['description'] ??
+                                        ''),
                                     onTap: () {
                                       setState(() {
                                         addressController.text =
-                                            _placeSuggestions[index];
+                                            _placeSuggestions[index]
+                                                    ['description'] ??
+                                                '';
+                                        _onSuggestionSelected(suggestion);
                                         _placeSuggestions.clear();
                                       });
                                     },
@@ -474,14 +544,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           GeneralButton(
                             Width: MediaQuery.of(context).size.width,
                             onTap: () async {
-                              // Get the new address from the controller
-                              final newAddress = addressController.text;
-
-                              bool success =
-                                  await Provider.of<AuthenticationProvider>(
-                                          context,
-                                          listen: false)
-                                      .updateUserAddress(newAddress);
+                              // Get the new address from the controlle
+                              bool success = await UserDataServices()
+                                  .updateUserAddress(
+                                      SharePreferenceData().uid, addressBlock);
 
                               if (success) {
                                 Navigator.pop(

@@ -56,8 +56,11 @@ class UserDataServices {
   Future<bool> updateUserAddress(String uid, String newAddress) async {
     try {
       var data = {"id": uid, "address": newAddress};
+      print("Address Data, $data");
       final response = await BackendCall()
           .postRequest(endpoint: addUserData, jsonBody: data);
+
+      print("response, $response");
       return true;
     } catch (e) {
       print('Error occurred while sending location data: $e');
