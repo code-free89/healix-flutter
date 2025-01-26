@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+
 part 'user_profile_data.g.dart';
 
 @collection
@@ -6,51 +7,50 @@ class UserProfileData {
   Id isarId = Isar.autoIncrement;
   String? height;
   String? weight;
-  List<String>? healthHistory;
+  List<String> healthHistory = [];
   String? id;
   String? phone;
-  List<String>? allergies;
-  List<String>? cuisinePreference;
+  List<String> allergies = [];
+  List<String> cuisinePreference = [];
   @ignore
   dynamic address;
   @Index(unique: true)
   String? email;
-  List<String>? dietPreference;
+  List<String> dietPreference = [];
   String? gender;
   String? name;
 
-  UserProfileData(
-      {this.height,
-      this.weight,
-      this.healthHistory,
-      this.id,
-      this.phone,
-      this.allergies,
-      this.cuisinePreference,
-      this.address,
-      this.email,
-      this.dietPreference,
-      this.gender,
-      this.name});
+  UserProfileData({
+    this.height,
+    this.weight,
+    List<String>? healthHistory,
+    this.id,
+    this.phone,
+    List<String>? allergies,
+    List<String>? cuisinePreference,
+    this.address,
+    this.email,
+    List<String>? dietPreference,
+    this.gender,
+    this.name,
+  }) {
+    this.healthHistory = healthHistory ?? [];
+    this.allergies = allergies ?? [];
+    this.cuisinePreference = cuisinePreference ?? [];
+    this.dietPreference = dietPreference ?? [];
+  }
 
   UserProfileData.fromJson(Map<String, dynamic> json) {
     height = json['height'];
     weight = json['weight'];
-    healthHistory = json['healthHistory']?.cast<String>();
+    healthHistory = json['healthHistory']?.cast<String>() ?? [];
     id = json['id'];
     phone = json['phone'];
-    allergies = json['allergies']?.cast<String>();
-    cuisinePreference = json['cuisinePreference']?.cast<String>();
-    // Handle address as either String or Address
-    if (json['address'] != null) {
-      if (json['address'] is String) {
-        address = json['address'];
-      } else if (json['address'] is Map<String, dynamic>) {
-        address = Address.fromJson(json['address']);
-      }
-    }
+    allergies = json['allergies']?.cast<String>() ?? [];
+    cuisinePreference = json['cuisinePreference']?.cast<String>() ?? [];
+    address = _parseAddress(json['address']);
     email = json['email'];
-    dietPreference = json['dietPreference']?.cast<String>();
+    dietPreference = json['dietPreference']?.cast<String>() ?? [];
     gender = json['gender'];
     name = json['name'];
   }
@@ -64,19 +64,28 @@ class UserProfileData {
     data['phone'] = phone;
     data['allergies'] = allergies;
     data['cuisinePreference'] = cuisinePreference;
-    // Serialize address appropriately
-    if (address != null) {
-      if (address is Address) {
-        data['address'] = (address as Address).toJson();
-      } else if (address is String) {
-        data['address'] = address;
-      }
-    }
+    data['address'] = _serializeAddress(address);
     data['email'] = email;
     data['dietPreference'] = dietPreference;
     data['gender'] = gender;
     data['name'] = name;
     return data;
+  }
+
+  dynamic _parseAddress(dynamic addressJson) {
+    if (addressJson is String) {
+      return addressJson;
+    } else if (addressJson is Map<String, dynamic>) {
+      return Address.fromJson(addressJson);
+    }
+    return null;
+  }
+
+  dynamic _serializeAddress(dynamic address) {
+    if (address is Address) {
+      return address.toJson();
+    }
+    return address;
   }
 }
 
@@ -88,13 +97,14 @@ class Address {
   String? unit;
   String? country;
 
-  Address(
-      {this.city,
-      this.state,
-      this.zipcode,
-      this.street,
-      this.unit,
-      this.country});
+  Address({
+    this.city,
+    this.state,
+    this.zipcode,
+    this.street,
+    this.unit,
+    this.country,
+  });
 
   Address.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -106,13 +116,31 @@ class Address {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['city'] = city;
-    data['state'] = state;
-    data['zipcode'] = zipcode;
-    data['street'] = street;
-    data['unit'] = unit;
-    data['country'] = country;
-    return data;
+    return {
+      'city': city,
+      'state': state,
+      'zipcode': zipcode,
+      'street': street,
+      'unit': unit,
+      'country': country,
+    };
+  }
+
+  /// Converts the address to a formatted string
+  String toFormattedString() {
+    List<String> parts = [
+      if (street != null && street!.isNotEmpty) street!,
+      if (unit != null && unit!.isNotEmpty) unit!,
+      if (city != null && city!.isNotEmpty) city!,
+      if (state != null && state!.isNotEmpty) state!,
+      if (zipcode != null && zipcode!.isNotEmpty) zipcode!,
+      if (country != null && country!.isNotEmpty) country!,
+    ];
+    return parts.join(', ');
+  }
+
+  @override
+  String toString() {
+    return 'Address(city: $city, state: $state, zipcode: $zipcode, street: $street, unit: $unit, country: $country)';
   }
 }

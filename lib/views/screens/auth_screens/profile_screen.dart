@@ -32,8 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool _isInitialized = false; // Flag to track initialization
   String addressBlock = "";
-  int selectedAddreessIndex = 0;
   Map<String, String> suggestion = {};
+
+  // Declare variables outside the try block
+  String street = '';
+  String unit = '';
+  String city = '';
+  String state = '';
+  String country = '';
+  String zipcode = '';
 
   @override
   void dispose() {
@@ -49,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (!_isInitialized && authProvider.userData != null) {
       nameController.text = authProvider.userData?.name ?? '';
       emailController.text = authProvider.userData?.email ?? '';
-      addressController.text = authProvider.userData?.address?.toString() ?? '';
+      addressController.text =
+          authProvider.userData?.address.toFormattedString() ?? '';
       phoneController.text = authProvider.userData?.phone ?? '';
       _isInitialized = true; // Mark as initialized
     }
@@ -83,37 +91,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final data = json.decode(response.body);
         final addressComponents = data['result']['address_components'] as List;
 
-        return {
-          'street': _getAddressComponent(addressComponents, 'route') ?? '',
-          'unit': _getAddressComponent(addressComponents, 'subpremise') ?? '',
-          'city': _getAddressComponent(addressComponents, 'locality') ?? '',
-          'state': _getAddressComponent(
-                  addressComponents, 'administrative_area_level_1') ??
-              '',
-          'country': _getAddressComponent(addressComponents, 'country') ?? '',
-          'zipcode':
-              _getAddressComponent(addressComponents, 'postal_code') ?? '',
-        };
+        // Populate the variables with the corresponding address components
+        street = _getAddressComponent(addressComponents, 'route') ?? '';
+        unit = _getAddressComponent(addressComponents, 'subpremise') ?? '';
+        city = _getAddressComponent(addressComponents, 'locality') ?? '';
+        state = _getAddressComponent(
+                addressComponents, 'administrative_area_level_1') ??
+            '';
+        country = _getAddressComponent(addressComponents, 'country') ?? '';
+        zipcode = _getAddressComponent(addressComponents, 'postal_code') ?? '';
       } else {
         print('Error fetching place details: ${response.reasonPhrase}');
-        return {};
       }
     } catch (e) {
       print('Error fetching place details: $e');
-      return {};
     }
+
+    // Return the map of address details
+    return {
+      'street': street,
+      'unit': unit,
+      'city': city,
+      'state': state,
+      'country': country,
+      'zipcode': zipcode,
+    };
   }
 
   void _onSuggestionSelected(Map<String, String> suggestion) async {
     final placeId = suggestion['place_id'];
     if (placeId != null) {
       final addressDetails = await _getPlaceDetails(placeId);
-
-      // Convert addressDetails to JSON string
       addressBlock = jsonEncode(addressDetails);
-
-      print('Address Details: $addressBlock');
-      // Output will be in JSON string format
     }
   }
 
@@ -180,7 +189,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     addressController,
                     isReadOnly: true,
                     onEditTap: () {
-                      log('user uid :: ${FirebaseAuth.instance.currentUser!.uid}');
                       showEditAddressBottomSheet(context, addressController);
                     },
                   ),
@@ -518,19 +526,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _placeSuggestions.length,
                                 itemBuilder: (context, index) {
-                                  selectedAddreessIndex = index;
-                                  suggestion = _placeSuggestions[index];
                                   return ListTile(
                                     title: Text(_placeSuggestions[index]
                                             ['description'] ??
                                         ''),
                                     onTap: () {
+                                      suggestion = _placeSuggestions[index];
                                       setState(() {
                                         addressController.text =
                                             _placeSuggestions[index]
                                                     ['description'] ??
                                                 '';
                                         _onSuggestionSelected(suggestion);
+                                        print(suggestion);
                                         _placeSuggestions.clear();
                                       });
                                     },
@@ -545,6 +553,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Width: MediaQuery.of(context).size.width,
                             onTap: () async {
                               // Get the new address from the controlle
+                              String description =
+                                  suggestion['description'] ?? '';
+
+                              List<String> parts = description
+                                  .split(',')
+                                  .map((e) => e.trim())
+                                  .toList();
+                              print("Address description: $suggestion");
+
+                              // Store in individual variables
+                              String adstreet =
+                                  parts.isNotEmpty ? parts[0] : '';
+                              String adstate = parts.isNotEmpty ? parts[1] : '';
+                              String adcity = parts.isNotEmpty ? parts[2] : '';
+                              String adcountry =
+                                  parts.isNotEmpty ? parts[3] : '';
+
+                              Map<String, dynamic> addressBlock = {
+                                "city": city,
+                                "country": country,
+                                "state": state,
+                                "street": adstreet,
+                                "unit": unit,
+                                "zipcode": zipcode
+                              };
+
                               bool success = await UserDataServices()
                                   .updateUserAddress(
                                       SharePreferenceData().uid, addressBlock);

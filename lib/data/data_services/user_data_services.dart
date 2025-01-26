@@ -53,18 +53,18 @@ class UserDataServices {
     }
   }
 
-  Future<bool> updateUserAddress(String uid, String newAddress) async {
+  Future<bool> updateUserAddress(
+      String uid, Map<String, dynamic> addressBlock) async {
     try {
-      var data = {"id": uid, "address": newAddress};
-      print("Address Data, $data");
+      // Construct the request body
+      var data = {"id": uid, "address": addressBlock};
+      // Send the request
       final response = await BackendCall()
           .postRequest(endpoint: addUserData, jsonBody: data);
-
-      print("response, $response");
-      return true;
+      return true; // Assuming 200 is success
     } catch (e) {
-      print('Error occurred while sending location data: $e');
-      throw Exception('Error occurred while sending location data: $e');
+      print('Error occurred while updating address: $e');
+      return false;
     }
   }
 }

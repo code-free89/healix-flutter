@@ -198,15 +198,21 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserAddress(String newAddress) async {
+  Future<bool> updateUserAddress(Map<String, dynamic> newAddress) async {
     try {
+      // Call the API to update the address
       bool success = await apiRepository.updateUserAddress(
-          SharePreferenceData().uid, newAddress);
+        SharePreferenceData().uid,
+        newAddress,
+      );
+
       if (success) {
-        userData?.address = newAddress; // Update the local user data
-        notifyListeners();
+        // Update the local user data with the structured address
+        userData?.address = newAddress;
+        notifyListeners(); // Notify listeners to update the UI
         return true;
       }
+
       return false;
     } catch (e) {
       print("Error updating address: $e");

@@ -65,7 +65,8 @@ class ApiRepository {
     );
   }
 
-  Future<bool> updateUserAddress(String uid, String newAddress) async {
+  Future<bool> updateUserAddress(
+      String uid, Map<String, dynamic> newAddress) async {
     return await UserDataServices().updateUserAddress(uid, newAddress);
   }
 }
