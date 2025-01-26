@@ -126,12 +126,12 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  Future signOut() async {
+  signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;
     await SharePreferenceData().clearSharePreference();
+    userData = UserProfileData();
     notifyListeners();
-    return Future.delayed(Duration.zero);
   }
 
   Future<void> _onAuthStateChanged(User? firebaseUser) async {
@@ -184,18 +184,18 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getUserProfileData(BuildContext context, String id) async {
+  Future<void> getUserProfileData(BuildContext context) async {
     try {
-      var res = await apiRepository.getUserProfileData(id);
+      var res =
+          await apiRepository.getUserProfileData(SharePreferenceData().uid);
       userData = res;
-      notifyListeners();
     } catch (e) {
       _status = Status.Unauthenticated;
       showErrorDialog(context, "Error",
           "An error occurred while fetching user profile response: $e");
       _errorMessage = "Unable to fetch data. Please try again later.";
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<bool> updateUserAddress(Map<String, dynamic> newAddress) async {

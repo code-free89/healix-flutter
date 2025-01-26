@@ -6,20 +6,30 @@ import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
 import 'package:helix_ai/views/shared_components/want_text.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../controllers/authentication_provider.dart';
 import '../../../../util/constants/constant.dart';
+import '../../../../util/constants/enums.dart';
 
 class ChatStart extends StatelessWidget {
-  ChatStart({super.key});
-
-  final List<String> capability = [
-    'Revolutionize your nutrition with Gene – the ultimate solution for automating your diet.',
-    'Prioritize your mental well-being with Gene',
-    'Effortlessly order and track essential tests and other health metrics,'
-  ];
+  const ChatStart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthenticationProvider>(context);
+    if (authProvider.userData?.name == null &&
+        authProvider.status == Status.Authenticated) {
+      authProvider.getUserProfileData(context);
+    }
+
+    final List<String> capability = [
+      'Hi ${authProvider.userData?.name ?? ""}, welcome to Healix! I am Gene. Go ahead and ask me anything about your health and diet',
+      'Revolutionize your nutrition with Gene – the ultimate solution for automating your diet.',
+      'Prioritize your mental well-being with Gene',
+      'Effortlessly order and track essential tests and other health metrics,',
+    ];
+
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -34,8 +44,12 @@ class ChatStart extends StatelessWidget {
             SizedBox(
               height: height * 0.03,
             ),
-            WantText(text: "Gene Capabilities", fontSize: width * 0.061, fontWeight: FontWeight.w700, textColor: textColor, usePoppins: true),
-
+            WantText(
+                text: "Gene Capabilities",
+                fontSize: width * 0.061,
+                fontWeight: FontWeight.w700,
+                textColor: textColor,
+                usePoppins: true),
             SizedBox(
               height: height * 0.03,
             ),
@@ -49,20 +63,25 @@ class ChatStart extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: height * 0.03),
                   decoration: BoxDecoration(
                       boxShadow: [
-                        BoxShadow(color: Color(0x124a5568),blurRadius: 8,spreadRadius: 3)
+                        BoxShadow(
+                            color: Color(0x124a5568),
+                            blurRadius: 8,
+                            spreadRadius: 3)
                       ],
                       color: whiteColor,
-                      borderRadius: BorderRadius.circular(width *0.030)),
+                      borderRadius: BorderRadius.circular(width * 0.030)),
                   width: double.infinity,
                   child: Column(
                     children: [
-                      ChatText(text: capability[index],textAlign: TextAlign.center,),
+                      ChatText(
+                        text: capability[index],
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 );
               },
             ),
-
           ],
         ),
       ),

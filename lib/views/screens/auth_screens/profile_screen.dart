@@ -24,12 +24,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-
   bool _isInitialized = false; // Flag to track initialization
   String addressBlock = "";
   Map<String, String> suggestion = {};
@@ -44,23 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    addressController.dispose();
-    phoneController.dispose();
     super.dispose();
-  }
-
-  void _initializeControllers(AuthenticationProvider authProvider) {
-    if (!_isInitialized && authProvider.userData != null) {
-      nameController.text = authProvider.userData?.name ?? '';
-      emailController.text = authProvider.userData?.email ?? '';
-      addressController.text =
-          authProvider.userData?.address.toFormattedString() ?? '';
-      phoneController.text = authProvider.userData?.phone ?? '';
-      _isInitialized = true; // Mark as initialized
-    }
   }
 
   @override
@@ -129,7 +107,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
-    _initializeControllers(authProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: colorWhite,
@@ -166,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Center(
                 child: WantText(
                     text: authProvider.userData != null
-                        ? authProvider.userData!.name!
+                        ? authProvider.userData?.name ?? ""
                         : '',
                     fontSize: size.width * 0.082,
                     fontWeight: FontWeight.bold,
@@ -174,27 +151,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     usePoppins: true),
               ),
               SizedBox(height: size.height * 0.035),
-              buildEditableField("Full Name", nameController),
-              buildEditableField("E-Mail", emailController),
-              buildEditableField("Password", passwordController,
-                  isObscure: true),
+              buildEditableField(
+                  "Full Name", authProvider.userData?.name ?? ""),
+              buildEditableField("E-Mail", authProvider.userData?.email ?? ""),
+              buildEditableField("Password", "********", isObscure: true),
               GestureDetector(
                 onTap: () {
-                  showEditAddressBottomSheet(context, addressController);
+                  showEditAddressBottomSheet(context);
                 },
                 child: Container(
                   color: Colors.white,
                   child: buildEditableField(
                     "Address",
-                    addressController,
+                    authProvider.userData?.address ?? "",
                     isReadOnly: true,
                     onEditTap: () {
-                      showEditAddressBottomSheet(context, addressController);
+                      showEditAddressBottomSheet(context);
                     },
                   ),
                 ),
               ),
-              buildEditableField("Phone Number", phoneController),
+              buildEditableField(
+                  "Phone Number", authProvider.userData?.phone ?? ""),
               SizedBox(height: size.height * 0.01),
               ListTile(
                 leading: Icon(Icons.description_outlined),
@@ -253,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (isRunning) {
                               service.invoke("stopService");
                             }
-                            await authProvider.signOut();
+                            authProvider.signOut();
                             Provider.of<ChatProvider>(context, listen: false)
                                 .resetChat();
                             Navigator.pushAndRemoveUntil(
@@ -296,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget buildEditableField(
     String label,
-    TextEditingController controller, {
+    String text, {
     bool isObscure = false,
     bool isReadOnly = false,
     VoidCallback? onEditTap,
@@ -328,7 +306,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Prevents user interaction when readOnly
                     child: TextField(
                       readOnly: isReadOnly,
-                      controller: controller,
+                      controller: TextEditingController(text: text),
                       obscureText: isObscure,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -359,12 +337,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await Provider.of<AuthenticationProvider>(context, listen: false)
         .getUserProfileData(
       context,
-      SharePreferenceData().uid,
     );
   }
 
-  void showEditAddressBottomSheet(
-      BuildContext context, TextEditingController addressController) {
+  void showEditAddressBottomSheet(BuildContext context) {
     showModalBottomSheet(
       backgroundColor: Colors.white,
       context: context,
@@ -374,6 +350,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         List<Map<String, String>> _placeSuggestions = [];
+        final TextEditingController addressController = TextEditingController();
 
         bool _isLoading = false;
 

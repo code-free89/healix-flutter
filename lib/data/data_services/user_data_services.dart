@@ -39,7 +39,7 @@ class UserDataServices {
     String userId,
   ) async {
     try {
-      print("Sending request to $getUserData");
+      debugPrint("Sending request to $getUserData");
       final response =
           await BackendCall().postRequest(endpoint: getUserData, jsonBody: {
         "id": userId,
