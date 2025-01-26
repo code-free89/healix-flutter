@@ -18,10 +18,6 @@ class ChatStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthenticationProvider>(context);
-    if (authProvider.userData?.name == null &&
-        authProvider.status == Status.Authenticated) {
-      authProvider.getUserProfileData(context);
-    }
 
     final List<String> capability = [
       'Hi ${authProvider.userData?.name ?? ""}, welcome to Healix! I am Gene. Go ahead and ask me anything about your health and diet',

@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-
-
 class UserInfoProvider extends ChangeNotifier {
   String selectedGender = "";
   String selectedHeightUnit = "CM";
@@ -170,5 +168,27 @@ class UserInfoProvider extends ChangeNotifier {
       for (int i = 0; i < selectedWellnessGoals.length; i++)
         if (selectedWellnessGoals[i]) wellnessGoalOptions[i]
     ];
+  }
+
+  void resetAll() {
+    selectedGender = "";
+    selectedHeightUnit = "CM";
+    selectedWeightUnit = "LB";
+    dob = "";
+    isEnable = false;
+    selectedHealthConditions = List.generate(5, (_) => false);
+    selectedWellnessGoals = List.generate(4, (_) => false);
+    foodOptions = [
+      "American",
+      "Chinese",
+      "Mexican",
+      "Thai",
+      "Indian",
+      "Italian",
+    ];
+    _selectedDietary.clear();
+    _selectedAllergies.clear();
+    selectedCountry = '+1';
+    notifyListeners();
   }
 }

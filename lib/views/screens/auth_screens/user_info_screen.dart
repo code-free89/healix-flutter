@@ -409,8 +409,6 @@ class _UserInfoScreenContent extends StatelessWidget {
                                 String rawPhoneNumber = phoneController.text
                                     .replaceAll(RegExp(r'\D'), '')
                                     .trim();
-
-                                print("Raw phone number: $rawPhoneNumber");
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

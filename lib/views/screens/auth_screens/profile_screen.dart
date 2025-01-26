@@ -43,8 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    getUserData();
-
     super.initState();
   }
 
@@ -110,162 +108,166 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: colorWhite,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * 0.061),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: size.height * 0.055,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: size.width * 0.05,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.061),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: size.height * 0.055,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: size.width * 0.05,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context); // Back navigation
+                      },
                     ),
-                    onTap: () {
-                      Navigator.pop(context); // Back navigation
-                    },
-                  ),
-                  WantText(
-                      text: 'Profile',
-                      fontSize: size.width * 0.036,
-                      fontWeight: FontWeight.w500,
-                      textColor: colorBlack.withOpacity(0.7),
-                      usePoppins: false),
-                  SizedBox()
-                ],
-              ),
-              Center(
-                child: WantText(
-                    text: authProvider.userData != null
-                        ? authProvider.userData?.name ?? ""
-                        : '',
-                    fontSize: size.width * 0.082,
-                    fontWeight: FontWeight.bold,
-                    textColor: textColor,
-                    usePoppins: true),
-              ),
-              SizedBox(height: size.height * 0.035),
-              buildEditableField(
-                  "Full Name", authProvider.userData?.name ?? ""),
-              buildEditableField("E-Mail", authProvider.userData?.email ?? ""),
-              buildEditableField("Password", "********", isObscure: true),
-              GestureDetector(
-                onTap: () {
-                  showEditAddressBottomSheet(context);
-                },
-                child: Container(
-                  color: Colors.white,
-                  child: buildEditableField(
-                    "Address",
-                    authProvider.userData?.address ?? "",
-                    isReadOnly: true,
-                    onEditTap: () {
-                      showEditAddressBottomSheet(context);
-                    },
+                    WantText(
+                        text: 'Profile',
+                        fontSize: size.width * 0.036,
+                        fontWeight: FontWeight.w500,
+                        textColor: colorBlack.withOpacity(0.7),
+                        usePoppins: false),
+                    SizedBox()
+                  ],
+                ),
+                Center(
+                  child: WantText(
+                      text: authProvider.userData != null
+                          ? authProvider.userData?.name ?? ""
+                          : '',
+                      fontSize: size.width * 0.082,
+                      fontWeight: FontWeight.bold,
+                      textColor: textColor,
+                      usePoppins: true),
+                ),
+                SizedBox(height: size.height * 0.035),
+                buildEditableField(
+                    "Full Name", authProvider.userData?.name ?? ""),
+                buildEditableField(
+                    "E-Mail", authProvider.userData?.email ?? ""),
+                buildEditableField("Password", "********", isObscure: true),
+                GestureDetector(
+                  onTap: () {
+                    showEditAddressBottomSheet(context);
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: buildEditableField(
+                      "Address",
+                      authProvider.userData?.address ?? "",
+                      isReadOnly: true,
+                      onEditTap: () {
+                        showEditAddressBottomSheet(context);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              buildEditableField(
-                  "Phone Number", authProvider.userData?.phone ?? ""),
-              SizedBox(height: size.height * 0.01),
-              ListTile(
-                leading: Icon(Icons.description_outlined),
-                title: WantText(
-                    text: 'Terms of Service',
-                    fontSize: size.width * 0.0435,
-                    fontWeight: FontWeight.w500,
-                    textColor: textColor,
-                    usePoppins: false),
-                trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  // Navigate to Terms of Service screen
-                },
-              ),
-              Container(
-                height: 1.5,
-                width: size.width,
-                color: colorGrey,
-              ),
-              ListTile(
-                leading: Icon(Icons.privacy_tip_outlined),
-                title: WantText(
-                    text: 'Privacy Policy',
-                    fontSize: size.width * 0.0435,
-                    fontWeight: FontWeight.w500,
-                    textColor: textColor,
-                    usePoppins: false),
-                trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  // Navigate to Privacy Policy screen
-                },
-              ),
-              Container(
-                height: 1.5,
-                width: size.width,
-                color: colorGrey,
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: WantText(
-                    text: 'Log out',
-                    fontSize: size.width * 0.0435,
-                    fontWeight: FontWeight.w500,
-                    textColor: textColor,
-                    usePoppins: false),
-                trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return LogOutAlertDialog(
-                          onLogout: () async {
-                            debugPrint("logout clicked");
-                            final service = FlutterBackgroundService();
-                            var isRunning = await service.isRunning();
-                            if (isRunning) {
-                              service.invoke("stopService");
-                            }
-                            authProvider.signOut();
-                            Provider.of<ChatProvider>(context, listen: false)
-                                .resetChat();
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (_) => UserLogin()),
-                                (route) => false);
-                          },
-                        );
-                      });
-                },
-              ),
-              Container(
-                height: 1.5,
-                width: size.width,
-                color: colorGrey,
-              ),
-              SizedBox(height: size.height * 0.035),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: size.height * 0.061,
-                      child: Image.asset("assets/images/logo.png")),
-                  SizedBox(width: size.width * 0.061),
-                  WantText(
-                      text: 'Healix AI\nV 1.0.0',
+                buildEditableField(
+                    "Phone Number", authProvider.userData?.phone ?? ""),
+                SizedBox(height: size.height * 0.01),
+                ListTile(
+                  leading: Icon(Icons.description_outlined),
+                  title: WantText(
+                      text: 'Terms of Service',
                       fontSize: size.width * 0.0435,
                       fontWeight: FontWeight.w500,
-                      textColor: colorGreyText,
+                      textColor: textColor,
                       usePoppins: false),
-                ],
-              ),
-            ],
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    // Navigate to Terms of Service screen
+                  },
+                ),
+                Container(
+                  height: 1.5,
+                  width: size.width,
+                  color: colorGrey,
+                ),
+                ListTile(
+                  leading: Icon(Icons.privacy_tip_outlined),
+                  title: WantText(
+                      text: 'Privacy Policy',
+                      fontSize: size.width * 0.0435,
+                      fontWeight: FontWeight.w500,
+                      textColor: textColor,
+                      usePoppins: false),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    // Navigate to Privacy Policy screen
+                  },
+                ),
+                Container(
+                  height: 1.5,
+                  width: size.width,
+                  color: colorGrey,
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: WantText(
+                      text: 'Log out',
+                      fontSize: size.width * 0.0435,
+                      fontWeight: FontWeight.w500,
+                      textColor: textColor,
+                      usePoppins: false),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return LogOutAlertDialog(
+                            onLogout: () async {
+                              debugPrint("logout clicked");
+                              final service = FlutterBackgroundService();
+                              var isRunning = await service.isRunning();
+                              if (isRunning) {
+                                service.invoke("stopService");
+                              }
+                              authProvider.signOut();
+                              Provider.of<ChatProvider>(context, listen: false)
+                                  .resetChat();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => UserLogin()),
+                                  (route) => false);
+                            },
+                          );
+                        });
+                  },
+                ),
+                Container(
+                  height: 1.5,
+                  width: size.width,
+                  color: colorGrey,
+                ),
+                SizedBox(height: size.height * 0.035),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: size.height * 0.061,
+                        child: Image.asset("assets/images/logo.png")),
+                    SizedBox(width: size.width * 0.061),
+                    WantText(
+                        text: 'Healix AI\nV 1.0.0',
+                        fontSize: size.width * 0.0435,
+                        fontWeight: FontWeight.w500,
+                        textColor: colorGreyText,
+                        usePoppins: false),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -330,13 +332,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void getUserData() async {
-    await Provider.of<AuthenticationProvider>(context, listen: false)
-        .getUserProfileData(
-      context,
     );
   }
 
@@ -542,10 +537,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               // Store in individual variables
                               String adstreet =
                                   parts.isNotEmpty ? parts[0] : '';
-                              String adstate = parts.isNotEmpty ? parts[1] : '';
-                              String adcity = parts.isNotEmpty ? parts[2] : '';
-                              String adcountry =
-                                  parts.isNotEmpty ? parts[3] : '';
 
                               Map<String, dynamic> addressBlock = {
                                 "city": city,
@@ -555,15 +546,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 "unit": unit,
                                 "zipcode": zipcode
                               };
+                              final authProvider =
+                                  Provider.of<AuthenticationProvider>(context,
+                                      listen: false);
+                              authProvider.userData!.address =
+                                  addressController.text;
+                              authProvider.notifyListeners();
+                              SharePreferenceData()
+                                  .storeUserInfo(authProvider.userData!);
 
+                              Navigator.pop(context);
                               bool success = await UserDataServices()
                                   .updateUserAddress(
                                       SharePreferenceData().uid, addressBlock);
 
-                              if (success) {
-                                Navigator.pop(
-                                    context); // Close the bottom sheet if successful
-                              } else {
+                              if (!success) {
                                 print(
                                     "error : Failed to update address. Please try again.");
 

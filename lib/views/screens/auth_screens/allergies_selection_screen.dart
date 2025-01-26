@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helix_ai/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
@@ -141,6 +142,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                             ..healthHistory = healthHistory.toList(),
                           context,
                         );
+                        userInfoProvider.resetAll();
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -192,6 +194,13 @@ class AllergiesSelectionScreen extends StatelessWidget {
                               ..healthHistory = healthHistory.toList(),
                             context,
                           );
+                          SharePreferenceData().storeUserInfo(UserProfileData(
+                            allergies: [],
+                            dietPreference: dietPref,
+                            cuisinePreference: favoriteFood,
+                            healthHistory: healthHistory,
+                          ));
+                          userInfoProvider.resetAll();
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

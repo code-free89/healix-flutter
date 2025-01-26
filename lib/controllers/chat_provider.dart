@@ -247,11 +247,9 @@ class ChatProvider extends ChangeNotifier {
     String notificationTitle,
   ) async {
     try {
-      String? userUid = await SharePreferenceData().retrieveUserInfo().then(
-            (value) => value?.id,
-          );
+      String? userUid = await SharePreferenceData().uid;
       return await apiRepository.getNotificationContent(
-          userUid!, notificationTitle);
+          userUid, notificationTitle);
     } catch (e) {
       print("Error updating address: $e");
       return false;

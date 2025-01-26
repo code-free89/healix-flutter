@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:helix_ai/data/shared_preferences/share_preferences_data.dart';
 import 'package:helix_ai/util/constants/constant.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
@@ -44,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         break;
       case Status.Authenticated:
+        authProvider.userData = await SharePreferenceData().retrieveUserInfo();
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

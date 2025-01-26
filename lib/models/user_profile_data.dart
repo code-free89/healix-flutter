@@ -7,37 +7,37 @@ class UserProfileData {
   Id isarId = Isar.autoIncrement;
   String? height;
   String? weight;
-  List<String> healthHistory = [];
+  List<String>? healthHistory;
   String? id;
   String? phone;
-  List<String> allergies = [];
-  List<String> cuisinePreference = [];
+  List<String>? allergies;
+  List<String>? cuisinePreference;
   @ignore
   dynamic address;
   @Index(unique: true)
   String? email;
-  List<String> dietPreference = [];
+  List<String>? dietPreference;
   String? gender;
   String? name;
 
   UserProfileData({
     this.height,
     this.weight,
-    List<String>? healthHistory,
+    this.healthHistory,
     this.id,
     this.phone,
-    List<String>? allergies,
-    List<String>? cuisinePreference,
+    this.allergies,
+    this.cuisinePreference,
     this.address,
     this.email,
-    List<String>? dietPreference,
+    this.dietPreference,
     this.gender,
     this.name,
   }) {
-    this.healthHistory = healthHistory ?? [];
-    this.allergies = allergies ?? [];
-    this.cuisinePreference = cuisinePreference ?? [];
-    this.dietPreference = dietPreference ?? [];
+    healthHistory ??= [];
+    allergies ??= [];
+    cuisinePreference ??= [];
+    dietPreference ??= [];
   }
 
   UserProfileData.fromJson(Map<String, dynamic> json) {

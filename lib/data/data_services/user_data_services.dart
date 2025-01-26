@@ -15,7 +15,6 @@ class UserDataServices {
           .postRequest(endpoint: addUserLocationData, jsonBody: data);
     } catch (e) {
       print('Error occurred while sending location data: $e');
-
       throw Exception('Error occurred while sending location data: $e');
     }
   }
@@ -23,7 +22,6 @@ class UserDataServices {
   Future<bool> addUserProfile(UserViewModel userData) async {
     try {
       print("Sending request to $addUserData");
-
       final response = BackendCall().postRequest(
         endpoint: addUserData,
         jsonBody: userData.toJson(),

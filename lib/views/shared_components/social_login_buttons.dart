@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 
@@ -35,9 +36,10 @@ class SocialLoginButtons extends StatelessWidget {
           final User? user = userCredential.user;
           if (user != null) {
             print('Facebook Firebase Login Success: ${user.uid}');
-            await SharePreferenceData().storeUserInfo(
-                uid: userCredential.user!.uid,
-                email: userCredential.user!.email);
+            await SharePreferenceData().storeUserInfo(UserProfileData(
+              id: userCredential.user!.uid,
+              email: userCredential.user!.email,
+            ));
             // Navigate to ChatHome after successful login
             Navigator.pushReplacement(
               context,
@@ -78,8 +80,10 @@ class SocialLoginButtons extends StatelessWidget {
         if (user != null) {
           print('Google Firebase Login Success: ${user.uid}');
 
-          await SharePreferenceData().storeUserInfo(
-              uid: userCredential.user!.uid, email: userCredential.user!.email);
+          await SharePreferenceData().storeUserInfo(UserProfileData(
+            id: userCredential.user!.uid,
+            email: userCredential.user!.email,
+          ));
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(
             context,

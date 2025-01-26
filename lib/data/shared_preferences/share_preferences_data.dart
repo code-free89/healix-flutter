@@ -41,14 +41,8 @@ class SharePreferenceData {
     await isar.writeTxn(() => isar.userProfileDatas.clear());
   }
 
-  Future<void> storeUserInfo(
-      {String? uid,
-      String? email,
-      String? displayName,
-      bool? firstTime}) async {
-    var userProfileData =
-        UserProfileData(id: uid, email: email, name: displayName);
-    await isar.writeTxn(() => isar.userProfileDatas.put(userProfileData));
+  Future<void> storeUserInfo(UserProfileData user) async {
+    await isar.writeTxn(() => isar.userProfileDatas.put(user));
   }
 
   Future<UserProfileData?> retrieveUserInfo() async {

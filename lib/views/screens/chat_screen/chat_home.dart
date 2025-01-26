@@ -235,11 +235,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
                           isFetching = false;
 
                           // Fetch Health Data
-                          String? userUid = await sharePreferenceProvider
-                              .retrieveUserInfo()
-                              .then(
-                                (value) => value?.id,
-                              );
+                          String? userUid = SharePreferenceData().uid;
                           DateTime now = DateTime.now();
                           String today = DateFormat('yyyy-MM-dd').format(now);
 
@@ -283,8 +279,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   }
 
   Future<void> checkBackgroundService() async {
-    UserProfileData? user = await sharePreferenceProvider.retrieveUserInfo();
-    String? userUid = user?.id;
+    String? userUid = sharePreferenceProvider.uid;
 
     /// Call and post health data when app is opened
     HealthManager().fetchHealthDataFromDevice(userUid ?? "");

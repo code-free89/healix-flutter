@@ -5,7 +5,6 @@ import 'package:helix_ai/data/shared_preferences/share_preferences_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/backend_services/firebase_fcm.dart';
-import '../data/data_services/health_data_services.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/user_profile_data.dart';
 import '/models/user_data_view_model.dart';
@@ -42,21 +41,14 @@ class AuthenticationProvider with ChangeNotifier {
       setIsSignupLoading(true);
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
-
-      await SharePreferenceData().storeUserInfo(
-          uid: userCredential.user!.uid, email: userCredential.user!.email);
-      print("Get User ID");
-      print(userCredential.user!.uid);
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', userCredential.user!.uid);
-      print("Get User ID");
-      print(userCredential.user!.uid);
-      String? uid = prefs.getString('uid');
-      print("User ID: ${userCredential.user!.uid}");
+      SharePreferenceData().uid = userCredential.user!.uid;
       await FirebaseFCMService().init();
 
       _status = Status.FirstTimeAuthenticated;
+      SharePreferenceData().storeUserInfo(UserProfileData(
+        id: userCredential.user!.uid,
+        email: email,
+      ));
       setIsSignupLoading(false);
       notifyListeners();
       return userCredential.user!.uid;
@@ -86,10 +78,8 @@ class AuthenticationProvider with ChangeNotifier {
       // Sign in using Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-
-      await SharePreferenceData().storeUserInfo(
-          uid: userCredential.user!.uid, email: userCredential.user!.email);
       await FirebaseFCMService().init();
+
       setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -109,14 +99,26 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   Future<bool> addUserProfile(
-      UserViewModel userData, BuildContext context) async {
+      UserViewModel userviewData, BuildContext context) async {
     try {
       setIsSignupLoading(true);
-      var res = await apiRepository.addUserProfile(userData);
+      var res = await apiRepository.addUserProfile(userviewData);
       if (res) {
         setIsSignupLoading(false);
+        userData = UserProfileData(
+          id: SharePreferenceData().uid,
+          email: userviewData.email,
+          name: userviewData.name,
+          phone: userviewData.phone,
+          address: userviewData.address,
+          allergies: userviewData.allergies,
+          dietPreference: userviewData.dietPreference,
+          // : userviewData.favoriteFood,
+          healthHistory: userviewData.healthHistory,
+        );
         notifyListeners();
       }
+      SharePreferenceData().storeUserInfo(userData!);
       return res;
     } catch (e) {
       _status = Status.Unauthenticated;
@@ -188,6 +190,7 @@ class AuthenticationProvider with ChangeNotifier {
     try {
       var res =
           await apiRepository.getUserProfileData(SharePreferenceData().uid);
+      await SharePreferenceData().storeUserInfo(res);
       userData = res;
     } catch (e) {
       _status = Status.Unauthenticated;

@@ -36,6 +36,7 @@ class _UserLoginState extends State<UserLogin> {
     if (loginFormKey.currentState!.validate()) {
       if (await authProvider.signIn(
           loginEmailController.text, loginPasswordController.text)) {
+        await authProvider.getUserProfileData(context);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
