@@ -14,26 +14,28 @@ class UserProfileData {
   List<String>? cuisinePreference;
   @ignore
   dynamic address;
+
+  String? addressString;
   @Index(unique: true)
   String? email;
   List<String>? dietPreference;
   String? gender;
   String? name;
 
-  UserProfileData({
-    this.height,
-    this.weight,
-    this.healthHistory,
-    this.id,
-    this.phone,
-    this.allergies,
-    this.cuisinePreference,
-    this.address,
-    this.email,
-    this.dietPreference,
-    this.gender,
-    this.name,
-  }) {
+  UserProfileData(
+      {this.height,
+      this.weight,
+      this.healthHistory,
+      this.id,
+      this.phone,
+      this.allergies,
+      this.cuisinePreference,
+      this.address,
+      this.email,
+      this.dietPreference,
+      this.gender,
+      this.name,
+      this.addressString}) {
     healthHistory ??= [];
     allergies ??= [];
     cuisinePreference ??= [];
@@ -49,6 +51,7 @@ class UserProfileData {
     allergies = json['allergies']?.cast<String>() ?? [];
     cuisinePreference = json['cuisinePreference']?.cast<String>() ?? [];
     address = _parseAddress(json['address']);
+    addressString = _parseAddress(json['address'])?.toFormattedString();
     email = json['email'];
     dietPreference = json['dietPreference']?.cast<String>() ?? [];
     gender = json['gender'];

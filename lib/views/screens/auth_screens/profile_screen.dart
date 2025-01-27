@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: size.height * 0.04,
+                  height: size.height * 0.03,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white,
                     child: buildEditableField(
                       "Address",
-                      authProvider.userData?.address ?? "",
+                      authProvider.userData?.addressString ?? "",
                       isReadOnly: true,
                       onEditTap: () {
                         showEditAddressBottomSheet(context);
@@ -549,7 +549,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               final authProvider =
                                   Provider.of<AuthenticationProvider>(context,
                                       listen: false);
-                              authProvider.userData!.address =
+                              authProvider.userData!.addressString =
                                   addressController.text;
                               authProvider.notifyListeners();
                               SharePreferenceData()

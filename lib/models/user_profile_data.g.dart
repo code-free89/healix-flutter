@@ -17,58 +17,63 @@ const UserProfileDataSchema = CollectionSchema(
   name: r'UserProfileData',
   id: 5550307937702832034,
   properties: {
-    r'allergies': PropertySchema(
+    r'addressString': PropertySchema(
       id: 0,
+      name: r'addressString',
+      type: IsarType.string,
+    ),
+    r'allergies': PropertySchema(
+      id: 1,
       name: r'allergies',
       type: IsarType.stringList,
     ),
     r'cuisinePreference': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'cuisinePreference',
       type: IsarType.stringList,
     ),
     r'dietPreference': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'dietPreference',
       type: IsarType.stringList,
     ),
     r'email': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'email',
       type: IsarType.string,
     ),
     r'gender': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'gender',
       type: IsarType.string,
     ),
     r'healthHistory': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'healthHistory',
       type: IsarType.stringList,
     ),
     r'height': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'height',
       type: IsarType.string,
     ),
     r'id': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'id',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'name',
       type: IsarType.string,
     ),
     r'phone': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'phone',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'weight',
       type: IsarType.string,
     )
@@ -107,6 +112,12 @@ int _userProfileDataEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.addressString;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final list = object.allergies;
     if (list != null) {
@@ -206,17 +217,18 @@ void _userProfileDataSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeStringList(offsets[0], object.allergies);
-  writer.writeStringList(offsets[1], object.cuisinePreference);
-  writer.writeStringList(offsets[2], object.dietPreference);
-  writer.writeString(offsets[3], object.email);
-  writer.writeString(offsets[4], object.gender);
-  writer.writeStringList(offsets[5], object.healthHistory);
-  writer.writeString(offsets[6], object.height);
-  writer.writeString(offsets[7], object.id);
-  writer.writeString(offsets[8], object.name);
-  writer.writeString(offsets[9], object.phone);
-  writer.writeString(offsets[10], object.weight);
+  writer.writeString(offsets[0], object.addressString);
+  writer.writeStringList(offsets[1], object.allergies);
+  writer.writeStringList(offsets[2], object.cuisinePreference);
+  writer.writeStringList(offsets[3], object.dietPreference);
+  writer.writeString(offsets[4], object.email);
+  writer.writeString(offsets[5], object.gender);
+  writer.writeStringList(offsets[6], object.healthHistory);
+  writer.writeString(offsets[7], object.height);
+  writer.writeString(offsets[8], object.id);
+  writer.writeString(offsets[9], object.name);
+  writer.writeString(offsets[10], object.phone);
+  writer.writeString(offsets[11], object.weight);
 }
 
 UserProfileData _userProfileDataDeserialize(
@@ -226,17 +238,18 @@ UserProfileData _userProfileDataDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserProfileData(
-    allergies: reader.readStringList(offsets[0]),
-    cuisinePreference: reader.readStringList(offsets[1]),
-    dietPreference: reader.readStringList(offsets[2]),
-    email: reader.readStringOrNull(offsets[3]),
-    gender: reader.readStringOrNull(offsets[4]),
-    healthHistory: reader.readStringList(offsets[5]),
-    height: reader.readStringOrNull(offsets[6]),
-    id: reader.readStringOrNull(offsets[7]),
-    name: reader.readStringOrNull(offsets[8]),
-    phone: reader.readStringOrNull(offsets[9]),
-    weight: reader.readStringOrNull(offsets[10]),
+    addressString: reader.readStringOrNull(offsets[0]),
+    allergies: reader.readStringList(offsets[1]),
+    cuisinePreference: reader.readStringList(offsets[2]),
+    dietPreference: reader.readStringList(offsets[3]),
+    email: reader.readStringOrNull(offsets[4]),
+    gender: reader.readStringOrNull(offsets[5]),
+    healthHistory: reader.readStringList(offsets[6]),
+    height: reader.readStringOrNull(offsets[7]),
+    id: reader.readStringOrNull(offsets[8]),
+    name: reader.readStringOrNull(offsets[9]),
+    phone: reader.readStringOrNull(offsets[10]),
+    weight: reader.readStringOrNull(offsets[11]),
   );
   object.isarId = id;
   return object;
@@ -250,19 +263,19 @@ P _userProfileDataDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readStringList(offset)) as P;
     case 2:
       return (reader.readStringList(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readStringList(offset)) as P;
-    case 6:
       return (reader.readStringOrNull(offset)) as P;
+    case 6:
+      return (reader.readStringList(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
@@ -270,6 +283,8 @@ P _userProfileDataDeserializeProp<P>(
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -493,6 +508,160 @@ extension UserProfileDataQueryWhere
 
 extension UserProfileDataQueryFilter
     on QueryBuilder<UserProfileData, UserProfileData, QFilterCondition> {
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'addressString',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'addressString',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'addressString',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'addressString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'addressString',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'addressString',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
+      addressStringIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'addressString',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<UserProfileData, UserProfileData, QAfterFilterCondition>
       allergiesIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -2611,6 +2780,20 @@ extension UserProfileDataQueryLinks
 
 extension UserProfileDataQuerySortBy
     on QueryBuilder<UserProfileData, UserProfileData, QSortBy> {
+  QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy>
+      sortByAddressString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'addressString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy>
+      sortByAddressStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'addressString', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy> sortByEmail() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.asc);
@@ -2704,6 +2887,20 @@ extension UserProfileDataQuerySortBy
 
 extension UserProfileDataQuerySortThenBy
     on QueryBuilder<UserProfileData, UserProfileData, QSortThenBy> {
+  QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy>
+      thenByAddressString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'addressString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy>
+      thenByAddressStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'addressString', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfileData, UserProfileData, QAfterSortBy> thenByEmail() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.asc);
@@ -2811,6 +3008,14 @@ extension UserProfileDataQuerySortThenBy
 extension UserProfileDataQueryWhereDistinct
     on QueryBuilder<UserProfileData, UserProfileData, QDistinct> {
   QueryBuilder<UserProfileData, UserProfileData, QDistinct>
+      distinctByAddressString({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'addressString',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfileData, UserProfileData, QDistinct>
       distinctByAllergies() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'allergies');
@@ -2893,6 +3098,13 @@ extension UserProfileDataQueryProperty
   QueryBuilder<UserProfileData, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
+    });
+  }
+
+  QueryBuilder<UserProfileData, String?, QQueryOperations>
+      addressStringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'addressString');
     });
   }
 

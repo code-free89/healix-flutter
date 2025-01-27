@@ -74,7 +74,9 @@ class _UserChatState extends State<UserChat> {
             if (index == 0) {
               return Column(
                 children: [
-                  ChatStart(),
+                  ChatStart(
+                    scrollableScrollPhysics: NeverScrollableScrollPhysics(),
+                  ),
                   UserChatContainer(
                     question: question,
                     answer: answer.isNotEmpty ? answer : 'Loading answer...',

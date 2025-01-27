@@ -13,7 +13,8 @@ import '../../../../util/constants/constant.dart';
 import '../../../../util/constants/enums.dart';
 
 class ChatStart extends StatelessWidget {
-  const ChatStart({super.key});
+  NeverScrollableScrollPhysics? scrollableScrollPhysics;
+  ChatStart({super.key, this.scrollableScrollPhysics});
 
   @override
   Widget build(BuildContext context) {
@@ -27,57 +28,60 @@ class ChatStart extends StatelessWidget {
     ];
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            appLogo,
-            height: height * 0.1,
-            width: height * 0.065,
-          ),
-          SizedBox(
-            height: height * 0.03,
-          ),
-          WantText(
-              text: "Gene Capabilities",
-              fontSize: width * 0.061,
-              fontWeight: FontWeight.w700,
-              textColor: textColor,
-              usePoppins: true),
-          SizedBox(
-            height: height * 0.03,
-          ),
-          ListView.builder(
-            itemCount: capability.length,
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Container(
-                padding: EdgeInsets.all(height * 0.0128),
-                margin: EdgeInsets.only(bottom: height * 0.03),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color(0x124a5568),
-                          blurRadius: 8,
-                          spreadRadius: 3)
+      child: SingleChildScrollView(
+        physics: scrollableScrollPhysics,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              appLogo,
+              height: height * 0.1,
+              width: height * 0.065,
+            ),
+            SizedBox(
+              height: height * 0.03,
+            ),
+            WantText(
+                text: "Gene Capabilities",
+                fontSize: width * 0.061,
+                fontWeight: FontWeight.w700,
+                textColor: textColor,
+                usePoppins: true),
+            SizedBox(
+              height: height * 0.03,
+            ),
+            ListView.builder(
+              itemCount: capability.length,
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: EdgeInsets.all(height * 0.0128),
+                  margin: EdgeInsets.only(bottom: height * 0.03),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0x124a5568),
+                            blurRadius: 8,
+                            spreadRadius: 3)
+                      ],
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(width * 0.030)),
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      ChatText(
+                        text: capability[index],
+                        textAlign: TextAlign.center,
+                      ),
                     ],
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(width * 0.030)),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    ChatText(
-                      text: capability[index],
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
