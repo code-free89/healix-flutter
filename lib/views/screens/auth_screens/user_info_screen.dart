@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helix_ai/util/constants/constant.dart';
+import 'package:helix_ai/util/validator.dart';
 import 'package:helix_ai/views/screens/auth_screens/wellness_goal_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/user_info_provider.dart';
@@ -287,7 +288,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                             labelText: "Height",
                             controller: heightFtController,
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(1),
+                              MaxNumberInputFormatter(7),
                               NoSpecialCharactersFormatter(),
                             ],
                             onChanged: (value) {
@@ -334,7 +335,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             labelText: "Height",
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(2),
+                              MaxNumberInputFormatter(11),
                               NoSpecialCharactersFormatter(),
                             ],
                             controller: heightInchController,
@@ -364,10 +365,8 @@ class _UserInfoScreenContent extends StatelessWidget {
                     SizedBox(height: size.height * 0.0197),
                     AuthCustomTextFormField(
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d{0,9}(\.\d{0,1})?$')),
                           NoSpecialCharactersFormatter(),
-                          LengthLimitingTextInputFormatter(3),
+                          MaxNumberInputFormatter(400)
                         ],
                         onChanged: (value) {
                           isButtonEnabled(context);

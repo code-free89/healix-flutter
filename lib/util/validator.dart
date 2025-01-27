@@ -1,4 +1,6 @@
-class Validator{
+import 'package:flutter/services.dart';
+
+class Validator {
   static String? validateEmail(String? value) {
     final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
@@ -25,9 +27,9 @@ class Validator{
   }
 
   static String? validateAge(String? value) {
-    if(value != null && value.isNotEmpty){
+    if (value != null && value.isNotEmpty) {
       final int? age = int.parse(value);
-      if(age != null && age > 100){
+      if (age != null && age > 100) {
         return 'Cannot be more than 100';
       }
     }
@@ -58,5 +60,44 @@ class Validator{
       }
     }
     return null;
+  }
+}
+
+class MaxNumberInputFormatter extends TextInputFormatter {
+  final int max;
+
+  MaxNumberInputFormatter(this.max);
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Check if the new input is a valid number and is within the max limit
+    if (newValue.text.isEmpty) return newValue; // Allow empty input
+
+    final int? number = int.tryParse(newValue.text);
+    if (number != null && number <= max) {
+      return newValue;
+    }
+
+    // If input exceeds the max value, keep the old value
+    return oldValue;
+  }
+}
+
+// Modify the input formatter for the "Weight" field
+class WeightFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final String newText = newValue.text;
+
+    // Ensure value is numeric and <= 3 digits
+    if (RegExp(r'^\d{1,3}\$').hasMatch(newText)) {
+      return newValue;
+    }
+
+    return oldValue; // Revert to the old value if invalid
   }
 }

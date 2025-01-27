@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../controllers/chat_provider.dart';
 import '/models/getCustomizedata.dart';
+import 'chat_start.dart';
 
 class UserChat extends StatefulWidget {
   final ScrollController scrollController;
@@ -69,6 +70,21 @@ class _UserChatState extends State<UserChat> {
             String answer = message[answerTitle] ?? '';
             bool meal = message[isMeal] ?? false;
             MenuItem? menu = message[menuItem];
+
+            if (index == 0) {
+              return Column(
+                children: [
+                  ChatStart(),
+                  UserChatContainer(
+                    question: question,
+                    answer: answer.isNotEmpty ? answer : 'Loading answer...',
+                    isMeal: meal,
+                    menuItem: menu,
+                    isNotification: chatProvider.isNotification,
+                  ),
+                ],
+              );
+            }
 
             return UserChatContainer(
               question: question,
