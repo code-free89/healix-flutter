@@ -1,12 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '/models/notification_content.dart';
 import 'package:helix_ai/util/constants/colors.dart';
 import 'package:helix_ai/views/shared_components/chat_text.dart';
-import 'package:helix_ai/views/shared_components/want_text.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +34,7 @@ class UserChatContainer extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         // User's question bubble
-        question.isNotEmpty
+        question.isNotEmpty && question != "Annotation"
             ? Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
@@ -107,158 +104,173 @@ class UserChatContainer extends StatelessWidget {
           ),
         ),
         (isMeal != null && isMeal!)
-            ? Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // height: MediaQuery.of(context).size.height * 0.25,
-                          // width: 100,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(.2),
-                                spreadRadius: 3,
-                                // How far the shadow spreads
-                                blurRadius: 10,
-                                // How blurry the shadow looks
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.18,
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)),
-                                    color: Colors.white),
-                                child: Image.network(
-                                  menuItem?.image ?? "",
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Text("");
-                                  },
-                                ),
-                              ),
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.07,
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.grey.shade300),
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                    color: Colors.grey.shade300),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width *
-                                          0.02),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        menuItem?.name ?? "No Name",
-                                        style: TextStyle(
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.042,
-                                        ),
-                                      ),
-                                      Text(
-                                        "\$${menuItem?.price?.toString() ?? "N/A"}",
-                                        style: TextStyle(
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.04,
-                                        ),
-                                      ),
-                                    ],
+            ? Consumer<ChatProvider>(
+                builder: (context, chatProvider, child) {
+                  startOrderTimer(context);
+                  return Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.2),
+                                    spreadRadius: 3,
+                                    // How far the shadow spreads
+                                    blurRadius: 10,
+                                    // How blurry the shadow looks
+                                    offset: Offset(0, 3),
                                   ),
-                                ),
+                                ],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical:
-                                  MediaQuery.of(context).size.width * 0.04),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: Consumer<ChatProvider>(
-                                builder: (_, chatProvider, __) {
-                              return Row(
+                              child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.check,
-                                          size: 18, color: gray1Color),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          chatProvider.getFinalQuote(
-                                              'Confirm', context, menuItem!);
-                                        },
-                                        child: Text(
-                                          'Confirm',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: gray1Color,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.18,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        color: Colors.white),
+                                    child: Image.network(
+                                      menuItem?.image ?? "",
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Text("");
+                                      },
+                                    ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () async {},
-                                    child: Row(
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.07,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        color: Colors.grey.shade300),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.02),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            menuItem?.name ?? "No Name",
+                                            style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.042,
+                                            ),
+                                          ),
+                                          Text(
+                                            "\$${menuItem?.price?.toString() ?? "N/A"}",
+                                            style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.04,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).size.width * 0.04),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Row(
                                       children: [
-                                        Icon(Icons.close,
+                                        Icon(Icons.check,
                                             size: 18, color: gray1Color),
-                                        Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: gray1Color,
+                                        GestureDetector(
+                                          onTap: () async {
+                                            chatProvider.isOrderButtonClicked
+                                                ? null
+                                                : chatProvider.getFinalQuote(
+                                                    'Confirm',
+                                                    context,
+                                                    menuItem!);
+                                          },
+                                          child: Text(
+                                            'Confirm',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: chatProvider
+                                                      .isOrderButtonClicked
+                                                  ? gray1Color
+                                                  : colorBlack,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
+                                    GestureDetector(
+                                      onTap: () async {},
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.close,
+                                              size: 18, color: gray1Color),
+                                          Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: gray1Color,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               )
             : SizedBox.shrink(),
         if (isNotification != null && isNotification! && question.isEmpty)
           Consumer<ChatProvider>(builder: (_, chatProvider, __) {
             return Padding(
-              padding: EdgeInsets.only(left: width * 0.15),
+              padding:
+                  EdgeInsets.only(left: width * 0.15, bottom: width * 0.07),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -350,9 +362,15 @@ class UserChatContainer extends StatelessWidget {
   }
 
   void setNotificationResponse(BuildContext context, query, response) async {
-    context.read<ChatProvider>().notificationOptionSelected();
-    Fluttertoast.showToast(msg: 'Thanks for your input');
+    context.read<ChatProvider>().notificationOptionSelected(true);
     await Provider.of<ChatProvider>(context, listen: false)
         .setNotificationResponse(context, query, response);
   }
+}
+
+void startOrderTimer(BuildContext context) {
+  final int clickStopTimer = 30;
+  Timer(Duration(seconds: clickStopTimer), () {
+    context.read<ChatProvider>().OrderButtonOptionSelected();
+  });
 }

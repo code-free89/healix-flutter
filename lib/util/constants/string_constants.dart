@@ -1,5 +1,3 @@
-
-
 const appName = "Healix AI";
 
 const String questionTitle = "question";

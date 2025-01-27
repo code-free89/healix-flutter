@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../data/shared_preferences/share_preferences_data.dart';
+import '../models/final_quote_data_model.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/notification_content.dart' as notification;
 import 'package:helix_ai/data/data_services/message_data_services.dart';
@@ -22,6 +23,7 @@ class ChatProvider extends ChangeNotifier {
   bool isMealFinalQuoteLoaded = false;
   bool isNotification = false;
   bool isNotificationClicked = false;
+  bool isOrderButtonClicked = false;
   List<notification.Choices> answers = [];
   notification.Choices? choice;
   List<Map<String, dynamic>> messages = [];
@@ -122,6 +124,7 @@ class ChatProvider extends ChangeNotifier {
           isMeal: true,
           menuItem: res.menuItem,
         };
+        isOrderButtonClicked = false;
       }
       messagesDataservices.addMessage(res);
     } catch (error) {
@@ -139,6 +142,8 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> getFinalQuote(
       String question, BuildContext context, MenuItem menuItemView) async {
+    isOrderButtonClicked = true;
+    notifyListeners();
     // Add a placeholder message to the list
     messages.add({
       questionTitle: question,
@@ -160,13 +165,14 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       // Fetch data
-      bool success = await apiRepository.getFinalQuoteData(request);
+      FinalQuoteDataModel finalQuoteData =
+          await apiRepository.getFinalQuoteData(request);
 
-      if (success) {
+      if (finalQuoteData.message != null) {
         // Replace the placeholder with the final success message
         messages[currentMessageIndex] = {
           questionTitle: question,
-          answerTitle: 'Order confirmed!',
+          answerTitle: finalQuoteData.message,
         };
       } else {
         // Replace the placeholder with an error message
@@ -207,7 +213,8 @@ class ChatProvider extends ChangeNotifier {
 
   void updateAnswerWithNotification(notificationQuestion) {
     for (var i = 0; i < messages.length; i++) {
-      if (messages[i]['question'] == '') {
+      if (messages[i]['question'] == '' ||
+          messages[i]['question'] == 'Annotation') {
         messages.removeAt(i);
         notifyListeners();
       }
@@ -224,8 +231,20 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void notificationOptionSelected() {
+  void notificationOptionSelected(bool isAnswerSelected) {
     isNotificationClicked = true;
+    if (isAnswerSelected) {
+      messages.add({
+        questionTitle: 'Annotation',
+        // Empty Answer since it's just a Notification Annotation
+        answerTitle: 'Thanks for your input',
+      });
+    }
+    notifyListeners();
+  }
+
+  void OrderButtonOptionSelected() {
+    isOrderButtonClicked = true;
     notifyListeners();
   }
 

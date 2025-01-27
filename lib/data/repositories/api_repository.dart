@@ -4,6 +4,7 @@ import 'package:helix_ai/data/data_services/message_data_services.dart';
 
 import '../../models/customized_fetch_data_request.dart';
 import '../../models/customized_request.dart';
+import '../../models/final_quote_data_model.dart';
 import '../../models/getCustomizedata.dart';
 import '../../models/user_data_view_model.dart';
 import '../../models/user_profile_data.dart';
@@ -25,7 +26,7 @@ class ApiRepository {
     return UserDataServices().addUserLocation(userId, latitude, longitude);
   }
 
-  Future<bool> getFinalQuoteData(
+  Future<FinalQuoteDataModel> getFinalQuoteData(
     CustomizedFetchDataRequest request,
   ) {
     return MessageDataServices().getFinalQuoteData(request);

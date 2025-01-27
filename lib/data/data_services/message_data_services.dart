@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:isar/isar.dart';
 
 import '../../models/customized_fetch_data_request.dart';
 import '../../models/customized_request.dart';
+import '../../models/final_quote_data_model.dart';
 import '../../models/getCustomizedata.dart';
 import '../../util/constants/api_constants.dart';
 import '../backend_services/backend_call.dart';
@@ -23,11 +25,12 @@ class MessageDataServices {
     }
   }
 
-  Future<bool> getFinalQuoteData(CustomizedFetchDataRequest request) async {
+  Future<FinalQuoteDataModel> getFinalQuoteData(
+      CustomizedFetchDataRequest request) async {
     try {
       final response = await BackendCall()
           .postRequest(endpoint: getQuoteData, jsonBody: request.toJson());
-      return true;
+      return FinalQuoteDataModel.fromJson(response);
     } catch (e) {
       throw Exception('Error occurred while fetching final quote data: $e');
     }
