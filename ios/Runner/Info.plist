@@ -62,6 +62,11 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
 	<key>NSHealthShareUsageDescription</key>
 	<string>We need access to your health data to display it in the app.</string>
 	<key>NSHealthUpdateUsageDescription</key>
