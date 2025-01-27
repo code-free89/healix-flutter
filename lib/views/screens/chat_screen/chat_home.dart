@@ -155,9 +155,11 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                  child: UserChat(
-                scrollController: scrollController,
-              )),
+                  child: chatProvider.messages.isNotEmpty
+                      ? UserChat(
+                          scrollController: scrollController,
+                        )
+                      : ChatStart()),
               SizedBox(
                 height: height * 0.018,
               ),
