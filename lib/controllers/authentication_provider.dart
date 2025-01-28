@@ -5,6 +5,7 @@ import 'package:helix_ai/data/shared_preferences/share_preferences_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/backend_services/firebase_fcm.dart';
+import '../models/billing_data_model.dart';
 import '../views/shared_components/show_permission_dialog.dart';
 import '/models/user_profile_data.dart';
 import '/models/user_data_view_model.dart';
@@ -119,6 +120,20 @@ class AuthenticationProvider with ChangeNotifier {
         notifyListeners();
       }
       SharePreferenceData().storeUserInfo(userData!);
+      return res;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      _errorMessage = "Unable to signup. Please try again later.";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> setBillingDetails(BillingDataModel billingData) async {
+    try {
+      setIsSignupLoading(true);
+      var res = await apiRepository.addUserBillingData(billingData);
+
       return res;
     } catch (e) {
       _status = Status.Unauthenticated;

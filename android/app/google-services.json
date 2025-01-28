@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "123873713539",
+    "firebase_url": "https://smarte-cloudservice-846b2-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "smarte-cloudservice-846b2",
     "storage_bucket": "smarte-cloudservice-846b2.appspot.com"
   },
@@ -50,11 +51,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "123873713539-kv1ta81ut2dehol4hk8l66o7sq4pa96t.apps.googleusercontent.com",
+          "client_id": "123873713539-62d6ugsf4kjacg3jekoskp943eakuqkt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.healix_gpt_app.healix_gpt_app",
-            "certificate_hash": "ed0f9fb7d14ce01ac3160eac7157ab930af8fc85"
+            "certificate_hash": "28565be5129527eb94b1fc38521bf255fa7c05e5"
+          }
+        },
+        {
+          "client_id": "123873713539-lat1a05tn9o02kuhs0bn5laqnv92mugs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healix_gpt_app.healix_gpt_app",
+            "certificate_hash": "d6fce4e063057eebc78dde914d5a0ba41f0d343e"
+          }
+        },
+        {
+          "client_id": "123873713539-lm91377i1sdpfu09liml2mhf4vndf73b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healix_gpt_app.healix_gpt_app",
+            "certificate_hash": "6a0a39aa9e23e304fa38ce9f84bbb8b991e53bfc"
           }
         },
         {

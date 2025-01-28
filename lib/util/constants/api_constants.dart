@@ -18,3 +18,4 @@ final String addUserLocationData = '$BASEURL/save_location';
 final String saveFcmTokenUrl = '$BASEURL/save_fcm_token';
 final String setNotificationResponseUrl = '$BASEURL/save_user_feedback';
 final String getNotificationContentUrl = '$BASEURL/get_notification_content';
+final String addBillingDataUrl = '$BASEURL/save_payment_info';

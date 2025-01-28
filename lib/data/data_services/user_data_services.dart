@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 
 import '../../models/user_data_view_model.dart';
@@ -42,6 +43,7 @@ class UserDataServices {
           await BackendCall().postRequest(endpoint: getUserData, jsonBody: {
         "id": userId,
       });
+      debugPrint("response from get_user_profile $response");
 
       return UserProfileData.fromJson(response);
     } catch (e) {
@@ -59,10 +61,25 @@ class UserDataServices {
       // Send the request
       final response = await BackendCall()
           .postRequest(endpoint: addUserData, jsonBody: data);
-      return true; // Assuming 200 is success
+      return true;
     } catch (e) {
       print('Error occurred while updating address: $e');
       return false;
+    }
+  }
+
+  Future<bool> addUserBillingData(BillingDataModel billingData) async {
+    try {
+      print("Sending request to $addBillingDataUrl");
+      final response = await BackendCall().postRequest(
+        endpoint: addBillingDataUrl,
+        jsonBody: billingData.toJson(),
+      );
+
+      return true;
+    } catch (e) {
+      print('Error occurred while adding user billing response: $e');
+      throw Exception('Error occurred while adding billing response: $e');
     }
   }
 }

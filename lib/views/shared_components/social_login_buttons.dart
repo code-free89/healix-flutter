@@ -79,10 +79,15 @@ class SocialLoginButtons extends StatelessWidget {
         final User? user = userCredential.user;
         if (user != null) {
           print('Google Firebase Login Success: ${user.uid}');
+          print('Google Firebase Login Success: ${user.email}');
+          print('Google Firebase Login Success: ${user.displayName}');
+          print('Google Firebase Login Success: ${user.phoneNumber}');
 
           await SharePreferenceData().storeUserInfo(UserProfileData(
             id: userCredential.user!.uid,
             email: userCredential.user!.email,
+            name: userCredential.user!.displayName,
+            phone: userCredential.user!.phoneNumber,
           ));
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(

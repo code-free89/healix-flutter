@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helix_ai/data/data_services/user_data_services.dart';
+import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
@@ -173,6 +173,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 buildEditableField(
                     "Phone Number", authProvider.userData?.phone ?? ""),
+                GestureDetector(
+                  onTap: () {
+                    showEditBillingInfoBottomSheet(context);
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: buildEditableField(
+                      "Billing information",
+                      "**** **** **** 1234",
+                      isReadOnly: true,
+                      onEditTap: () {
+                        showEditBillingInfoBottomSheet(context);
+                      },
+                    ),
+                  ),
+                ),
                 SizedBox(height: size.height * 0.01),
                 ListTile(
                   leading: Icon(Icons.description_outlined),
@@ -602,6 +618,261 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         );
       },
+    );
+  }
+
+  void showEditBillingInfoBottomSheet(BuildContext context) {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController cardNoController = TextEditingController();
+    final TextEditingController exDateController = TextEditingController();
+    final TextEditingController cvcController = TextEditingController();
+    String expiryMonth = '';
+    String expiryYear = '';
+    bool isSelected = false;
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        final size = MediaQuery.of(context).size;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: size.width * 0.04,
+                right: size.width * 0.04,
+                top: size.width * 0.04,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(),
+                        GestureDetector(
+                          child: const Icon(Icons.close),
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.06),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WantText(
+                              text: "Billing details",
+                              fontSize: size.width * 0.05,
+                              fontWeight: FontWeight.bold,
+                              textColor: textColor,
+                              usePoppins: true),
+                          SizedBox(
+                            height: size.height * 0.029,
+                          ),
+                          _buildField(
+                              label: "Name on the card",
+                              hintText: 'John Doe',
+                              controller: nameController),
+                          SizedBox(
+                            height: size.height * 0.017,
+                          ),
+                          _buildField(
+                              label: 'Card Number',
+                              hintText: '**** **** **** ****',
+                              keyboardType: TextInputType.number,
+                              controller: cardNoController),
+                          SizedBox(
+                            height: size.height * 0.017,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: _buildField(
+                                label: 'Expiry Date',
+                                hintText: 'MM / YY',
+                                controller: exDateController,
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  if (value.length == 2 &&
+                                      !value.contains('/')) {
+                                    exDateController.text = '$value/';
+                                    exDateController.selection =
+                                        TextSelection.fromPosition(
+                                      TextPosition(
+                                          offset: exDateController.text.length),
+                                    );
+                                  }
+                                  if (value.length == 5) {
+                                    setState(() {
+                                      expiryMonth = value.substring(0, 2);
+                                      expiryYear = value.substring(3, 5);
+                                    });
+                                  }
+                                },
+                              )),
+                              SizedBox(width: size.width * 0.02),
+                              Expanded(
+                                  child: _buildField(
+                                      label: 'CVV',
+                                      hintText: '***',
+                                      controller: cvcController)),
+                            ],
+                          ),
+                          SizedBox(
+                            height: size.height * 0.017,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                side: BorderSide(color: colorGrey, width: 1.5),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                value: isSelected,
+                                activeColor: greenThemeColor,
+                                checkColor: whiteColor,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isSelected = value!;
+                                  });
+                                },
+                              ),
+                              WantText(
+                                  text:
+                                      'Remember my card details for future payments.',
+                                  fontSize: size.width * 0.030,
+                                  fontWeight: FontWeight.w400,
+                                  textColor: colorBlack,
+                                  usePoppins: false),
+                            ],
+                          ),
+                          SizedBox(
+                            height: size.height * 0.029,
+                          ),
+                          GeneralButton(
+                            Width: MediaQuery.of(context).size.width,
+                            onTap: () async {
+                              String? userUid = await SharePreferenceData()
+                                  .retrieveUserInfo()
+                                  .then((value) => value?.id);
+                              String? userEmail = await SharePreferenceData()
+                                  .retrieveUserInfo()
+                                  .then((value) => value?.email);
+
+                              BillingDataModel billingData = BillingDataModel(
+                                  id: userUid!,
+                                  userEmail: userEmail!,
+                                  cardNumber: int.parse(
+                                      cardNoController.text.toString()),
+                                  expirationYear:
+                                      int.parse(expiryYear.toString()),
+                                  expirationMonth:
+                                      int.parse(expiryMonth.toString()),
+                                  cvc: cvcController.text);
+
+                              final authProvider =
+                                  Provider.of<AuthenticationProvider>(context,
+                                      listen: false);
+
+                              var response = await authProvider
+                                  .setBillingDetails(billingData);
+                              Navigator.pop(context);
+                            },
+                            label: "Save",
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildField(
+      {required String label,
+      required String hintText,
+      TextInputType? keyboardType,
+      required TextEditingController controller,
+      void Function(String)? onChanged}) {
+    final size = MediaQuery.of(context).size;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        WantText(
+            text: label,
+            fontSize: size.width * 0.030,
+            fontWeight: FontWeight.w400,
+            textColor: colorBlack,
+            usePoppins: false),
+        SizedBox(
+          height: size.width * 0.004,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: colorWhite,
+            border: Border.all(color: colorBlack.withOpacity(0.15)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(size.width * 0.03),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colorBlack.withOpacity(0.15),
+                blurRadius: 10,
+                spreadRadius: 0.3,
+              ),
+            ],
+          ),
+          height: MediaQuery.of(context).size.height * 0.07,
+          child: TextFormField(
+            expands: true,
+            maxLines: null,
+            keyboardType:
+                keyboardType != null ? keyboardType : TextInputType.text,
+            controller: controller,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              hintStyle: GoogleFonts.roboto(
+                color: colorGreyText,
+                fontSize: MediaQuery.of(context).size.width * 0.035,
+                fontWeight: FontWeight.w500,
+              ),
+              hintText: hintText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(MediaQuery.of(context).size.width * 0.03),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(MediaQuery.of(context).size.width * 0.03),
+                ),
+                borderSide: BorderSide(color: colorGrey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(MediaQuery.of(context).size.width * 0.03),
+                ),
+                borderSide: BorderSide(color: colorBlack),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

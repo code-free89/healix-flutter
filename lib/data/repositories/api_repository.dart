@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/data/data_services/message_data_services.dart';
 
+import '../../models/billing_data_model.dart';
 import '../../models/customized_fetch_data_request.dart';
 import '../../models/customized_request.dart';
 import '../../models/final_quote_data_model.dart';
@@ -34,6 +35,10 @@ class ApiRepository {
 
   Future<bool> addUserProfile(UserViewModel userData) {
     return UserDataServices().addUserProfile(userData);
+  }
+
+  Future<bool> addUserBillingData(BillingDataModel billingData) {
+    return UserDataServices().addUserBillingData(billingData);
   }
 
   Future<UserProfileData> getUserProfileData(
