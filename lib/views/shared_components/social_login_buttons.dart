@@ -90,7 +90,6 @@ class SocialLoginButtons extends StatelessWidget {
           final authProvider =
               Provider.of<AuthenticationProvider>(context, listen: false);
           UserViewModel userData = UserViewModel();
-
           authProvider.addUserProfile(
             userData
               ..id = userCredential.user!.uid

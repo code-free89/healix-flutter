@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +17,7 @@ import '../../../data/shared_preferences/share_preferences_data.dart';
 import '../../../util/constants/colors.dart';
 import '../../shared_components/logout_alert_dialog.dart';
 import '../../shared_components/want_text.dart';
+import 'credit_card_formatter.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -35,6 +36,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String state = '';
   String country = '';
   String zipcode = '';
+  FocusNode cardNoFocusNode = FocusNode();
+  FocusNode cvcFocusNode = FocusNode();
+  FocusNode expiryDateFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
 
   @override
   void dispose() {
@@ -629,6 +634,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String expiryMonth = '';
     String expiryYear = '';
     bool isSelected = false;
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    nameController.text = authProvider.userData?.name ?? '';
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -678,79 +686,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: size.height * 0.029,
                           ),
                           _buildField(
-                              label: "Name on the card",
-                              hintText: 'John Doe',
-                              controller: nameController),
-                          SizedBox(
-                            height: size.height * 0.017,
-                          ),
-                          _buildField(
-                              label: 'Card Number',
-                              hintText: '**** **** **** ****',
-                              keyboardType: TextInputType.number,
-                              controller: cardNoController),
-                          SizedBox(
-                            height: size.height * 0.017,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: _buildField(
-                                label: 'Expiry Date',
-                                hintText: 'MM / YY',
-                                controller: exDateController,
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) {
-                                  if (value.length == 2 &&
-                                      !value.contains('/')) {
-                                    exDateController.text = '$value/';
-                                    exDateController.selection =
-                                        TextSelection.fromPosition(
-                                      TextPosition(
-                                          offset: exDateController.text.length),
-                                    );
-                                  }
-                                  if (value.length == 5) {
-                                    setState(() {
-                                      expiryMonth = value.substring(0, 2);
-                                      expiryYear = value.substring(3, 5);
-                                    });
-                                  }
-                                },
-                              )),
-                              SizedBox(width: size.width * 0.02),
-                              Expanded(
-                                  child: _buildField(
-                                      label: 'CVV',
-                                      hintText: '***',
-                                      controller: cvcController)),
+                            focusNode: nameFocusNode,
+                            label: "Name on the card",
+                            hintText: 'John Doe',
+                            controller: nameController,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[a-zA-Z\s]'))
                             ],
                           ),
                           SizedBox(
                             height: size.height * 0.017,
                           ),
+                          _buildField(
+                            label: 'Card Number',
+                            hintText: '**** **** **** ****',
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(16),
+                              CreditCardFormatter(),
+                            ],
+                            controller: cardNoController,
+                            focusNode: cardNoFocusNode,
+                            onChanged: (_) {
+                              String cardType = CreditCardFormatter()
+                                  .detectCardType(cardNoController.text);
+                              int maxLength = 0;
+                              (cardType == 'AMEX' || cardType == 'DINERS')
+                                  ? maxLength = 15
+                                  : maxLength = 16;
+                              if (cardNoController.text
+                                      .replaceAll(' ', '')
+                                      .length ==
+                                  maxLength) {
+                                FocusScope.of(context)
+                                    .requestFocus(expiryDateFocusNode);
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: size.height * 0.017,
+                          ),
                           Row(
                             children: [
-                              Checkbox(
-                                side: BorderSide(color: colorGrey, width: 1.5),
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                value: isSelected,
-                                activeColor: greenThemeColor,
-                                checkColor: whiteColor,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    isSelected = value!;
-                                  });
+                              Expanded(
+                                  child: _buildField(
+                                      focusNode: expiryDateFocusNode,
+                                      label: 'Expiry Date',
+                                      hintText: 'MM / YYYY',
+                                      controller: exDateController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(7),
+                                      ],
+                                      onChanged: (value) {
+                                        if (value.length == 2 &&
+                                            !value.contains('/')) {
+                                          int? month = int.tryParse(value);
+                                          if (month != null &&
+                                              month >= 1 &&
+                                              month <= 12) {
+                                            exDateController.text = '$value/';
+                                            exDateController.selection =
+                                                TextSelection.fromPosition(
+                                              TextPosition(
+                                                  offset: exDateController
+                                                      .text.length),
+                                            );
+                                          } else {
+                                            exDateController.text = '';
+                                          }
+                                        }
+                                        if (value.length == 7) {
+                                          String month = value.substring(0, 2);
+                                          String year = value.substring(3, 7);
+                                          if (int.tryParse(month) != null &&
+                                              int.tryParse(year) != null) {
+                                            int monthInt = int.parse(month);
+                                            int yearInt = int.parse(year);
+                                            if (monthInt >= 1 &&
+                                                monthInt <= 12 &&
+                                                yearInt >= 2025) {
+                                              setState(() {
+                                                expiryMonth = month;
+                                                expiryYear = year;
+                                              });
+                                              FocusScope.of(context)
+                                                  .requestFocus(cvcFocusNode);
+                                            } else {
+                                              exDateController.text =
+                                                  exDateController.text
+                                                      .replaceRange(3, 7, '');
+                                            }
+                                          }
+                                        }
+                                      })),
+                              SizedBox(width: size.width * 0.02),
+                              Expanded(
+                                  child: _buildField(
+                                focusNode: cvcFocusNode,
+                                label: 'CVC',
+                                hintText: '***',
+                                controller: cvcController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(4),
+                                ],
+                                onChanged: (value) {
+                                  if (value.length == 3 &&
+                                      !isAmexCard(cardNoController.text)) {
+                                    FocusScope.of(context)
+                                        .unfocus(); // Auto-close for non-AmEx cards
+                                  } else if (value.length == 4 &&
+                                      isAmexCard(cardNoController.text)) {
+                                    FocusScope.of(context)
+                                        .unfocus(); // Auto-close for AmEx cards
+                                  }
                                 },
-                              ),
-                              WantText(
-                                  text:
-                                      'Remember my card details for future payments.',
-                                  fontSize: size.width * 0.030,
-                                  fontWeight: FontWeight.w400,
-                                  textColor: colorBlack,
-                                  usePoppins: false),
+                              )),
                             ],
                           ),
                           SizedBox(
@@ -769,8 +825,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               BillingDataModel billingData = BillingDataModel(
                                   id: userUid!,
                                   userEmail: userEmail!,
-                                  cardNumber: int.parse(
-                                      cardNoController.text.toString()),
+                                  cardNumber: int.parse(cardNoController.text
+                                      .toString()
+                                      .replaceAll(' ', '')),
                                   expirationYear:
                                       int.parse(expiryYear.toString()),
                                   expirationMonth:
@@ -808,7 +865,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       required String hintText,
       TextInputType? keyboardType,
       required TextEditingController controller,
-      void Function(String)? onChanged}) {
+      required FocusNode focusNode,
+      void Function(String)? onChanged,
+      List<TextInputFormatter>? inputFormatters,
+      Function(dynamic _)? onFieldSubmitted}) {
     final size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -839,12 +899,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           height: MediaQuery.of(context).size.height * 0.07,
           child: TextFormField(
+            focusNode: focusNode,
             expands: true,
             maxLines: null,
             keyboardType:
                 keyboardType != null ? keyboardType : TextInputType.text,
+            inputFormatters: inputFormatters != null ? inputFormatters : [],
             controller: controller,
             onChanged: onChanged,
+            onSaved: onFieldSubmitted,
             decoration: InputDecoration(
               hintStyle: GoogleFonts.roboto(
                 color: colorGreyText,
@@ -874,5 +937,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
     );
+  }
+
+  bool isAmexCard(String cardNumber) {
+    return cardNumber.startsWith('34') || cardNumber.startsWith('37');
   }
 }

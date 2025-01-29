@@ -71,10 +71,14 @@ class UserDataServices {
   Future<bool> addUserBillingData(BillingDataModel billingData) async {
     try {
       print("Sending request to $addBillingDataUrl");
+      print("body sent to $addBillingDataUrl :::  ${billingData.toJson()}");
+
       final response = await BackendCall().postRequest(
         endpoint: addBillingDataUrl,
         jsonBody: billingData.toJson(),
       );
+
+      print("response from $addBillingDataUrl :::  $response");
 
       return true;
     } catch (e) {
