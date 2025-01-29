@@ -8,13 +8,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helix_ai/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
+import 'package:provider/provider.dart';
 
+import '../../controllers/authentication_provider.dart';
 import '../../data/shared_preferences/share_preferences_data.dart';
+import '../../models/user_data_view_model.dart';
 import '../../util/constants/constant.dart';
 
 class SocialLoginButtons extends StatelessWidget {
   final String text;
+
   SocialLoginButtons({super.key, required this.text});
+
   // Google Sign-In instance
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -78,17 +83,22 @@ class SocialLoginButtons extends StatelessWidget {
 
         final User? user = userCredential.user;
         if (user != null) {
-          print('Google Firebase Login Success: ${user.uid}');
-          print('Google Firebase Login Success: ${user.email}');
-          print('Google Firebase Login Success: ${user.displayName}');
-          print('Google Firebase Login Success: ${user.phoneNumber}');
-
           await SharePreferenceData().storeUserInfo(UserProfileData(
             id: userCredential.user!.uid,
             email: userCredential.user!.email,
-            name: userCredential.user!.displayName,
-            phone: userCredential.user!.phoneNumber,
           ));
+          final authProvider =
+              Provider.of<AuthenticationProvider>(context, listen: false);
+          UserViewModel userData = UserViewModel();
+
+          authProvider.addUserProfile(
+            userData
+              ..id = userCredential.user!.uid
+              ..email = userCredential.user!.email
+              ..name = userCredential.user!.displayName
+              ..phone = userCredential.user!.phoneNumber,
+            context,
+          );
           // Navigate to ChatHome after successful login
           Navigator.pushReplacement(
             context,
@@ -149,7 +159,8 @@ class SocialLoginButtons extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),
                 child: SvgPicture.asset(
-                  appleLogin, // You can still use the Apple icon here, but it will trigger Facebook login
+                  appleLogin,
+                  // You can still use the Apple icon here, but it will trigger Facebook login
                   fit: BoxFit.none,
                 ),
               ),

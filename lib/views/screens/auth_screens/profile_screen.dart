@@ -180,8 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Container(
                     color: Colors.white,
                     child: buildEditableField(
-                      "Billing information",
-                      "**** **** **** 1234",
+                      "Billing Information",
+                      "**** **** **** ****",
                       isReadOnly: true,
                       onEditTap: () {
                         showEditBillingInfoBottomSheet(context);
