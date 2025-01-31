@@ -638,6 +638,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Provider.of<AuthenticationProvider>(context, listen: false);
     nameController.text = authProvider.userData?.name ?? '';
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

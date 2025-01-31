@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 
@@ -80,9 +81,20 @@ class UserDataServices {
 
       print("response from $addBillingDataUrl :::  $response");
 
+      if (response['error'] != null && response['error'] != '') {
+        Fluttertoast.showToast(
+          msg: response['status'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return false;
+      }
       return true;
     } catch (e) {
-      print('Error occurred while adding user billing response: $e');
+      print('Error occurred while adding user billing response: ${e}');
       throw Exception('Error occurred while adding billing response: $e');
     }
   }
