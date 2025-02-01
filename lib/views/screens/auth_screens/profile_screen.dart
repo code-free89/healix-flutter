@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
+import 'package:helix_ai/util/formatter.dart';
 import 'package:helix_ai/views/shared_components/show_reusable_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
@@ -774,23 +775,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(5),
+                                    ExpiryDateFormatter(),
                                   ],
                                   onChanged: (value) {
-                                    if (value.length == 2 &&
-                                        !value.contains('/')) {
-                                      int? month = int.tryParse(value);
-                                      if (month != null &&
-                                          month >= 1 &&
-                                          month <= 12) {
-                                        exDateController.text = '$value/';
-                                        exDateController.selection =
-                                            TextSelection.fromPosition(
-                                          TextPosition(
-                                              offset:
-                                                  exDateController.text.length),
-                                        );
-                                      } else {
-                                        exDateController.text = '';
+                                    if (value.length == 3) {
+                                      int? month =
+                                          int.tryParse(value.substring(0, 2));
+                                      if (month == null ||
+                                          month < 1 ||
+                                          month > 12) {
+                                        exDateController.clear();
                                       }
                                     }
                                     if (value.length == 5) {
