@@ -4,7 +4,8 @@ class CreditCardFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    String digitsOnly = newValue.text.replaceAll(RegExp(r'\D'), ''); // Remove non-numeric chars
+    String digitsOnly =
+        newValue.text.replaceAll(RegExp(r'\D'), ''); // Remove non-numeric chars
     String formattedText = _formatCardNumber(digitsOnly);
 
     return TextEditingValue(
@@ -47,7 +48,9 @@ class CreditCardFormatter extends TextInputFormatter {
   String detectCardType(String input) {
     if (input.startsWith('34') || input.startsWith('37')) {
       return 'AMEX';
-    } else if (RegExp(r'^(51|52|53|54|55|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720)').hasMatch(input)) {
+    } else if (RegExp(
+            r'^(51|52|53|54|55|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720)')
+        .hasMatch(input)) {
       return 'MASTERCARD';
     } else if (input.startsWith('4')) {
       return 'VISA';

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
+import 'package:helix_ai/views/shared_components/show_reusable_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
 import 'package:helix_ai/views/shared_components/general_button.dart';
@@ -633,10 +634,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final TextEditingController cvcController = TextEditingController();
     String expiryMonth = '';
     String expiryYear = '';
-    bool isSelected = false;
+    String ccImage = 'unknown';
+    bool isValidInput = false;
+    bool isLoading = false;
     AuthenticationProvider authProvider =
         Provider.of<AuthenticationProvider>(context, listen: false);
     nameController.text = authProvider.userData?.name ?? '';
+
+    void validateInput() {
+      setState(() {
+        if (!nameController.text.isEmpty &&
+            !cardNoController.text.isEmpty &&
+            !exDateController.text.isEmpty &&
+            !cvcController.text.isEmpty) {
+          isValidInput = true;
+        } else {
+          isValidInput = false;
+        }
+      });
+    }
+
     showModalBottomSheet(
       backgroundColor: Colors.white,
       context: context,
@@ -678,11 +695,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           WantText(
-                              text: "Billing details",
-                              fontSize: size.width * 0.05,
-                              fontWeight: FontWeight.bold,
-                              textColor: textColor,
-                              usePoppins: true),
+                            text: "Billing details",
+                            fontSize: size.width * 0.05,
+                            fontWeight: FontWeight.bold,
+                            textColor: textColor,
+                            usePoppins: true,
+                          ),
                           SizedBox(
                             height: size.height * 0.029,
                           ),
@@ -694,8 +712,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             keyboardType: TextInputType.text,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Z\s]'))
+                                RegExp(r'[a-zA-Z\s]'),
+                              )
                             ],
+                            onChanged: (_) {
+                              validateInput();
+                            },
                           ),
                           SizedBox(
                             height: size.height * 0.017,
@@ -709,11 +731,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               LengthLimitingTextInputFormatter(16),
                               CreditCardFormatter(),
                             ],
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                "assets/images/$ccImage.png",
+                                width: 40,
+                              ),
+                            ),
                             controller: cardNoController,
                             focusNode: cardNoFocusNode,
-                            onChanged: (_) {
+                            onChanged: (value) {
                               String cardType = CreditCardFormatter()
                                   .detectCardType(cardNoController.text);
+                              setState(() {
+                                ccImage = cardType.toLowerCase();
+                              });
                               int maxLength = 0;
                               (cardType == 'AMEX' || cardType == 'DINERS')
                                   ? maxLength = 15
@@ -725,6 +757,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 FocusScope.of(context)
                                     .requestFocus(expiryDateFocusNode);
                               }
+                              validateInput();
                             },
                           ),
                           SizedBox(
@@ -733,57 +766,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Row(
                             children: [
                               Expanded(
-                                  child: _buildField(
-                                      focusNode: expiryDateFocusNode,
-                                      label: 'Expiry Date',
-                                      hintText: 'MM / YYYY',
-                                      controller: exDateController,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(7),
-                                      ],
-                                      onChanged: (value) {
-                                        if (value.length == 2 &&
-                                            !value.contains('/')) {
-                                          int? month = int.tryParse(value);
-                                          if (month != null &&
-                                              month >= 1 &&
-                                              month <= 12) {
-                                            exDateController.text = '$value/';
-                                            exDateController.selection =
-                                                TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: exDateController
-                                                      .text.length),
-                                            );
-                                          } else {
-                                            exDateController.text = '';
-                                          }
+                                child: _buildField(
+                                  focusNode: expiryDateFocusNode,
+                                  label: 'Expiry Date',
+                                  hintText: 'MM / YY',
+                                  controller: exDateController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(5),
+                                  ],
+                                  onChanged: (value) {
+                                    if (value.length == 2 &&
+                                        !value.contains('/')) {
+                                      int? month = int.tryParse(value);
+                                      if (month != null &&
+                                          month >= 1 &&
+                                          month <= 12) {
+                                        exDateController.text = '$value/';
+                                        exDateController.selection =
+                                            TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset:
+                                                  exDateController.text.length),
+                                        );
+                                      } else {
+                                        exDateController.text = '';
+                                      }
+                                    }
+                                    if (value.length == 5) {
+                                      int currentYear = DateTime.now().year;
+                                      int currentMonth = DateTime.now().month;
+                                      String month = value.substring(0, 2);
+                                      String year = currentYear
+                                              .toString()
+                                              .substring(0, 2) +
+                                          value.substring(3, 5);
+                                      if (int.tryParse(month) != null &&
+                                          int.tryParse(year) != null) {
+                                        int monthInt = int.parse(month);
+                                        int yearInt = int.parse(year);
+                                        if (monthInt >= 1 &&
+                                            monthInt <= 12 &&
+                                            yearInt >= 2025 &&
+                                            yearInt < currentYear + 10 &&
+                                            !(yearInt == currentYear &&
+                                                monthInt < currentMonth)) {
+                                          setState(() {
+                                            expiryMonth = month;
+                                            expiryYear = year;
+                                          });
+                                          FocusScope.of(context)
+                                              .requestFocus(cvcFocusNode);
+
+                                          validateInput();
+                                        } else {
+                                          exDateController.text =
+                                              exDateController.text
+                                                  .replaceRange(3, 5, '');
+
+                                          validateInput();
                                         }
-                                        if (value.length == 7) {
-                                          String month = value.substring(0, 2);
-                                          String year = value.substring(3, 7);
-                                          if (int.tryParse(month) != null &&
-                                              int.tryParse(year) != null) {
-                                            int monthInt = int.parse(month);
-                                            int yearInt = int.parse(year);
-                                            if (monthInt >= 1 &&
-                                                monthInt <= 12 &&
-                                                yearInt >= 2025) {
-                                              setState(() {
-                                                expiryMonth = month;
-                                                expiryYear = year;
-                                              });
-                                              FocusScope.of(context)
-                                                  .requestFocus(cvcFocusNode);
-                                            } else {
-                                              exDateController.text =
-                                                  exDateController.text
-                                                      .replaceRange(3, 7, '');
-                                            }
-                                          }
-                                        }
-                                      })),
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
                               SizedBox(width: size.width * 0.02),
                               Expanded(
                                   child: _buildField(
@@ -806,6 +853,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     FocusScope.of(context)
                                         .unfocus(); // Auto-close for AmEx cards
                                   }
+
+                                  validateInput();
                                 },
                               )),
                             ],
@@ -815,6 +864,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           GeneralButton(
                             Width: MediaQuery.of(context).size.width,
+                            isDisabled: !isValidInput,
+                            isLoading: isLoading,
                             onTap: () async {
                               String? userUid = await SharePreferenceData()
                                   .retrieveUserInfo()
@@ -838,10 +889,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               final authProvider =
                                   Provider.of<AuthenticationProvider>(context,
                                       listen: false);
-
+                              setState(() {
+                                isLoading = true;
+                              });
                               var response = await authProvider
                                   .setBillingDetails(billingData);
-                              Navigator.pop(context);
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (response == false) {
+                                showReusableDialog(
+                                  context,
+                                  "Oops..",
+                                  "Your card got declined, please check if valid card is saved within the app",
+                                  "Check the card details",
+                                );
+                                cardNoController.clear();
+                                nameController.clear();
+                                cvcController.clear();
+                                exDateController.clear();
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg: 'Billing details saved successfully.',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                                Navigator.pop(context);
+                              }
                             },
                             label: "Save",
                           ),
@@ -861,15 +938,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildField(
-      {required String label,
-      required String hintText,
-      TextInputType? keyboardType,
-      required TextEditingController controller,
-      required FocusNode focusNode,
-      void Function(String)? onChanged,
-      List<TextInputFormatter>? inputFormatters,
-      Function(dynamic _)? onFieldSubmitted}) {
+  Widget _buildField({
+    required String label,
+    required String hintText,
+    TextInputType? keyboardType,
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    void Function(String)? onChanged,
+    List<TextInputFormatter>? inputFormatters,
+    Function(dynamic _)? onFieldSubmitted,
+    Widget? prefixIcon,
+  }) {
     final size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -910,6 +989,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onChanged: onChanged,
             onSaved: onFieldSubmitted,
             decoration: InputDecoration(
+              prefixIcon: prefixIcon,
               hintStyle: GoogleFonts.roboto(
                 color: colorGreyText,
                 fontSize: MediaQuery.of(context).size.width * 0.035,
