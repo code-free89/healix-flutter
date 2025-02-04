@@ -54,6 +54,21 @@ class UserDataServices {
     }
   }
 
+  Future<bool> updateUserInfo(String uid, Map<String, dynamic> data) async {
+    try {
+      // Construct the request body
+      var info = {"id": uid, ...data};
+      print(info.toString());
+      // Send the request
+      final response = await BackendCall()
+          .postRequest(endpoint: addUserData, jsonBody: info);
+      return true;
+    } catch (e) {
+      print('Error occurred while updating address: $e');
+      return false;
+    }
+  }
+
   Future<bool> updateUserAddress(
       String uid, Map<String, dynamic> addressBlock) async {
     try {

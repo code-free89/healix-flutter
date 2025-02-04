@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -8,6 +9,7 @@ import 'package:helix_ai/data/data_services/user_data_services.dart';
 import 'package:helix_ai/models/billing_data_model.dart';
 import 'package:helix_ai/util/constants/api_constants.dart';
 import 'package:helix_ai/util/formatter.dart';
+import 'package:helix_ai/views/shared_components/auth_custom_text_field.dart';
 import 'package:helix_ai/views/shared_components/show_reusable_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:helix_ai/views/screens/auth_screens/user_login.dart';
@@ -148,20 +150,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Center(
                   child: WantText(
-                      text: authProvider.userData != null
-                          ? authProvider.userData?.name ?? ""
-                          : '',
-                      fontSize: size.width * 0.082,
-                      fontWeight: FontWeight.bold,
-                      textColor: textColor,
-                      usePoppins: true),
+                    text: authProvider.userData != null
+                        ? authProvider.userData?.name ?? ""
+                        : '',
+                    fontSize: size.width * 0.082,
+                    fontWeight: FontWeight.bold,
+                    textColor: textColor,
+                    usePoppins: true,
+                  ),
                 ),
                 SizedBox(height: size.height * 0.035),
+                GestureDetector(
+                  onTap: () {
+                    showEditNameBottomSheet(context, authProvider);
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: buildEditableField(
+                      "Full Name",
+                      authProvider.userData?.name ?? "",
+                      isReadOnly: true,
+                      onEditTap: () {
+                        showEditNameBottomSheet(context, authProvider);
+                      },
+                    ),
+                  ),
+                ),
                 buildEditableField(
-                    "Full Name", authProvider.userData?.name ?? ""),
+                  "E-Mail",
+                  authProvider.userData?.email ?? "",
+                  isReadOnly: true,
+                  isEditIconVisible: false,
+                ),
                 buildEditableField(
-                    "E-Mail", authProvider.userData?.email ?? ""),
-                buildEditableField("Password", "********", isObscure: true),
+                  "Password",
+                  "********",
+                  isObscure: true,
+                  isReadOnly: true,
+                  isEditIconVisible: false,
+                ),
                 GestureDetector(
                   onTap: () {
                     showEditAddressBottomSheet(context);
@@ -178,8 +205,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                buildEditableField(
-                    "Phone Number", authProvider.userData?.phone ?? ""),
+                GestureDetector(
+                  onTap: () {
+                    showEditPhoneNumberBottomSheet(context, authProvider);
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: buildEditableField(
+                      "Phone Number",
+                      authProvider.userData?.phone ?? "",
+                      isReadOnly: true,
+                      onEditTap: () {
+                        showEditPhoneNumberBottomSheet(context, authProvider);
+                      },
+                    ),
+                  ),
+                ),
                 GestureDetector(
                   onTap: () {
                     showEditBillingInfoBottomSheet(context);
@@ -200,11 +241,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ListTile(
                   leading: Icon(Icons.description_outlined),
                   title: WantText(
-                      text: 'Terms of Service',
-                      fontSize: size.width * 0.0435,
-                      fontWeight: FontWeight.w500,
-                      textColor: textColor,
-                      usePoppins: false),
+                    text: 'Terms of Service',
+                    fontSize: size.width * 0.0435,
+                    fontWeight: FontWeight.w500,
+                    textColor: textColor,
+                    usePoppins: false,
+                  ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     // Navigate to Terms of Service screen
@@ -218,11 +260,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ListTile(
                   leading: Icon(Icons.privacy_tip_outlined),
                   title: WantText(
-                      text: 'Privacy Policy',
-                      fontSize: size.width * 0.0435,
-                      fontWeight: FontWeight.w500,
-                      textColor: textColor,
-                      usePoppins: false),
+                    text: 'Privacy Policy',
+                    fontSize: size.width * 0.0435,
+                    fontWeight: FontWeight.w500,
+                    textColor: textColor,
+                    usePoppins: false,
+                  ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     // Navigate to Privacy Policy screen
@@ -236,35 +279,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ListTile(
                   leading: Icon(Icons.logout),
                   title: WantText(
-                      text: 'Log out',
-                      fontSize: size.width * 0.0435,
-                      fontWeight: FontWeight.w500,
-                      textColor: textColor,
-                      usePoppins: false),
+                    text: 'Log out',
+                    fontSize: size.width * 0.0435,
+                    fontWeight: FontWeight.w500,
+                    textColor: textColor,
+                    usePoppins: false,
+                  ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return LogOutAlertDialog(
-                            onLogout: () async {
-                              debugPrint("logout clicked");
-                              final service = FlutterBackgroundService();
-                              var isRunning = await service.isRunning();
-                              if (isRunning) {
-                                service.invoke("stopService");
-                              }
-                              authProvider.signOut();
-                              Provider.of<ChatProvider>(context, listen: false)
-                                  .resetChat();
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => UserLogin()),
-                                  (route) => false);
-                            },
-                          );
-                        });
+                      context: context,
+                      builder: (BuildContext context) {
+                        return LogOutAlertDialog(
+                          onLogout: () async {
+                            debugPrint("logout clicked");
+                            final service = FlutterBackgroundService();
+                            var isRunning = await service.isRunning();
+                            if (isRunning) {
+                              service.invoke("stopService");
+                            }
+                            authProvider.signOut();
+                            Provider.of<ChatProvider>(context, listen: false)
+                                .resetChat();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => UserLogin()),
+                              (route) => false,
+                            );
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
                 Container(
@@ -278,15 +323,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                        height: size.height * 0.061,
-                        child: Image.asset("assets/images/logo.png")),
+                      height: size.height * 0.061,
+                      child: Image.asset("assets/images/logo.png"),
+                    ),
                     SizedBox(width: size.width * 0.061),
                     WantText(
-                        text: 'Healix AI\nV 1.0.0',
-                        fontSize: size.width * 0.0435,
-                        fontWeight: FontWeight.w500,
-                        textColor: colorGreyText,
-                        usePoppins: false),
+                      text: 'Healix AI\nV 1.0.0',
+                      fontSize: size.width * 0.0435,
+                      fontWeight: FontWeight.w500,
+                      textColor: colorGreyText,
+                      usePoppins: false,
+                    ),
                   ],
                 ),
               ],
@@ -302,6 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String text, {
     bool isObscure = false,
     bool isReadOnly = false,
+    bool isEditIconVisible = true,
     VoidCallback? onEditTap,
     String? Function(String?)?
         validator, // Pass the onTap function as a parameter
@@ -349,12 +397,354 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          GestureDetector(
-            child: Icon(Icons.edit, size: 20),
-            onTap: onEditTap, // Pass the editing functionality
-          ),
+          isEditIconVisible
+              ? GestureDetector(
+                  child: Icon(Icons.edit, size: 20),
+                  onTap: onEditTap, // Pass the editing functionality
+                )
+              : Container(),
         ],
       ),
+    );
+  }
+
+  void showEditNameBottomSheet(
+      BuildContext context, AuthenticationProvider authProvider) {
+    final TextEditingController nameController = TextEditingController(
+      text: authProvider.userData?.name ?? "",
+    );
+    bool isFullNameInput = false;
+    bool isSavingData = false;
+
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        final size = MediaQuery.of(context).size;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: MediaQuery.of(context).size.width * 0.04,
+                right: MediaQuery.of(context).size.width * 0.04,
+                top: MediaQuery.of(context).size.width * 0.04,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(),
+                        GestureDetector(
+                          child: const Icon(Icons.close),
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.06,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WantText(
+                            text: "Change Full Name",
+                            fontSize: MediaQuery.of(context).size.width * 0.05,
+                            fontWeight: FontWeight.bold,
+                            textColor: textColor,
+                            usePoppins: true,
+                          ),
+                          SizedBox(
+                            height: size.height * 0.015,
+                          ),
+                          _buildField(
+                            focusNode: nameFocusNode,
+                            label: "",
+                            hintText: 'John Doe',
+                            controller: nameController,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z\s]'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                isFullNameInput = !value.isEmpty;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            height: size.height * 0.06,
+                          ),
+                          GeneralButton(
+                            Width: MediaQuery.of(context).size.width,
+                            isDisabled: !isFullNameInput,
+                            isLoading: isSavingData,
+                            onTap: () async {
+                              String name = nameController.text;
+                              setState(() {
+                                isSavingData = true;
+                              });
+                              bool success =
+                                  await UserDataServices().updateUserInfo(
+                                SharePreferenceData().uid,
+                                {'name': name},
+                              );
+
+                              setState(() {
+                                isSavingData = false;
+                              });
+
+                              if (success) {
+                                authProvider.userData!.name = name;
+                                SharePreferenceData()
+                                    .storeUserInfo(authProvider.userData!);
+
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Profile updated successfully.'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            label: "Save",
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showEditPhoneNumberBottomSheet(
+      BuildContext context, AuthenticationProvider authProvider) {
+    final TextEditingController phoneController = TextEditingController(
+      text: authProvider.userData?.phone ?? "",
+    );
+    final FocusNode phoneFocusNode = FocusNode();
+
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        final size = MediaQuery.of(context).size;
+        bool isPhoneInput = !phoneController.text.isEmpty;
+        bool isSavingData = false;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: MediaQuery.of(context).size.width * 0.04,
+                right: MediaQuery.of(context).size.width * 0.04,
+                top: MediaQuery.of(context).size.width * 0.04,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(),
+                        GestureDetector(
+                          child: const Icon(Icons.close),
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.06,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WantText(
+                            text: "Change Phone Number",
+                            fontSize: MediaQuery.of(context).size.width * 0.05,
+                            fontWeight: FontWeight.bold,
+                            textColor: textColor,
+                            usePoppins: true,
+                          ),
+                          SizedBox(
+                            height: size.height * 0.015,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: colorWhite,
+                              border: Border.all(
+                                  color: colorBlack.withOpacity(0.15)),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(size.width * 0.03),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: colorBlack.withOpacity(0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 0.3,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.01,
+                                ),
+                                Container(
+                                  width: size.width * 0.25,
+                                  decoration: BoxDecoration(
+                                    color: colorBlack.withOpacity(0.15),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(size.width * 0.03),
+                                    ),
+                                  ),
+                                  child: CountryCodePicker(
+                                    showDropDownButton: false,
+                                    padding: EdgeInsets.zero,
+                                    boxDecoration: BoxDecoration(
+                                      color: colorWhite,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(size.width * 0.05)),
+                                    ),
+                                    initialSelection: 'US',
+                                    favorite: ['+1', 'US'],
+                                    showCountryOnly: false,
+                                    showOnlyCountryWhenClosed: false,
+                                    dialogBackgroundColor: colorWhite,
+                                    alignLeft: false,
+                                    dialogSize: Size(
+                                        size.width * 0.8, size.height * 0.4),
+                                    textStyle: GoogleFonts.roboto(
+                                      textStyle: TextStyle(
+                                        fontSize: size.width * 0.04,
+                                        color: colorBlack,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.01,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.5,
+                                  child: AuthCustomTextFormField(
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent),
+                                    borderColor: Colors.transparent,
+                                    labelText: "Phone Number",
+                                    controller: phoneController,
+                                    keyboardType: TextInputType.phone,
+                                    focusNode: phoneFocusNode,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isPhoneInput = !value.isEmpty;
+                                      });
+                                    },
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(10),
+                                      PhoneNumberFormatter(onComplete: () {
+                                        phoneFocusNode.unfocus();
+                                        setState(() {
+                                          isPhoneInput = true;
+                                        });
+                                      })
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.06,
+                          ),
+                          GeneralButton(
+                            Width: MediaQuery.of(context).size.width,
+                            isLoading: isSavingData,
+                            isDisabled: !isPhoneInput,
+                            onTap: () async {
+                              String phone = phoneController.text;
+                              setState(() {
+                                isSavingData = true;
+                              });
+                              bool success =
+                                  await UserDataServices().updateUserInfo(
+                                SharePreferenceData().uid,
+                                {'phone': phone},
+                              );
+
+                              setState(() {
+                                isSavingData = false;
+                              });
+
+                              if (success) {
+                                authProvider.userData!.phone = phone;
+                                SharePreferenceData()
+                                    .storeUserInfo(authProvider.userData!);
+                                authProvider.notifyListeners();
+
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Profile updated successfully.'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            label: "Save",
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -869,17 +1259,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   .then((value) => value?.email);
 
                               BillingDataModel billingData = BillingDataModel(
-                                  id: userUid!,
-                                  userEmail: userEmail!,
-                                  cardNumber: int.parse(cardNoController.text
-                                      .toString()
-                                      .replaceAll(' ', '')),
-                                  expirationYear:
-                                      int.parse(expiryYear.toString()),
-                                  expirationMonth:
-                                      int.parse(expiryMonth.toString()),
-                                  cvc: cvcController.text);
-
+                                id: userUid!,
+                                userEmail: userEmail!,
+                                cardNumber: int.parse(cardNoController.text
+                                    .toString()
+                                    .replaceAll(' ', '')),
+                                expirationYear:
+                                    int.parse(expiryYear.toString()),
+                                expirationMonth:
+                                    int.parse(expiryMonth.toString()),
+                                cvc: cvcController.text,
+                              );
                               final authProvider =
                                   Provider.of<AuthenticationProvider>(context,
                                       listen: false);
@@ -903,14 +1293,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 cvcController.clear();
                                 exDateController.clear();
                               } else {
-                                Fluttertoast.showToast(
-                                  msg: 'Billing details saved successfully.',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
-                                );
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Billing details saved successfully.'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                });
                                 Navigator.pop(context);
                               }
                             },
