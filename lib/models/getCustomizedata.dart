@@ -45,7 +45,7 @@ class CustomizedResponse {
       id: json['id'],
       searchText: json['search_text'],
       gptResponse: json['gpt_response'],
-      healthData: json['health_data'],
+      healthData: (json['health_data'] is Map) ? json['health_data'] : null,
       intent: json['intent'],
       menuItem: parsedMenuItem,
     );

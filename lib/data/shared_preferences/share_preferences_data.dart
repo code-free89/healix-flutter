@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,14 +43,32 @@ class SharePreferenceData {
   }
 
   Future<void> storeUserInfo(UserProfileData user) async {
-    await isar.writeTxn(() => isar.userProfileDatas.put(user));
+    try {
+      final existingUser = await isar.userProfileDatas
+          .filter()
+          .emailEqualTo(user.email)
+          .findFirst(); // Check if user with the same email exists
+
+      await isar.writeTxn(() async {
+        if (existingUser != null) {
+          user.id = existingUser.id; // Ensure update happens on the same record
+        }
+        await isar.userProfileDatas.put(user);
+      });
+    } catch (e) {
+      debugPrint("Exception in storing UserInfo: $e");
+    }
   }
 
   Future<UserProfileData?> retrieveUserInfo() async {
-    UserProfileData? userProfileData =
-        await isar.userProfileDatas.where().findFirst();
-    uid = userProfileData?.id ?? '';
-    return userProfileData;
+    try {
+      UserProfileData? userProfileData =
+          await isar.userProfileDatas.where().findFirst();
+      uid = userProfileData?.id ?? '';
+      return userProfileData;
+    } catch (e) {
+      debugPrint("Exception in retreiving UserInfo: $e");
+    }
   }
 
   Future<void> storeFirstProfileShownStatus(bool isShown) async {

@@ -111,6 +111,8 @@ class AuthenticationProvider with ChangeNotifier {
           email: userviewData.email,
           name: userviewData.name,
           phone: userviewData.phone,
+          height: userviewData.height,
+          weight: userviewData.weight,
           address: userviewData.address,
           allergies: userviewData.allergies,
           dietPreference: userviewData.dietPreference,

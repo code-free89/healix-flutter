@@ -113,13 +113,13 @@ class _HomePageState extends State<HomePage> {
         break;
       case Status.Authenticated:
         FirebaseFCMService().init();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatHome(
-                userFromLogin: true,
-              ),
-            ));
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => ChatHome(
+        //         userFromLogin: true,
+        //       ),
+        //     ));
 
         break;
       case Status.FirstTimeAuthenticated:
