@@ -1251,9 +1251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isDisabled: !isValidInput,
                             isLoading: isLoading,
                             onTap: () async {
-                              String? userUid = await SharePreferenceData()
-                                  .retrieveUserInfo()
-                                  .then((value) => value?.id);
+                              String? userUid = await SharePreferenceData().uid;
                               String? userEmail = await SharePreferenceData()
                                   .retrieveUserInfo()
                                   .then((value) => value?.email);

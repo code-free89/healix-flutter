@@ -58,9 +58,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> setUserLocationData() async {
-    String? userUid = await SharePreferenceData()
-        .retrieveUserInfo()
-        .then((value) => value?.id);
+    String? userUid = SharePreferenceData().uid;
     LocationPermission permission;
     // Call your API to set user location data
     permission = await Geolocator.checkPermission();
@@ -85,9 +83,7 @@ class ChatProvider extends ChangeNotifier {
     isAnswerLoading = true;
     notifyListeners();
 
-    String? userUid = await SharePreferenceData()
-        .retrieveUserInfo()
-        .then((value) => value?.id);
+    String? userUid = SharePreferenceData().uid;
 
     // Create a CustomizedRequest object
     CustomizedRequest request = CustomizedRequest(
@@ -153,9 +149,7 @@ class ChatProvider extends ChangeNotifier {
 
     int currentMessageIndex =
         messages.length - 1; // Get index of the placeholder
-    String? userUid = await SharePreferenceData()
-        .retrieveUserInfo()
-        .then((value) => value?.id);
+    String? userUid = SharePreferenceData().uid;
 
     // Prepare the request
     CustomizedFetchDataRequest request = CustomizedFetchDataRequest(
