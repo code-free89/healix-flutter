@@ -154,8 +154,6 @@ class UserChatContainer extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.07,
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
                                     decoration: BoxDecoration(
@@ -166,16 +164,18 @@ class UserChatContainer extends StatelessWidget {
                                             bottomRight: Radius.circular(10)),
                                         color: Colors.grey.shade300),
                                     child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: MediaQuery.of(context)
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.02),
+                                              0.02,
+                                          vertical: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.004),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(
                                             menuItem?.name ?? "No Name",
@@ -186,6 +186,11 @@ class UserChatContainer extends StatelessWidget {
                                                   0.042,
                                             ),
                                           ),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.006),
                                           Text(
                                             "\$${menuItem?.price?.toString() ?? "N/A"}",
                                             style: TextStyle(

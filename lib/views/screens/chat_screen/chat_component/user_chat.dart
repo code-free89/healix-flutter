@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:helix_ai/util/constants/string_constants.dart';
-import 'package:helix_ai/views/screens/chat_screen/chat_component/HealthBarChart.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_component/user_chat_container.dart';
 import 'package:provider/provider.dart';
 
