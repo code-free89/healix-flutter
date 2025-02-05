@@ -5,10 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helix_ai/controllers/authentication_provider.dart';
 import 'package:helix_ai/models/user_profile_data.dart';
 import 'package:helix_ai/util/constants/images_path.dart';
 import 'package:helix_ai/views/screens/chat_screen/chat_home.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../controllers/authentication_provider.dart';
 import '../../data/shared_preferences/share_preferences_data.dart';
@@ -61,6 +63,49 @@ class SocialLoginButtons extends StatelessWidget {
       }
     } catch (e) {
       print('Error during Facebook Login: $e');
+    }
+  }
+
+  // Method to handle Apple Login
+  Future<void> _loginWithApple(BuildContext context) async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName
+          ]);
+      final OAuthCredential credential = OAuthProvider('apple.com').credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+      if (user != null) {
+        print('Apple Firebase Login Success: ${user.uid}');
+        await SharePreferenceData().storeUserInfo(UserProfileData(
+          id: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          name: userCredential.user!.displayName,
+        ));
+        // Navigate to ChatHome after successful login
+        Provider.of<AuthenticationProvider>(context).userData = UserProfileData(
+          id: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          name: userCredential.user!.displayName,
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatHome(
+                    userFromLogin: false,
+                  )),
+        );
+      }
+    } catch (e) {
+      print('Error during Apple Login: $e');
     }
   }
 
@@ -150,7 +195,7 @@ class SocialLoginButtons extends StatelessWidget {
               width: height * 0.03,
             ),
             InkWell(
-              onTap: () => _loginWithFacebook(context), // Facebook Login Tap
+              onTap: () => _loginWithApple(context), // Facebook Login Tap
               child: Container(
                 height: height * 0.07,
                 width: height * 0.07,
