@@ -415,6 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
     bool isFullNameInput = false;
     bool isSavingData = false;
+    bool isNameValid = true;
 
     showModalBottomSheet(
       backgroundColor: Colors.white,
@@ -471,6 +472,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             focusNode: nameFocusNode,
                             label: "",
                             hintText: 'John Doe',
+                            errorText: "Invalid Full Name",
+                            hasError: !isNameValid,
                             controller: nameController,
                             keyboardType: TextInputType.text,
                             inputFormatters: [
@@ -494,6 +497,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () async {
                               String name = nameController.text;
                               setState(() {
+                                isNameValid = isValidFullName(name);
+                              });
+                              if (!isValidFullName(name)) {
+                                return;
+                              }
+                              setState(() {
                                 isSavingData = true;
                               });
                               bool success =
@@ -515,9 +524,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .addPostFrameCallback((_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content:
-                                          Text('Profile updated successfully.'),
+                                      content: SizedBox(
+                                        height: 20,
+                                        child: Center(
+                                          child: Text(
+                                            'Profile updated successfully.',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ), // Smaller font helps on iOS
+                                          ),
+                                        ),
+                                      ),
                                       backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
                                     ),
                                   );
                                 });
@@ -544,10 +563,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void showEditPhoneNumberBottomSheet(
       BuildContext context, AuthenticationProvider authProvider) {
+    String phone = authProvider.userData?.phone ?? "";
+    String countryCode = '+1';
+    if (phone.indexOf(' ') > 0) {
+      countryCode = phone.split(' ')[0];
+      phone = phone.split(' ')[1];
+    }
     final TextEditingController phoneController = TextEditingController(
-      text: authProvider.userData?.phone ?? "",
+      text: phone,
     );
     final FocusNode phoneFocusNode = FocusNode();
+    bool isValueUpdated = false;
 
     showModalBottomSheet(
       backgroundColor: Colors.white,
@@ -558,7 +584,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         final size = MediaQuery.of(context).size;
-        bool isPhoneInput = !phoneController.text.isEmpty;
         bool isSavingData = false;
 
         return StatefulBuilder(
@@ -639,7 +664,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(size.width * 0.05)),
                                     ),
-                                    initialSelection: 'US',
+                                    initialSelection: countryCode == '+1'
+                                        ? 'US'
+                                        : countryCode,
                                     favorite: ['+1', 'US'],
                                     showCountryOnly: false,
                                     showOnlyCountryWhenClosed: false,
@@ -654,6 +681,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                    onChanged: (country) {
+                                      setState(() {
+                                        countryCode = country.dialCode ?? "+1";
+                                        isValueUpdated = true;
+                                      });
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -671,7 +704,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     focusNode: phoneFocusNode,
                                     onChanged: (value) {
                                       setState(() {
-                                        isPhoneInput = !value.isEmpty;
+                                        isValueUpdated = true;
                                       });
                                     },
                                     inputFormatters: [
@@ -679,9 +712,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       LengthLimitingTextInputFormatter(10),
                                       PhoneNumberFormatter(onComplete: () {
                                         phoneFocusNode.unfocus();
-                                        setState(() {
-                                          isPhoneInput = true;
-                                        });
                                       })
                                     ],
                                   ),
@@ -695,9 +725,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           GeneralButton(
                             Width: MediaQuery.of(context).size.width,
                             isLoading: isSavingData,
-                            isDisabled: !isPhoneInput,
+                            isDisabled: phoneController.text.length != 12 ||
+                                !isValueUpdated,
                             onTap: () async {
                               String phone = phoneController.text;
+                              phone = "$countryCode $phone";
                               setState(() {
                                 isSavingData = true;
                               });
@@ -721,9 +753,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .addPostFrameCallback((_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content:
-                                          Text('Profile updated successfully.'),
+                                      content: SizedBox(
+                                        height: 20,
+                                        child: Center(
+                                          child: Text(
+                                            'Profile updated successfully.',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ), // Smaller font helps on iOS
+                                          ),
+                                        ),
+                                      ),
                                       backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
                                     ),
                                   );
                                 });
@@ -1168,7 +1210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ExpiryDateFormatter(),
                                   ],
                                   onChanged: (value) {
-                                    if (value.length == 3) {
+                                    if (value.length == 2) {
                                       int? month =
                                           int.tryParse(value.substring(0, 2));
                                       if (month == null ||
@@ -1191,7 +1233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         int yearInt = int.parse(year);
                                         if (monthInt >= 1 &&
                                             monthInt <= 12 &&
-                                            yearInt >= 2025 &&
+                                            yearInt >= currentYear &&
                                             yearInt < currentYear + 10 &&
                                             !(yearInt == currentYear &&
                                                 monthInt < currentMonth)) {
@@ -1295,9 +1337,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .addPostFrameCallback((_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(
-                                          'Billing details saved successfully.'),
+                                      content: SizedBox(
+                                        height: 20,
+                                        child: Center(
+                                          child: Text(
+                                            'Billing details saved successfully.',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ), // Smaller font helps on iOS
+                                          ),
+                                        ),
+                                      ),
                                       backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
                                     ),
                                   );
                                 });
@@ -1332,6 +1384,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     List<TextInputFormatter>? inputFormatters,
     Function(dynamic _)? onFieldSubmitted,
     Widget? prefixIcon,
+    bool? hasError,
+    String? errorText,
   }) {
     final size = MediaQuery.of(context).size;
     return Column(
@@ -1349,19 +1403,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           decoration: BoxDecoration(
             color: colorWhite,
-            border: Border.all(color: colorBlack.withOpacity(0.15)),
+            border: Border.all(
+              color: hasError == true ? colorRed : colorBlack.withOpacity(0.15),
+            ),
             borderRadius: BorderRadius.all(
               Radius.circular(size.width * 0.03),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: colorBlack.withOpacity(0.15),
-                blurRadius: 10,
-                spreadRadius: 0.3,
-              ),
-            ],
+            boxShadow: hasError == true
+                ? []
+                : [
+                    BoxShadow(
+                      color: colorBlack.withOpacity(0.15),
+                      blurRadius: 10,
+                      spreadRadius: 0.3,
+                    ),
+                  ],
           ),
-          height: MediaQuery.of(context).size.height * 0.07,
+          height: size.height * 0.07,
           child: TextFormField(
             focusNode: focusNode,
             expands: true,
@@ -1400,6 +1458,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
+        SizedBox(
+          height: size.height * 0.005,
+        ),
+        hasError == true
+            ? WantText(
+                text: errorText ?? "",
+                fontSize: size.width * 0.035,
+                fontWeight: FontWeight.w400,
+                textColor: Colors.redAccent,
+                usePoppins: false,
+              )
+            : SizedBox(),
       ],
     );
   }

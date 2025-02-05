@@ -63,3 +63,21 @@ class PhoneNumberFormatter extends TextInputFormatter {
     );
   }
 }
+
+class NoSpecialCharactersFormatter extends TextInputFormatter {
+  final RegExp _regex = RegExp(r'^[a-zA-Z0-9\s@.]*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
+bool isValidFullName(String fullName) {
+  fullName = fullName.trim(); // Remove leading/trailing spaces
+  return RegExp(r'^[A-Za-z]{2,} [A-Za-z]{2,}$').hasMatch(fullName);
+}

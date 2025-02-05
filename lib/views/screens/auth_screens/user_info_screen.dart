@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helix_ai/util/constants/constant.dart';
+import 'package:helix_ai/util/formatter.dart';
 import 'package:helix_ai/util/validator.dart';
 import 'package:helix_ai/views/screens/auth_screens/wellness_goal_screen.dart';
 import 'package:provider/provider.dart';
@@ -634,18 +635,5 @@ class _PhoneNumberFormatter extends TextInputFormatter {
             : newSelectionIndex,
       ),
     );
-  }
-}
-
-class NoSpecialCharactersFormatter extends TextInputFormatter {
-  final RegExp _regex = RegExp(r'^[a-zA-Z0-9\s@.]*$');
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (_regex.hasMatch(newValue.text)) {
-      return newValue;
-    }
-    return oldValue;
   }
 }
