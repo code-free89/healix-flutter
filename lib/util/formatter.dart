@@ -79,5 +79,6 @@ class NoSpecialCharactersFormatter extends TextInputFormatter {
 
 bool isValidFullName(String fullName) {
   fullName = fullName.trim(); // Remove leading/trailing spaces
-  return RegExp(r'^[A-Za-z]{2,} [A-Za-z]{2,}$').hasMatch(fullName);
+  return RegExp(r'^[A-Za-z]{2,}( [A-Za-z]{2,})+$').hasMatch(fullName) &&
+      fullName.length < 50;
 }
