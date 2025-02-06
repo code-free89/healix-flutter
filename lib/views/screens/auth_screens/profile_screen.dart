@@ -477,14 +477,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             controller: nameController,
                             keyboardType: TextInputType.text,
                             inputFormatters: [
+                              NoSpecialCharactersFormatter(),
                               FilteringTextInputFormatter.allow(
                                 RegExp(r'[a-zA-Z\s]'),
                               ),
                             ],
                             onChanged: (value) {
-                              setState(() {
-                                isFullNameInput = !value.isEmpty;
-                              });
+                              if (value == ' ') {
+                                nameController.clear();
+                              } else {
+                                setState(() {
+                                  isFullNameInput = !value.isEmpty;
+                                  isNameValid = true;
+                                });
+                              }
                             },
                           ),
                           SizedBox(
@@ -495,7 +501,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isDisabled: !isFullNameInput,
                             isLoading: isSavingData,
                             onTap: () async {
-                              String name = nameController.text;
+                              String name = nameController.text.trim();
                               setState(() {
                                 isNameValid = isValidFullName(name);
                               });
@@ -508,7 +514,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               bool success =
                                   await UserDataServices().updateUserInfo(
                                 SharePreferenceData().uid,
-                                {'name': name},
+                                {'name': name.trim()},
                               );
 
                               setState(() {
@@ -517,6 +523,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               if (success) {
                                 authProvider.userData!.name = name;
+                                authProvider.notifyListeners();
                                 SharePreferenceData()
                                     .storeUserInfo(authProvider.userData!);
 
@@ -1165,7 +1172,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               CreditCardFormatter(),
                             ],
                             prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.only(
+                                  left: 8.0,
+                                  right: 8.0,
+                                  top: ccImage == 'unknown' ? 0 : 6.0),
                               child: Image.asset(
                                 "assets/images/$ccImage.png",
                                 width: 40,

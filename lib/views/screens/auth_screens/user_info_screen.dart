@@ -150,11 +150,17 @@ class _UserInfoScreenContent extends StatelessWidget {
                         SizedBox(
                           width: size.width * 0.49,
                           child: AuthCustomTextFormField(
-                            onChanged: (_) {
+                            onChanged: (value) {
                               isButtonEnabled(context);
+                              nameController.text = value == ' '
+                                  ? ''
+                                  : value.split(' ').join(' ');
                             },
                             inputFormatters: [
                               NoSpecialCharactersFormatter(),
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z\s]'),
+                              ),
                             ],
                             labelText: "Name",
                             controller: nameController,
@@ -416,7 +422,7 @@ class _UserInfoScreenContent extends StatelessWidget {
                                       userData: UserViewModel(
                                         id: id,
                                         email: email,
-                                        name: nameController.text,
+                                        name: nameController.text.trim(),
                                         phone: provider.selectedCountry +
                                             ' ' +
                                             rawPhoneNumber.trim(),
