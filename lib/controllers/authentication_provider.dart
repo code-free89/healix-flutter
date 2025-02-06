@@ -80,8 +80,6 @@ class AuthenticationProvider with ChangeNotifier {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       await FirebaseFCMService().init();
-
-      setIsLoginLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
       setIsLoginLoading(false);
