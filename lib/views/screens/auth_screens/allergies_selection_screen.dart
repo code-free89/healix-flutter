@@ -42,7 +42,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
             image:
                 DecorationImage(image: AssetImage("assets/images/auth.png"))),
         child: Padding(
-          padding: EdgeInsets.only(top: size.height * 0.45),
+          padding: EdgeInsets.only(top: size.height * 0.5),
           child: Container(
             decoration: BoxDecoration(
                 color: colorWhite,
@@ -63,7 +63,7 @@ class AllergiesSelectionScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: size.height * 0.02),
+                  SizedBox(height: size.height * 0.03),
 
                   // Text and Input Section
                   WantText(
@@ -84,8 +84,8 @@ class AllergiesSelectionScreen extends StatelessWidget {
 
                   // Allergy Selection Section
                   Wrap(
-                    spacing: size.width * 0.02,
-                    runSpacing: size.width * 0.02,
+                    spacing: size.width * 0.022,
+                    runSpacing: size.width * 0.025,
                     children: userInfoProvider.allergies.map((allergy) {
                       final isSelected =
                           userInfoProvider.selectedAllergies.contains(allergy);
